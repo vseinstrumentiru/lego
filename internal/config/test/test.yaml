@@ -1,0 +1,12 @@
+srv:
+  name: test
+  http:
+    addr: 8080
+  events:
+    provider: channel
+    nats:
+      addr: "nats://testaddr"
+app:
+  name: app-test
+  some:
+    val1: val1

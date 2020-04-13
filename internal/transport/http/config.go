@@ -10,19 +10,19 @@ import (
 type Config struct {
 	lego.WithSwitch `mapstructure:",squash"`
 
-	Addr string
+	Port int
 }
 
 func (c Config) SetDefaults(env *viper.Viper, flag *pflag.FlagSet) {
-	flag.String("http-addr", ":8000", "HTTP server address")
-	_ = env.BindPFlag("srv.http.addr", flag.Lookup("http-addr"))
-	env.SetDefault("srv.http.addr", ":8080")
+	flag.String("http-port", "8000", "HTTP server port")
+	_ = env.BindPFlag("srv.http.port", flag.Lookup("http-port"))
+	env.SetDefault("srv.http.port", 8080)
 }
 
 func (c Config) Validate() (err error) {
 	if c.Enabled {
-		if c.Addr == "" {
-			err = errors.Append(err, errors.New("srv.http.addr is required"))
+		if c.Port == 0 {
+			err = errors.Append(err, errors.New("srv.http.port is required"))
 		}
 	}
 

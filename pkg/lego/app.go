@@ -14,8 +14,7 @@ type App interface {
 }
 
 type AppWithConfig interface {
-	GetConfig() Config
-	SetConfig(config Config)
+	WithCustomConfig
 }
 
 type AppWithHttp interface {

@@ -12,6 +12,7 @@ import (
 	"io"
 	"logur.dev/logur"
 	"net/http"
+	"strconv"
 )
 
 func Run(p lego.Process, config Config) (*mux.Router, io.Closer) {
@@ -34,12 +35,13 @@ func Run(p lego.Process, config Config) (*mux.Router, io.Closer) {
 		ErrorLog: log.NewErrorStandardLogger(logger),
 	}
 
-	logger.Info("listening on address", map[string]interface{}{"address": config.Addr})
+	addr := ":" + strconv.Itoa(config.Port)
+	logger.Info("listening on address", map[string]interface{}{"address": addr})
 
-	httpLn, err := p.Listen("tcp", config.Addr)
+	httpLn, err := p.Listen("tcp", addr)
 	emperror.Panic(err)
 
-	p.Run(appkitrun.LogServe(logger)(appkitrun.HTTPServe(server, httpLn, p.ShutdownTimeout())))
+	p.Background(appkitrun.LogServe(logger)(appkitrun.HTTPServe(server, httpLn, p.ShutdownTimeout())))
 
 	return router, server
 }

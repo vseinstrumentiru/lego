@@ -57,8 +57,8 @@ func Test_ConfigDefaultsWithPointerApp(t *testing.T) {
 	ass.Equal("nats://testaddr", srv.Events.Nats.Addr)
 	ass.Equal("test", srv.Events.Nats.ClientID)
 
-	ass.NotNil(srv.App)
-	ass.NotNil("app-test", srv.App.(*app).Name)
+	ass.NotNil(srv.Custom)
+	ass.NotNil("app-test", srv.Custom.(*app).Name)
 }
 
 func Test_ConfigDefaultsWithApp(t *testing.T) {
@@ -72,6 +72,6 @@ func Test_ConfigDefaultsWithApp(t *testing.T) {
 	ass.Equal("nats://testaddr", srv.Events.Nats.Addr)
 	ass.Equal("test", srv.Events.Nats.ClientID)
 
-	ass.NotNil(srv.App)
-	ass.NotNil("app-test", srv.App.(app).Name)
+	ass.NotNil(srv.Custom)
+	ass.NotNil("app-test", srv.Custom.(app).Name)
 }

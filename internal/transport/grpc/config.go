@@ -10,19 +10,19 @@ import (
 type Config struct {
 	lego.WithSwitch `mapstructure:",squash"`
 
-	Addr string
+	Port int
 }
 
 func (c Config) SetDefaults(env *viper.Viper, flag *pflag.FlagSet) {
-	flag.String("grpc-addr", ":8001", "GRPC server address")
-	_ = env.BindPFlag("srv.grpc.addr", flag.Lookup("grpc-addr"))
-	env.SetDefault("srv.grpc.addr", ":8001")
+	flag.String("grpc-port", "8001", "GRPC server port")
+	_ = env.BindPFlag("srv.grpc.port", flag.Lookup("grpc-addr"))
+	env.SetDefault("srv.grpc.port", 8001)
 }
 
 func (c Config) Validate() (err error) {
 	if c.Enabled {
-		if c.Addr == "" {
-			err = errors.Append(err, errors.New("srv.grpc.addr is required"))
+		if c.Port == 0 {
+			err = errors.Append(err, errors.New("srv.grpc.port is required"))
 		}
 	}
 

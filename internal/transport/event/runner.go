@@ -54,7 +54,7 @@ func Run(p lego.Process, config Config) Server {
 		metrics.SubscriberReceivedMessageView,
 	)
 
-	p.Run(
+	p.Background(
 		func() error {
 			return server.Router.Run(context.Background())
 		},

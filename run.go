@@ -21,8 +21,8 @@ import (
 )
 
 func Run(ctx context.Context, app lego.App) {
-	s := newServer(app.GetName(), getAppConfig(app))
-	setAppConfig(app, s.Config.App)
+	s := newServer(app.GetName(), extractConfig(app))
+	provideConfig(app, s.Config.Custom)
 
 	defer emperror.HandleRecover(s.Handler())
 
@@ -120,19 +120,5 @@ func Run(ctx context.Context, app lego.App) {
 	err := s.Runner.Run()
 	if err != nil {
 		s.WithFilter(match.As(&run.SignalError{}).MatchError).Handle(err)
-	}
-}
-
-func getAppConfig(app lego.App) lego.Config {
-	if cApp, ok := app.(lego.AppWithConfig); ok {
-		return cApp.GetConfig()
-	}
-
-	return nil
-}
-
-func setAppConfig(app lego.App, cfg lego.Config) {
-	if cApp, ok := app.(lego.AppWithConfig); ok {
-		cApp.SetConfig(cfg)
 	}
 }

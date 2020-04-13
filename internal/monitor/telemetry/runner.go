@@ -29,7 +29,7 @@ func Run(p lego.Process, router *http.ServeMux, config Config) io.Closer {
 		ErrorLog: log.NewErrorStandardLogger(logger),
 	}
 
-	p.Run(appkitrun.LogServe(logger)(appkitrun.HTTPServe(server, ln, p.ShutdownTimeout())))
+	p.Background(appkitrun.LogServe(logger)(appkitrun.HTTPServe(server, ln, p.ShutdownTimeout())))
 
 	registerChecks(config.Checks)
 

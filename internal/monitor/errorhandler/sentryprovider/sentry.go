@@ -24,6 +24,10 @@ func New(dsn string) (*SentryHandler, error) {
 }
 
 func (h *SentryHandler) Handle(err error) {
+	if err == error(nil) || err == nil {
+		return
+	}
+
 	sentry.CaptureException(err)
 }
 

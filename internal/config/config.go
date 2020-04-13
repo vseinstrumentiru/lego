@@ -15,21 +15,22 @@ import (
 
 type WithSwitch = lego.WithSwitch
 
-type Server struct {
+type Config struct {
 	Name            string
 	Env             string
 	Debug           bool
+	Host            string
 	Http            http.Config
 	Grpc            grpc.Config
 	Events          event.Config
 	Monitor         monitor.Config
 	ShutdownTimeout time.Duration
 
-	Build build.Info
-	App   lego.Config `mapstructure:"-"`
+	Build  build.Info
+	Custom lego.Config `mapstructure:"-"`
 }
 
-func (c Server) Validate() (err error) {
+func (c Config) Validate() (err error) {
 	if c.Name == "" {
 		err = errors.Append(err, errors.New("srv.name required"))
 	}
@@ -39,12 +40,17 @@ func (c Server) Validate() (err error) {
 	err = errors.Append(err, c.Events.Validate())
 	err = errors.Append(err, c.Monitor.Validate())
 
+	if c.Custom != nil {
+		err = errors.Append(err, c.Custom.Validate())
+	}
+
 	return
 }
 
-func (c Server) SetDefaults(env *viper.Viper, flag *pflag.FlagSet) {
+func (c Config) SetDefaults(env *viper.Viper, flag *pflag.FlagSet) {
 	env.SetDefault("srv.env", "dev")
 	env.SetDefault("srv.debug", false)
+	env.SetDefault("srv.host", "localhost")
 	env.SetDefault("srv.shutdownTimeout", 15*time.Second)
 
 	c.Http.SetDefaults(env, flag)

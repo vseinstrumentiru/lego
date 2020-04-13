@@ -17,7 +17,7 @@ import (
 
 type server struct {
 	lego.LogErr
-	Config    config.Server
+	Config    config.Config
 	Telemetry *http.ServeMux
 	Health    health.Health
 	Upgrader  *tableflip.Upgrader
@@ -52,7 +52,7 @@ func newServer(name string, cfg lego.Config) *server {
 		}
 	}
 
-	srv.Telemetry, srv.Health = monitor.Provide(srv, srv.Config.Build, srv.Config.Monitor)
+	srv.Telemetry, srv.Health = monitor.ProvideServer(srv, srv.Config.Build, srv.Config.Monitor)
 
 	srv.Upgrader, _ = tableflip.New(tableflip.Options{})
 
@@ -63,7 +63,7 @@ func (s *server) Listen(network, addr string) (net.Listener, error) {
 	return s.Upgrader.Listen(network, addr)
 }
 
-func (s *server) Run(execute func() error, interrupt func(error)) {
+func (s *server) Background(execute func() error, interrupt func(error)) {
 	s.Runner.Add(execute, interrupt)
 }
 

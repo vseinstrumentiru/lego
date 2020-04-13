@@ -33,7 +33,7 @@ func Test_Provider(t *testing.T) {
 
 	ass.IsType(err, viper.ConfigFileNotFoundError{})
 
-	cfg = srv.App.(appConfig)
+	cfg = srv.Custom.(appConfig)
 
 	ass.Equal("TestSrv", srv.Name)
 	ass.Equal("Test", cfg.Some.Name)

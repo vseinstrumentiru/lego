@@ -9,6 +9,7 @@ import (
 	"google.golang.org/grpc"
 	"io"
 	"logur.dev/logur"
+	"strconv"
 )
 
 func Run(p lego.Process, config Config) (*grpc.Server, io.Closer) {
@@ -24,12 +25,13 @@ func Run(p lego.Process, config Config) (*grpc.Server, io.Closer) {
 		IsPublicEndpoint: true,
 	}))
 
-	logger.Info("listening on address", map[string]interface{}{"address": config.Addr})
+	addr := ":" + strconv.Itoa(config.Port)
+	logger.Info("listening on address", map[string]interface{}{"address": addr})
 
-	grpcLn, err := p.Listen("tcp", config.Addr)
+	grpcLn, err := p.Listen("tcp", addr)
 	emperror.Panic(err)
 
-	p.Run(appkitrun.LogServe(logger)(appkitrun.GRPCServe(server, grpcLn)))
+	p.Background(appkitrun.LogServe(logger)(appkitrun.GRPCServe(server, grpcLn)))
 
 	return server, lego.CloseFn(func() error {
 		server.Stop()

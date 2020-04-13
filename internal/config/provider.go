@@ -39,73 +39,68 @@ func configure() (*viper.Viper, *pflag.FlagSet) {
 	p.Bool("version", false, "Show version information")
 
 	v.AddConfigPath(".")
-	if c, _ := p.GetString("config"); c != "" {
-		v.SetConfigFile(c)
-	} else if c, _ := p.GetString("config-path"); c != "" {
-		v.AddConfigPath(c)
-	}
 
 	return v, p
 }
 
-func prepareAppConfig(cfg lego.Config) (lego.Config, bool) {
-	if cfg == lego.Config(nil) {
+func prepareCustomConfig(customCfg lego.Config) (lego.Config, bool) {
+	if customCfg == lego.Config(nil) {
 		return nil, false
 	}
 
-	cfgVal := reflect.ValueOf(cfg)
+	cfgVal := reflect.ValueOf(customCfg)
 	if !cfgVal.IsValid() {
-		emperror.Panic(errors.New("app config is nil pointer"))
+		emperror.Panic(errors.New("config is nil pointer"))
 	}
 
-	return cfg, true
+	return customCfg, true
 }
 
-func buildConfig(v *viper.Viper, app lego.Config) (srv Server, err error) {
+func buildConfig(v *viper.Viper, customCfg lego.Config, customCfgPrefix string) (cfg Config, err error) {
 	builder := dynamicstruct.NewStruct().
-		AddField("Srv", Server{}, "")
+		AddField("Srv", Config{}, "")
 
-	var hasApp bool
+	var hasCustomCfg bool
 
-	if app != nil {
-		hasApp = true
-		envPrefix := defaultEnvPrefix
+	if customCfg != nil {
+		hasCustomCfg = true
+		envPrefix := customCfgPrefix
 
-		if cApp, ok := app.(lego.ConfigWithCustomEnvPrefix); ok {
+		if cApp, ok := customCfg.(lego.ConfigWithCustomEnvPrefix); ok {
 			envPrefix = cApp.GetEnvPrefix()
 		}
 		v.AddConfigPath(fmt.Sprintf("$%s_CONFIG_DIR/", strings.ToUpper(envPrefix)))
 
-		builder = builder.AddField("App", app, fmt.Sprintf(`mapstructure:"%s"`, envPrefix))
+		builder = builder.AddField("Custom", customCfg, fmt.Sprintf(`mapstructure:"%s"`, customCfgPrefix))
 	}
 
 	unmarshalStruct := builder.Build().New()
 	if err = v.Unmarshal(&unmarshalStruct); err != nil {
-		return Server{}, err
+		return Config{}, err
 	}
 
 	structReflect := reflect.ValueOf(unmarshalStruct).Elem()
-	srv = structReflect.FieldByName("Srv").Interface().(Server)
-	if hasApp {
-		srv.App = structReflect.FieldByName("App").Interface().(lego.Config)
+	cfg = structReflect.FieldByName("Srv").Interface().(Config)
+	if hasCustomCfg {
+		cfg.Custom = structReflect.FieldByName("Custom").Interface().(lego.Config)
 	}
 
-	srv.Build = build.New()
+	cfg.Build = build.New()
 
-	return srv, nil
+	return cfg, nil
 }
 
 type Option func(env *viper.Viper, flags *pflag.FlagSet)
 
-func setServerDefaults() Option {
+func setServerCfgDefaults() Option {
 	return func(env *viper.Viper, flags *pflag.FlagSet) {
-		(Server{}).SetDefaults(env, flags)
+		(Config{}).SetDefaults(env, flags)
 	}
 }
 
-func setAppDefaults(app lego.Config) Option {
+func setCustomCfgDefaults(customCfg lego.Config) Option {
 	return func(env *viper.Viper, flags *pflag.FlagSet) {
-		app.SetDefaults(env, flags)
+		customCfg.SetDefaults(env, flags)
 	}
 }
 
@@ -115,14 +110,14 @@ func WithDefaultName(name string) Option {
 	}
 }
 
-func Provide(app lego.Config, options ...Option) (Server, error) {
+func Provide(customCfg lego.Config, options ...Option) (Config, error) {
 	v, p := configure()
 	var hasAppCfg bool
-	app, hasAppCfg = prepareAppConfig(app)
+	customCfg, hasAppCfg = prepareCustomConfig(customCfg)
 
-	defaultOptions := []Option{setServerDefaults()}
+	defaultOptions := []Option{setServerCfgDefaults()}
 	if hasAppCfg {
-		defaultOptions = append(defaultOptions, setAppDefaults(app))
+		defaultOptions = append(defaultOptions, setCustomCfgDefaults(customCfg))
 	}
 
 	options = append(defaultOptions, options...)
@@ -144,14 +139,14 @@ func Provide(app lego.Config, options ...Option) (Server, error) {
 		emperror.Panic(errors.Wrap(returnErr, "failed to read configuration"))
 	}
 
-	server, err := buildConfig(v, app)
+	cfg, err := buildConfig(v, customCfg, defaultEnvPrefix)
 	emperror.Panic(errors.Wrap(err, "failed to unmarshal application configuration"))
 
 	if v, _ := p.GetBool("version"); v {
-		fmt.Printf("%s version %s (%s) built on %s\n", server.Name, server.Build.Version, server.Build.CommitHash, server.Build.BuildDate)
+		fmt.Printf("%s version %s (%s) built on %s\n", cfg.Name, cfg.Build.Version, cfg.Build.CommitHash, cfg.Build.BuildDate)
 
 		os.Exit(0)
 	}
 
-	return server, returnErr
+	return cfg, returnErr
 }

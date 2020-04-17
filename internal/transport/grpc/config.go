@@ -14,9 +14,9 @@ type Config struct {
 }
 
 func (c Config) SetDefaults(env *viper.Viper, flag *pflag.FlagSet) {
-	flag.String("grpc-port", "8001", "GRPC server port")
-	_ = env.BindPFlag("srv.grpc.port", flag.Lookup("grpc-addr"))
-	env.SetDefault("srv.grpc.port", 8001)
+	flag.Int("grpc-port", 8081, "GRPC server port")
+	_ = env.BindPFlag("srv.grpc.port", flag.Lookup("grpc-port"))
+	env.SetDefault("srv.grpc.port", 8081)
 }
 
 func (c Config) Validate() (err error) {

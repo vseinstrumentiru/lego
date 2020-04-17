@@ -14,7 +14,7 @@ type Config struct {
 }
 
 func (c Config) SetDefaults(env *viper.Viper, flag *pflag.FlagSet) {
-	flag.String("http-port", "8000", "HTTP server port")
+	flag.Int("http-port", 8080, "HTTP server port")
 	_ = env.BindPFlag("srv.http.port", flag.Lookup("http-port"))
 	env.SetDefault("srv.http.port", 8080)
 }

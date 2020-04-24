@@ -60,6 +60,13 @@ func Run(ctx context.Context, app lego.App) {
 		)
 	}
 
+	if cApp, ok := app.(lego.AppWithRegistration); ok {
+		closer, err := cApp.Register(s)
+		emperror.Panic(err)
+
+		defer lego.Close(closer)
+	}
+
 	if httpApp, ok := app.(lego.AppWithHttp); ok {
 		if !s.Config.Http.Enabled {
 			emperror.Panic(errors.New("http config not defined"))
@@ -103,13 +110,6 @@ func Run(ctx context.Context, app lego.App) {
 				emperror.Panic(err)
 			}
 		}
-	}
-
-	if cApp, ok := app.(lego.AppWithRegistration); ok {
-		closer, err := cApp.Register(s)
-		emperror.Panic(err)
-
-		defer lego.Close(closer)
 	}
 
 	// Setup signal handler

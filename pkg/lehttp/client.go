@@ -57,7 +57,7 @@ func InsecureClient() ClientOption {
 }
 
 func NewClient(name string, opts ...ClientOption) *http.Client {
-	return &http.Client{
+	c := &http.Client{
 		Transport: &ochttp.Transport{
 			Base: http.DefaultTransport,
 			StartOptions: trace.StartOptions{
@@ -68,6 +68,12 @@ func NewClient(name string, opts ...ClientOption) *http.Client {
 			},
 		},
 	}
+
+	for _, opt := range opts {
+		opt(c)
+	}
+
+	return c
 }
 
 func NewRestyClient(name string, host string, opts ...ClientOption) *resty.Client {

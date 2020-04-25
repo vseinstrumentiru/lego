@@ -12,7 +12,7 @@ type Config struct {
 	// Telemetry HTTP server address
 	Addr string
 
-	Checks []*view.View
+	Stats []*view.View
 }
 
 func (c Config) SetDefaults(env *viper.Viper, flag *pflag.FlagSet) {

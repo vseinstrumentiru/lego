@@ -33,8 +33,8 @@ type AppWithPublishers interface {
 	RegisterEventDispatcher(publisher message.Publisher) error
 }
 
-type AppWithHealthChecks interface {
-	GetHealthChecks() []*view.View
+type AppWithStats interface {
+	GetStats() []*view.View
 }
 
 type AppWithRegistration interface {

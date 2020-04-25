@@ -31,12 +31,12 @@ func Run(p lego.Process, router *http.ServeMux, config Config) io.Closer {
 
 	p.Background(appkitrun.LogServe(logger)(appkitrun.HTTPServe(server, ln, p.ShutdownTimeout())))
 
-	registerChecks(config.Checks)
+	registerStats(config.Stats)
 
 	return server
 }
 
-func registerChecks(checks []*view.View) {
+func registerStats(stats []*view.View) {
 	err := view.Register(
 		// Health checks
 		health.ViewCheckCountByNameAndStatus,
@@ -57,6 +57,12 @@ func registerChecks(checks []*view.View) {
 		ochttp.ServerRequestCountByMethod,
 		ochttp.ServerResponseCountByStatusCode,
 
+		// GRPC Client
+		ocgrpc.ClientSentBytesPerRPCView,
+		ocgrpc.ClientReceivedBytesPerRPCView,
+		ocgrpc.ClientRoundtripLatencyView,
+		ocgrpc.ClientRoundtripLatencyView,
+
 		// GRPC
 		ocgrpc.ServerReceivedBytesPerRPCView,
 		ocgrpc.ServerSentBytesPerRPCView,
@@ -66,8 +72,8 @@ func registerChecks(checks []*view.View) {
 
 	emperror.Panic(errors.Wrap(err, "failed to register stat views"))
 
-	if len(checks) > 0 {
-		err = view.Register(checks...)
+	if len(stats) > 0 {
+		err = view.Register(stats...)
 
 		emperror.Panic(errors.Wrap(err, "failed to register app stat views"))
 	}

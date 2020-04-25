@@ -40,8 +40,8 @@ func Run(ctx context.Context, app lego.App) {
 	{
 		config := s.Config.Monitor.Telemetry
 
-		if cApp, ok := app.(lego.AppWithHealthChecks); ok {
-			config.Checks = cApp.GetHealthChecks()
+		if cApp, ok := app.(lego.AppWithStats); ok {
+			config.Stats = cApp.GetStats()
 		}
 
 		closer := telemetry.Run(s, s.Telemetry, config)

@@ -7,6 +7,7 @@ import (
 	"github.com/go-kit/kit/transport/http/jsonrpc"
 	"github.com/go-resty/resty/v2"
 	"github.com/shurcooL/graphql"
+	"github.com/vseinstrumentiru/lego/internal/monitor/propagation"
 	"go.opencensus.io/plugin/ochttp"
 	"go.opencensus.io/trace"
 	"net/http"
@@ -59,7 +60,8 @@ func InsecureClient() ClientOption {
 func NewClient(name string, opts ...ClientOption) *http.Client {
 	c := &http.Client{
 		Transport: &ochttp.Transport{
-			Base: http.DefaultTransport,
+			Base:        http.DefaultTransport,
+			Propagation: propagation.DefaultHTTPFormat,
 			StartOptions: trace.StartOptions{
 				Sampler: trace.AlwaysSample(),
 			},

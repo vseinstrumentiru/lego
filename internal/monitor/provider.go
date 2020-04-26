@@ -2,13 +2,16 @@ package monitor
 
 import (
 	"contrib.go.opencensus.io/exporter/jaeger"
+	jaegerPropagation "contrib.go.opencensus.io/exporter/jaeger/propagation"
 	"contrib.go.opencensus.io/exporter/ocagent"
 	"contrib.go.opencensus.io/exporter/prometheus"
 	"emperror.dev/emperror"
 	health "github.com/AppsFlyer/go-sundheit"
+	lepropagation "github.com/vseinstrumentiru/lego/internal/monitor/propagation"
 	"github.com/vseinstrumentiru/lego/internal/monitor/telemetry"
 	"github.com/vseinstrumentiru/lego/pkg/build"
 	"github.com/vseinstrumentiru/lego/pkg/lego"
+	"go.opencensus.io/plugin/ochttp/propagation/tracecontext"
 	"go.opencensus.io/stats/view"
 	"go.opencensus.io/trace"
 	"net/http"
@@ -16,6 +19,8 @@ import (
 
 func ProvideServer(p lego.Process, buildinfo build.Info, config Config) (*http.ServeMux, health.Health) {
 	router, healthz := telemetry.Provide(p, buildinfo)
+
+	var formatter lepropagation.HTTPFormatCollection
 
 	if config.Trace.Enabled {
 		trace.ApplyConfig(config.Trace.Config())
@@ -28,6 +33,7 @@ func ProvideServer(p lego.Process, buildinfo build.Info, config Config) (*http.S
 		)...)
 		emperror.Panic(err)
 
+		formatter = append(formatter, &tracecontext.HTTPFormat{})
 		trace.RegisterExporter(exporter)
 		view.RegisterExporter(exporter)
 	}
@@ -45,6 +51,7 @@ func ProvideServer(p lego.Process, buildinfo build.Info, config Config) (*http.S
 
 		emperror.Panic(err)
 
+		formatter = append(formatter, &jaegerPropagation.HTTPFormat{})
 		trace.RegisterExporter(exporter)
 	}
 
@@ -61,6 +68,7 @@ func ProvideServer(p lego.Process, buildinfo build.Info, config Config) (*http.S
 		})
 		emperror.Panic(err)
 
+		lepropagation.DefaultHTTPFormat = formatter
 		view.RegisterExporter(exporter)
 		router.Handle("/metrics", exporter)
 	}

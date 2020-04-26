@@ -148,5 +148,7 @@ func Provide(customCfg lego.Config, options ...Option) (Config, error) {
 		os.Exit(0)
 	}
 
+	cfg.Name = strings.ReplaceAll(cfg.Name, "-", "_")
+
 	return cfg, returnErr
 }

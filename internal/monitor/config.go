@@ -13,7 +13,7 @@ import (
 
 type Config struct {
 	Log          log.Config
-	ErrorHandler errorhandler.Config
+	Errorhandler errorhandler.Config
 	Exporter     exporter.Config
 	Trace        tracer.Config
 	Telemetry    telemetry.Config
@@ -21,7 +21,7 @@ type Config struct {
 
 func (c Config) SetDefaults(env *viper.Viper, flag *pflag.FlagSet) {
 	c.Log.SetDefaults(env, flag)
-	c.ErrorHandler.SetDefaults(env, flag)
+	c.Errorhandler.SetDefaults(env, flag)
 	c.Exporter.SetDefaults(env, flag)
 	c.Trace.SetDefaults(env, flag)
 	c.Telemetry.SetDefaults(env, flag)
@@ -29,7 +29,7 @@ func (c Config) SetDefaults(env *viper.Viper, flag *pflag.FlagSet) {
 
 func (c Config) Validate() (err error) {
 	err = errors.Append(err, c.Log.Validate())
-	err = errors.Append(err, c.ErrorHandler.Validate())
+	err = errors.Append(err, c.Errorhandler.Validate())
 	err = errors.Append(err, c.Exporter.Validate())
 	err = errors.Append(err, c.Trace.Validate())
 	err = errors.Append(err, c.Telemetry.Validate())

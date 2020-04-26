@@ -53,7 +53,7 @@ func newServer(name string, cfg lego.Config) *server {
 		}
 	}
 
-	srv.Telemetry, srv.Health = monitor.ProvideServer(srv, srv.Config.Build, srv.Config.Monitor)
+	srv.Telemetry, srv.Health = monitor.Provide(srv, srv.Config.Monitor)
 
 	srv.Upgrader, _ = tableflip.New(tableflip.Options{})
 

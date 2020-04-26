@@ -23,6 +23,11 @@ type Config struct {
 		ReconnectPeriod time.Duration
 	}
 
+	NewRelic struct {
+		lego.WithSwitch `mapstructure:",squash"`
+		Key             string
+	}
+
 	Prometheus struct {
 		lego.WithSwitch `mapstructure:",squash"`
 	}
@@ -40,6 +45,12 @@ func (c Config) Validate() (err error) {
 	if c.Opencensus.Enabled {
 		if c.Opencensus.Addr == "" {
 			err = errors.Append(err, errors.New("srv.monitor.exporter.opencensus.addr is required"))
+		}
+	}
+
+	if c.NewRelic.Enabled {
+		if c.NewRelic.Key == "" {
+			err = errors.Append(err, errors.New("srv.monitor.exporter.newrelic.key is required"))
 		}
 	}
 

@@ -84,10 +84,11 @@ func Provide(p lego.Process, config Config) (*http.ServeMux, health.Health) {
 		})
 		emperror.Panic(err)
 
-		lepropagation.DefaultHTTPFormat = formatter
 		view.RegisterExporter(exporter)
 		router.Handle("/metrics", exporter)
 	}
+
+	lepropagation.DefaultHTTPFormat = formatter
 
 	return router, healthz
 }

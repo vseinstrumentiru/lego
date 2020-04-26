@@ -7,6 +7,7 @@ import (
 	"github.com/sagikazarmark/ocmux"
 	"github.com/vseinstrumentiru/lego/internal/monitor/log"
 	"github.com/vseinstrumentiru/lego/internal/monitor/propagation"
+	"github.com/vseinstrumentiru/lego/pkg/build"
 	"github.com/vseinstrumentiru/lego/pkg/lego"
 	"go.opencensus.io/plugin/ochttp"
 	"go.opencensus.io/trace"
@@ -26,7 +27,7 @@ func Run(p lego.Process, config Config) (*mux.Router, io.Closer) {
 
 	server := &http.Server{
 		Handler: &ochttp.Handler{
-			Handler:     router,
+			Handler:     build.TraceMiddleware(p.Build())(router),
 			Propagation: propagation.DefaultHTTPFormat,
 			StartOptions: trace.StartOptions{
 				Sampler:  trace.AlwaysSample(),

@@ -2,6 +2,7 @@ package build
 
 import (
 	"encoding/json"
+	"go.opencensus.io/trace"
 	"net/http"
 
 	"emperror.dev/errors"
@@ -23,4 +24,24 @@ func Handler(buildInfo Info) http.Handler {
 
 		_, _ = w.Write(body)
 	})
+}
+
+func TraceMiddleware(buildInfo Info) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			span := trace.FromContext(r.Context())
+
+			if span == nil {
+				next.ServeHTTP(w, r)
+				return
+			}
+
+			span.AddAttributes(
+				trace.StringAttribute("build.version", buildInfo.Version),
+				trace.StringAttribute("build.commit", buildInfo.CommitHash),
+				trace.StringAttribute("build.date", buildInfo.BuildDate),
+			)
+			next.ServeHTTP(w, r)
+		})
+	}
 }

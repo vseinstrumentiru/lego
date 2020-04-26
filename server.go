@@ -8,6 +8,7 @@ import (
 	"github.com/vseinstrumentiru/lego/internal/monitor"
 	"github.com/vseinstrumentiru/lego/internal/monitor/errorhandler"
 	"github.com/vseinstrumentiru/lego/internal/monitor/log"
+	"github.com/vseinstrumentiru/lego/pkg/build"
 	"github.com/vseinstrumentiru/lego/pkg/lego"
 	"net"
 	"net/http"
@@ -73,4 +74,12 @@ func (s *server) ShutdownTimeout() time.Duration {
 
 func (s *server) Name() string {
 	return s.Config.Name
+}
+
+func (s *server) Build() build.Info {
+	return s.Config.Build
+}
+
+func (s *server) IsDebug() bool {
+	return s.Config.Debug
 }

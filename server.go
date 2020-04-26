@@ -83,3 +83,7 @@ func (s *server) Build() build.Info {
 func (s *server) IsDebug() bool {
 	return s.Config.Debug
 }
+
+func (s *server) DataCenterName() string {
+	return s.Config.DataCenter
+}

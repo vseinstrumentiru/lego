@@ -17,9 +17,10 @@ type WithSwitch = lego.WithSwitch
 
 type Config struct {
 	Name            string
+	DataCenter      string
+	Host            string
 	Env             string
 	Debug           bool
-	Host            string
 	Http            http.Config
 	Grpc            grpc.Config
 	Events          event.Config

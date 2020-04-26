@@ -25,9 +25,11 @@ func Run(p lego.Process, config Config) (*mux.Router, io.Closer) {
 	router := mux.NewRouter()
 	router.Use(ocmux.Middleware())
 
+	traceCfg := additionalTagsConfig{DataCenter: p.DataCenterName()}
+
 	server := &http.Server{
 		Handler: &ochttp.Handler{
-			Handler:     build.TraceMiddleware(p.Build())(router),
+			Handler:     additionalTagsMiddleware(traceCfg)(build.TraceMiddleware(p.Build())(router)),
 			Propagation: propagation.DefaultHTTPFormat,
 			StartOptions: trace.StartOptions{
 				Sampler:  trace.AlwaysSample(),
@@ -47,4 +49,26 @@ func Run(p lego.Process, config Config) (*mux.Router, io.Closer) {
 	p.Background(appkitrun.LogServe(logger)(appkitrun.HTTPServe(server, httpLn, p.ShutdownTimeout())))
 
 	return router, server
+}
+
+type additionalTagsConfig struct {
+	DataCenter string
+}
+
+func additionalTagsMiddleware(cfg additionalTagsConfig) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			span := trace.FromContext(r.Context())
+
+			if span == nil {
+				next.ServeHTTP(w, r)
+				return
+			}
+
+			span.AddAttributes(
+				trace.StringAttribute("server.dc", cfg.DataCenter),
+			)
+			next.ServeHTTP(w, r)
+		})
+	}
 }

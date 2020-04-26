@@ -10,6 +10,7 @@ type Process interface {
 	LogErr
 
 	Name() string
+	DataCenterName() string
 	Build() build.Info
 	IsDebug() bool
 

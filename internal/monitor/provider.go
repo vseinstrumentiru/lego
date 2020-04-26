@@ -2,12 +2,13 @@ package monitor
 
 import (
 	"contrib.go.opencensus.io/exporter/jaeger"
-	jaegerPropagation "contrib.go.opencensus.io/exporter/jaeger/propagation"
 	"contrib.go.opencensus.io/exporter/ocagent"
 	"contrib.go.opencensus.io/exporter/prometheus"
 	"emperror.dev/emperror"
 	health "github.com/AppsFlyer/go-sundheit"
 	lepropagation "github.com/vseinstrumentiru/lego/internal/monitor/propagation"
+	// jaegerPropagation "contrib.go.opencensus.io/exporter/jaeger/propagation"
+	jaegerPropagation "github.com/vseinstrumentiru/lego/internal/monitor/propagation/jaegerwrap"
 	"github.com/vseinstrumentiru/lego/internal/monitor/telemetry"
 	"github.com/vseinstrumentiru/lego/pkg/build"
 	"github.com/vseinstrumentiru/lego/pkg/lego"

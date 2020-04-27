@@ -4,6 +4,7 @@ import (
 	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
 	"github.com/vseinstrumentiru/lego/pkg/lego"
+	"os"
 	"time"
 )
 
@@ -27,9 +28,19 @@ func New(p lego.Process, dsn string) (*SentryHandler, error) {
 		Dsn:              dsn,
 		Debug:            p.IsDebug(),
 		AttachStacktrace: true,
-		ServerName:       serverName,
+		ServerName:       p.Name(),
 		Environment:      p.Env(),
 		Release:          release,
+	})
+
+	host, _ := os.Hostname()
+	dataCenter := p.DataCenterName()
+	branch := p.Build().Version
+
+	sentry.ConfigureScope(func(scope *sentry.Scope) {
+		scope.SetTag("data-center", dataCenter)
+		scope.SetTag("branch", branch)
+		scope.SetTag("host", host)
 	})
 
 	if err != nil {

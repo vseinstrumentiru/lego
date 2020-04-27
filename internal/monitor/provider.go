@@ -8,6 +8,8 @@ import (
 	health "github.com/AppsFlyer/go-sundheit"
 	"github.com/newrelic/newrelic-opencensus-exporter-go/nrcensus"
 	lepropagation "github.com/vseinstrumentiru/lego/internal/monitor/propagation"
+	"strings"
+
 	// jaegerPropagation "contrib.go.opencensus.io/exporter/jaeger/propagation"
 	jaegerPropagation "github.com/vseinstrumentiru/lego/internal/monitor/propagation/jaegerwrap"
 	"github.com/vseinstrumentiru/lego/internal/monitor/telemetry"
@@ -75,7 +77,7 @@ func Provide(p lego.Process, config Config) (*http.ServeMux, health.Health) {
 		p.Info("prometheus exporter enabled")
 
 		exporter, err := prometheus.NewExporter(prometheus.Options{
-			Namespace: p.Name(),
+			Namespace: strings.ReplaceAll(p.Name(), "-", "_"),
 			OnError: emperror.WithDetails(
 				p.Handler(),
 				"component", "opencensus",

@@ -12,6 +12,7 @@ type Process interface {
 	Name() string
 	DataCenterName() string
 	Build() build.Info
+	Env() string
 	IsDebug() bool
 
 	Listen(network, addr string) (net.Listener, error)

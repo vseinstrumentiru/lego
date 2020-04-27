@@ -32,7 +32,7 @@ func newServer(name string, cfg lego.Config) *server {
 	{
 		srv.Config, err = config.Provide(cfg, config.WithDefaultName(name))
 		logger := log.Provide(srv.Config.Monitor.Log, srv.Config.Env, srv.Config.Name)
-		handler := errorhandler.Provide(srv.Config.Monitor.Errorhandler, logger)
+		handler := errorhandler.Provide(srv, srv.Config.Monitor.Errorhandler, logger)
 
 		srv.LogErr = lego.NewLogErr(logger, handler)
 
@@ -82,6 +82,10 @@ func (s *server) Build() build.Info {
 
 func (s *server) IsDebug() bool {
 	return s.Config.Debug
+}
+
+func (s *server) Env() string {
+	return s.Config.Env
 }
 
 func (s *server) DataCenterName() string {

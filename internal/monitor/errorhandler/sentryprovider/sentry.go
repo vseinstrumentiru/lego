@@ -17,13 +17,19 @@ func New(p lego.Process, dsn string) (*SentryHandler, error) {
 		serverName += ":" + p.DataCenterName()
 	}
 
+	release := p.Build().Version
+	if release != "" {
+		release += "@"
+	}
+	release += p.Build().CommitHash
+
 	err := sentry.Init(sentry.ClientOptions{
 		Dsn:              dsn,
 		Debug:            p.IsDebug(),
 		AttachStacktrace: true,
 		ServerName:       serverName,
 		Environment:      p.Env(),
-		Release:          p.Build().Version + "@" + p.Build().CommitHash,
+		Release:          release,
 	})
 
 	if err != nil {

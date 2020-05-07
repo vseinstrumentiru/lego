@@ -3,6 +3,7 @@ package lego
 import (
 	"context"
 	"emperror.dev/emperror"
+	"fmt"
 	"logur.dev/logur"
 )
 
@@ -143,4 +144,31 @@ func (l *logErr) WithDetails(details ...interface{}) LogErr {
 		ErrorHandlerFacade: emperror.WithDetails(l.ErrorHandlerFacade, details...),
 		extractor:          l.extractor,
 	}
+}
+
+type LogErrF interface {
+	LogErr
+	Errorf(format string, v ...interface{})
+	Warnf(format string, v ...interface{})
+	Debugf(format string, v ...interface{})
+}
+
+type logErrF struct {
+	LogErr
+}
+
+func NewLogErrF(logErr LogErr) *logErrF {
+	return &logErrF{LogErr: logErr}
+}
+
+func (l *logErrF) Errorf(format string, v ...interface{}) {
+	l.Error(fmt.Sprintf(format, v...))
+}
+
+func (l *logErrF) Warnf(format string, v ...interface{}) {
+	l.Warn(fmt.Sprintf(format, v...))
+}
+
+func (l *logErrF) Debugf(format string, v ...interface{}) {
+	l.Debug(fmt.Sprintf(format, v...))
 }

@@ -6,6 +6,7 @@ require (
 	contrib.go.opencensus.io/exporter/jaeger v0.2.0
 	contrib.go.opencensus.io/exporter/ocagent v0.6.0
 	contrib.go.opencensus.io/exporter/prometheus v0.1.0
+	contrib.go.opencensus.io/integrations/ocsql v0.1.5
 	emperror.dev/emperror v0.32.0
 	emperror.dev/errors v0.7.0
 	emperror.dev/handler/logur v0.4.0
@@ -18,6 +19,7 @@ require (
 	github.com/getsentry/sentry-go v0.6.0
 	github.com/go-kit/kit v0.10.0
 	github.com/go-resty/resty/v2 v2.2.0
+	github.com/go-sql-driver/mysql v1.5.0
 	github.com/gogo/protobuf v1.3.1 // indirect
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/golang/protobuf v1.4.0 // indirect

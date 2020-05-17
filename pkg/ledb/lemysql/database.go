@@ -10,6 +10,9 @@ import (
 
 // NewConnector returns a new database connector for the application.
 func NewConnector(config Config) (driver.Connector, error) {
+	if config.Params == nil {
+		config.Params = make(map[string]string)
+	}
 	// Set some mandatory parameters
 	config.Params["parseTime"] = "true"
 	config.Params["rejectReadOnly"] = "true"

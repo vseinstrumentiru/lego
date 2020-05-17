@@ -91,3 +91,7 @@ func (s *server) Env() string {
 func (s *server) DataCenterName() string {
 	return s.Config.DataCenter
 }
+
+func (s *server) RegisterCheck(cfg *health.Config) error {
+	return s.Health.RegisterCheck(cfg)
+}

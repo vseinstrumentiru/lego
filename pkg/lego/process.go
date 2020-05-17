@@ -1,6 +1,7 @@
 package lego
 
 import (
+	health "github.com/AppsFlyer/go-sundheit"
 	"github.com/vseinstrumentiru/lego/pkg/build"
 	"net"
 	"time"
@@ -17,5 +18,6 @@ type Process interface {
 
 	Listen(network, addr string) (net.Listener, error)
 	Background(execute func() error, interrupt func(error))
+	RegisterCheck(cfg *health.Config) error
 	ShutdownTimeout() time.Duration
 }

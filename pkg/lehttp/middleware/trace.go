@@ -25,9 +25,11 @@ func (w *traceWriter) Write(b []byte) (int, error) {
 }
 
 type TraceRequestOptions struct {
-	LogRequest    bool
-	LogResponse   bool
-	HeadersToTags map[string]string
+	LogRequest        bool
+	RequestBodyLimit  int
+	LogResponse       bool
+	ResponseBodyLimit int
+	HeadersToTags     map[string]string
 }
 
 func TraceRequestResponse(opt TraceRequestOptions) func(http.Handler) http.Handler {
@@ -47,7 +49,7 @@ func TraceRequestResponse(opt TraceRequestOptions) func(http.Handler) http.Handl
 			}
 
 			if opt.LogRequest {
-				var reqLog string
+				var bodyBytes []byte
 				if r.Method == http.MethodGet {
 					req := struct {
 						Query string            `json:"query"`
@@ -56,14 +58,19 @@ func TraceRequestResponse(opt TraceRequestOptions) func(http.Handler) http.Handl
 						Query: r.URL.RawQuery,
 						Vars:  mux.Vars(r),
 					}
-					bodyBytes, _ := json.Marshal(req)
-					reqLog = string(bodyBytes)
+					bodyBytes, _ = json.Marshal(req)
+
 				} else {
-					bodyBytes, _ := ioutil.ReadAll(r.Body)
+					bodyBytes, _ = ioutil.ReadAll(r.Body)
 					_ = r.Body.Close() //  must close
 					r.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
-					reqLog = string(bodyBytes)
 				}
+
+				if opt.RequestBodyLimit > 0 && len(bodyBytes) > opt.RequestBodyLimit {
+					bodyBytes = bodyBytes[:opt.RequestBodyLimit-1]
+				}
+
+				reqLog := string(bodyBytes)
 
 				span.Annotate(
 					[]trace.Attribute{
@@ -83,9 +90,15 @@ func TraceRequestResponse(opt TraceRequestOptions) func(http.Handler) http.Handl
 			}
 			next.ServeHTTP(tw, r)
 
+			var bodyBytes []byte
+			bodyBytes = tw.buf
+			if opt.ResponseBodyLimit > 0 && len(bodyBytes) > opt.ResponseBodyLimit {
+				bodyBytes = bodyBytes[:opt.ResponseBodyLimit-1]
+			}
+
 			span.Annotate(
 				[]trace.Attribute{
-					trace.StringAttribute("response", string(tw.buf)),
+					trace.StringAttribute("response", string(bodyBytes)),
 				},
 				"response log",
 			)

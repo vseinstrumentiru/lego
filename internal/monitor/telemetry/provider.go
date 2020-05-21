@@ -10,8 +10,7 @@ import (
 )
 
 func Provide(logger logur.LoggerFacade, info build.Info) (*http.ServeMux, health.Health) {
-	telemetryRouter := http.NewServeMux()
-	http.DefaultServeMux = telemetryRouter
+	telemetryRouter := http.DefaultServeMux
 	telemetryRouter.Handle("/buildinfo", build.Handler(info))
 	zpages.Handle(telemetryRouter, "/debug")
 

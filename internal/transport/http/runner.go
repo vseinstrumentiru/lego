@@ -2,6 +2,7 @@ package http
 
 import (
 	"emperror.dev/emperror"
+	"emperror.dev/errors"
 	"github.com/gorilla/mux"
 	appkitrun "github.com/sagikazarmark/appkit/run"
 	"github.com/sagikazarmark/ocmux"
@@ -23,7 +24,7 @@ func Run(p lego.Process, config Config) (*mux.Router, io.Closer) {
 	logger := logur.WithField(p.Log(), "server", name)
 
 	router := mux.NewRouter()
-	router.Use(ocmux.Middleware())
+	router.Use(recoverHandlerMiddleware(p.Handle), ocmux.Middleware())
 
 	traceCfg := additionalTagsConfig{DataCenter: p.DataCenterName()}
 
@@ -55,7 +56,7 @@ type additionalTagsConfig struct {
 	DataCenter string
 }
 
-func additionalTagsMiddleware(cfg additionalTagsConfig) func(http.Handler) http.Handler {
+func additionalTagsMiddleware(cfg additionalTagsConfig) mux.MiddlewareFunc {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			span := trace.FromContext(r.Context())
@@ -68,6 +69,20 @@ func additionalTagsMiddleware(cfg additionalTagsConfig) func(http.Handler) http.
 			span.AddAttributes(
 				trace.StringAttribute("server.dc", cfg.DataCenter),
 			)
+			next.ServeHTTP(w, r)
+		})
+	}
+}
+
+func recoverHandlerMiddleware(errorHandler func(err error)) mux.MiddlewareFunc {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			defer func() {
+				if err := recover(); err != nil {
+					errorHandler(errors.WithStack(err.(error)))
+				}
+			}()
+
 			next.ServeHTTP(w, r)
 		})
 	}

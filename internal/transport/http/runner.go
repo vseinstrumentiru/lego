@@ -79,7 +79,8 @@ func recoverHandlerMiddleware(errorHandler func(err error)) mux.MiddlewareFunc {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			defer func() {
 				if err := recover(); err != nil {
-					errorHandler(errors.WithStack(err.(error)))
+					errorHandler(errors.Wrap(err.(error), "http server panic"))
+					w.WriteHeader(http.StatusInternalServerError)
 				}
 			}()
 

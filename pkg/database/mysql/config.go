@@ -1,6 +1,7 @@
 package mysql
 
 import (
+	"contrib.go.opencensus.io/integrations/ocsql"
 	"emperror.dev/emperror"
 	"emperror.dev/errors"
 	"github.com/go-sql-driver/mysql"
@@ -11,6 +12,7 @@ import (
 
 type Config struct {
 	mysql.Config `mapstructure:",squash"`
+	Trace        ocsql.TraceOptions
 }
 
 func (c Config) SetDefaults(key string, env *viper.Viper, flag *pflag.FlagSet) {
@@ -27,6 +29,7 @@ func (c Config) SetDefaults(key string, env *viper.Viper, flag *pflag.FlagSet) {
 	env.SetDefault(key+".parseTime", true)
 	env.SetDefault(key+".rejectReadOnly", true)
 	env.SetDefault(key+".allowNativePasswords", true)
+	env.SetDefault(key+".trace.query", true)
 	return
 }
 

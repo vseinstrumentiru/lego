@@ -16,15 +16,6 @@ func NewConnector(config Config) (driver.Connector, error) {
 
 	return ocsql.WrapConnector(
 		connector,
-		ocsql.WithOptions(ocsql.TraceOptions{
-			AllowRoot:    false,
-			Ping:         true,
-			RowsNext:     true,
-			RowsClose:    true,
-			RowsAffected: true,
-			LastInsertID: true,
-			Query:        true,
-			QueryParams:  false,
-		}),
+		ocsql.WithOptions(config.Trace),
 	), nil
 }

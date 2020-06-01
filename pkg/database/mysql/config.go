@@ -26,6 +26,7 @@ func (c Config) SetDefaults(key string, env *viper.Viper, flag *pflag.FlagSet) {
 
 	env.SetDefault(key+".parseTime", true)
 	env.SetDefault(key+".rejectReadOnly", true)
+	env.SetDefault(key+".allowNativePasswords", true)
 	return
 }
 

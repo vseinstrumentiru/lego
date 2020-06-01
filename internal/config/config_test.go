@@ -4,6 +4,7 @@ import (
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
+	"os"
 	"testing"
 )
 
@@ -24,12 +25,13 @@ func setDefaults(env *viper.Viper, flag *pflag.FlagSet) {
 	env.SetDefault("app.some.val2", "val2-default")
 	env.SetDefault("srv.name", "test-default")
 	env.SetDefault("srv.events.nats.clientid", "test")
-
-	env.AddConfigPath("./test")
-	env.SetConfigName("test")
 }
 
 func Test_ConfigDefaultsWithoutApp(t *testing.T) {
+	dir, _ := os.Getwd()
+	_ = os.Chdir(dir + "/test")
+	defer os.Chdir(dir)
+
 	ass := assert.New(t)
 
 	srv, err := Provide(nil, setDefaults)
@@ -49,6 +51,10 @@ func Test_ConfigDefaultsWithNillPointerApp(t *testing.T) {
 }
 
 func Test_ConfigDefaultsWithPointerApp(t *testing.T) {
+	dir, _ := os.Getwd()
+	_ = os.Chdir(dir + "/test")
+	defer os.Chdir(dir)
+
 	ass := assert.New(t)
 	srv, err := Provide(&app{})
 
@@ -62,6 +68,10 @@ func Test_ConfigDefaultsWithPointerApp(t *testing.T) {
 }
 
 func Test_ConfigDefaultsWithApp(t *testing.T) {
+	dir, _ := os.Getwd()
+	_ = os.Chdir(dir + "/test")
+	defer os.Chdir(dir)
+
 	ass := assert.New(t)
 	var a app
 	srv, err := Provide(a)

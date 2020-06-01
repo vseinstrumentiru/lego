@@ -92,18 +92,6 @@ func buildConfig(v *viper.Viper, customCfg lego.Config, customCfgPrefix string) 
 
 type Option func(env *viper.Viper, flags *pflag.FlagSet)
 
-func setServerCfgDefaults() Option {
-	return func(env *viper.Viper, flags *pflag.FlagSet) {
-		(Config{}).SetDefaults(env, flags)
-	}
-}
-
-func setCustomCfgDefaults(customCfg lego.Config) Option {
-	return func(env *viper.Viper, flags *pflag.FlagSet) {
-		customCfg.SetDefaults(env, flags)
-	}
-}
-
 func WithDefaultName(name string) Option {
 	return func(env *viper.Viper, flags *pflag.FlagSet) {
 		env.SetDefault("srv.name", name)
@@ -112,15 +100,6 @@ func WithDefaultName(name string) Option {
 
 func Provide(customCfg lego.Config, options ...Option) (Config, error) {
 	v, p := configure()
-	var hasAppCfg bool
-	customCfg, hasAppCfg = prepareCustomConfig(customCfg)
-
-	defaultOptions := []Option{setServerCfgDefaults()}
-	if hasAppCfg {
-		defaultOptions = append(defaultOptions, setCustomCfgDefaults(customCfg))
-	}
-
-	options = append(defaultOptions, options...)
 
 	for _, opt := range options {
 		opt(v, p)
@@ -137,6 +116,15 @@ func Provide(customCfg lego.Config, options ...Option) (Config, error) {
 	returnErr := v.ReadInConfig()
 	if !IsFileNotFound(returnErr) {
 		emperror.Panic(errors.Wrap(returnErr, "failed to read configuration"))
+	}
+
+	(Config{}).SetDefaults(v, p)
+
+	var hasAppCfg bool
+	customCfg, hasAppCfg = prepareCustomConfig(customCfg)
+
+	if hasAppCfg {
+		customCfg.SetDefaults(v, p)
 	}
 
 	cfg, err := buildConfig(v, customCfg, defaultEnvPrefix)

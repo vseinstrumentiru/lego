@@ -36,7 +36,7 @@ func Run(p lego.Process, config Config) (*mux.Router, io.Closer) {
 				Sampler:  trace.AlwaysSample(),
 				SpanKind: trace.SpanKindServer,
 			},
-			IsPublicEndpoint: true,
+			IsPublicEndpoint: config.IsPublic,
 		},
 		ErrorLog: log.NewErrorStandardLogger(logger),
 	}

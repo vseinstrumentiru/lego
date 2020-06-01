@@ -10,6 +10,11 @@ type Config interface {
 	SetDefaults(env *viper.Viper, flag *pflag.FlagSet)
 }
 
+type ConfigWithKey interface {
+	Validatable
+	SetDefaults(key string, env *viper.Viper, flag *pflag.FlagSet)
+}
+
 type ConfigWithCustomEnvPrefix interface {
 	Config
 	GetEnvPrefix() string

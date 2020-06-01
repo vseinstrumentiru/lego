@@ -15,19 +15,18 @@ require (
 	github.com/ThreeDotsLabs/watermill-nats v1.0.5
 	github.com/cenkalti/backoff/v3 v3.2.2 // indirect
 	github.com/cloudflare/tableflip v1.0.0
+	github.com/facebookincubator/ent v0.0.0-00010101000000-000000000000
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/getsentry/sentry-go v0.6.0
 	github.com/go-kit/kit v0.10.0
 	github.com/go-resty/resty/v2 v2.2.0
-	github.com/go-sql-driver/mysql v1.5.0
+	github.com/go-sql-driver/mysql v1.5.1-0.20200311113236-681ffa848bae
 	github.com/gogo/protobuf v1.3.1 // indirect
-	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/golang/protobuf v1.4.0 // indirect
 	github.com/gorilla/mux v1.7.4
 	github.com/grpc-ecosystem/grpc-gateway v1.14.4 // indirect
 	github.com/hashicorp/go-multierror v1.1.0 // indirect
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
-	github.com/mitchellh/mapstructure v1.2.2 // indirect
 	github.com/nats-io/nats.go v1.9.2 // indirect
 	github.com/nats-io/stan.go v0.6.0
 	github.com/newrelic/newrelic-opencensus-exporter-go v0.4.0
@@ -54,7 +53,6 @@ require (
 	golang.org/x/crypto v0.0.0-20200423211502-4bdfaf469ed5 // indirect
 	golang.org/x/lint v0.0.0-20200302205851-738671d3881b // indirect
 	golang.org/x/net v0.0.0-20200425230154-ff2c4b7c35a0 // indirect
-	golang.org/x/sync v0.0.0-20200317015054-43a5402ce75a // indirect
 	golang.org/x/sys v0.0.0-20200420163511-1957bb5e6d1f // indirect
 	golang.org/x/tools v0.0.0-20200426102838-f3a5411a4c3b // indirect
 	google.golang.org/api v0.22.0 // indirect
@@ -66,3 +64,5 @@ require (
 	logur.dev/integration/watermill v0.5.0
 	logur.dev/logur v0.16.2
 )
+
+replace github.com/facebookincubator/ent => github.com/lebrains/ent v0.2.2-0.20200517191904-232986ceed87

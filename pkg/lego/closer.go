@@ -29,8 +29,8 @@ func (c CloserGroup) Add(closer io.Closer) {
 
 func (c CloserGroup) Close() error {
 	var err error
-	for _, fn := range c.closers {
-		err = errors.Append(err, fn.Close())
+	for i := len(c.closers) - 1; i >= 0; i-- {
+		err = errors.Append(err, c.closers[i].Close())
 	}
 
 	return err

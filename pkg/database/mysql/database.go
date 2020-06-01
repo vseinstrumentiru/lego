@@ -1,29 +1,15 @@
-package lemysql
+package mysql
 
 import (
-	"database/sql/driver"
-
 	"contrib.go.opencensus.io/integrations/ocsql"
+	"database/sql/driver"
 	"emperror.dev/errors"
 	"github.com/go-sql-driver/mysql"
 )
 
 // NewConnector returns a new database connector for the application.
 func NewConnector(config Config) (driver.Connector, error) {
-	if config.Params == nil {
-		config.Params = make(map[string]string)
-	}
-	// Set some mandatory parameters
-	config.Params["parseTime"] = "true"
-	config.Params["rejectReadOnly"] = "true"
-
-	// TODO: fill in the config instead of playing with DSN
-	conf, err := mysql.ParseDSN(config.DSN())
-	if err != nil {
-		return nil, errors.WithStack(err)
-	}
-
-	connector, err := mysql.NewConnector(conf)
+	connector, err := mysql.NewConnector(&config.Config)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}

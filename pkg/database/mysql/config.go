@@ -20,6 +20,10 @@ func (c Config) SetDefaults(key string, env *viper.Viper, flag *pflag.FlagSet) {
 		emperror.Panic(errors.New("config key is empty"))
 	}
 
+	if pass := env.GetString("app.db.pass"); pass != "" {
+		env.Set("app.db.passwd", pass)
+	}
+
 	env.SetDefault(key+".parseTime", true)
 	env.SetDefault(key+".rejectReadOnly", true)
 	return

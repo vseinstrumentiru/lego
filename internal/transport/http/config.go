@@ -18,7 +18,6 @@ func (c Config) SetDefaults(env *viper.Viper, flag *pflag.FlagSet) {
 	flag.Int("http-port", 8080, "HTTP server port")
 	_ = env.BindPFlag("srv.http.port", flag.Lookup("http-port"))
 	env.SetDefault("srv.http.port", 8080)
-	env.SetDefault("srv.http.isPublic", true)
 }
 
 func (c Config) Validate() (err error) {

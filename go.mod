@@ -15,7 +15,7 @@ require (
 	github.com/ThreeDotsLabs/watermill-nats v1.0.5
 	github.com/cenkalti/backoff/v3 v3.2.2 // indirect
 	github.com/cloudflare/tableflip v1.0.0
-	github.com/facebookincubator/ent v0.0.0-00010101000000-000000000000
+	github.com/facebookincubator/ent v0.2.2
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/getsentry/sentry-go v0.6.0
 	github.com/go-kit/kit v0.10.0
@@ -64,5 +64,3 @@ require (
 	logur.dev/integration/watermill v0.5.0
 	logur.dev/logur v0.16.2
 )
-
-replace github.com/facebookincubator/ent => github.com/lebrains/ent v0.2.2-0.20200517191904-232986ceed87

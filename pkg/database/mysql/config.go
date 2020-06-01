@@ -22,6 +22,8 @@ func (c Config) SetDefaults(key string, env *viper.Viper, flag *pflag.FlagSet) {
 
 	env.SetDefault(key+".parseTime", true)
 	env.SetDefault(key+".rejectReadOnly", true)
+	env.RegisterAlias(key+".passwd", key+".pass")
+	env.RegisterAlias(key+".addr", key+".host")
 	return
 }
 

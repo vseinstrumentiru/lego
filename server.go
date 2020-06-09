@@ -4,16 +4,23 @@ import (
 	health "github.com/AppsFlyer/go-sundheit"
 	"github.com/cloudflare/tableflip"
 	"github.com/oklog/run"
-	"github.com/vseinstrumentiru/lego/internal/config"
-	"github.com/vseinstrumentiru/lego/internal/monitor"
-	"github.com/vseinstrumentiru/lego/internal/monitor/errorhandler"
-	"github.com/vseinstrumentiru/lego/internal/monitor/log"
-	"github.com/vseinstrumentiru/lego/pkg/build"
+	lego2 "github.com/vseinstrumentiru/lego/internal/lego"
+	"github.com/vseinstrumentiru/lego/internal/lego/build"
+	"github.com/vseinstrumentiru/lego/internal/lego/config"
+	"github.com/vseinstrumentiru/lego/internal/lego/monitor"
+	"github.com/vseinstrumentiru/lego/internal/lego/monitor/errorhandler"
+	"github.com/vseinstrumentiru/lego/internal/lego/monitor/log"
 	"github.com/vseinstrumentiru/lego/pkg/lego"
 	"net"
 	"net/http"
 	"os"
 	"time"
+)
+
+var (
+	Version    string
+	CommitHash string
+	BuildDate  string
 )
 
 type server struct {
@@ -25,9 +32,13 @@ type server struct {
 	Runner    run.Group
 }
 
-func newServer(name string, cfg lego.Config) *server {
+func newServer(name string, cfg lego2.Config) *server {
 	srv := &server{}
 	var err error
+
+	build.Version = Version
+	build.BuildDate = BuildDate
+	build.CommitHash = CommitHash
 
 	{
 		srv.Config, err = config.Provide(cfg, config.WithDefaultName(name))

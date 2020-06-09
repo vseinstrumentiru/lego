@@ -1,0 +1,14 @@
+srv:
+  name: test
+  http:
+    addr: 8080
+  events:
+    providers:
+      nats:
+        ttt:
+          addr: "nats://testaddr"
+          clientId: "test"
+app:
+  name: app-test
+  some:
+    val1: val1

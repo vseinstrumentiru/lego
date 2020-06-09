@@ -1,5 +1,5 @@
 package lego
 
-type Validatable interface {
-	Validate() error
-}
+import "github.com/vseinstrumentiru/lego/internal/lego"
+
+type Validatable = lego.Validatable

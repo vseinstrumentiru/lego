@@ -2,6 +2,7 @@ package LeGo
 
 import (
 	"context"
+	lego2 "github.com/vseinstrumentiru/lego/internal/lego"
 	"github.com/vseinstrumentiru/lego/pkg/lego"
 	"io"
 	"testing"
@@ -20,7 +21,7 @@ func (a *app) SetLogErr(logger lego.LogErr) {
 	a.LogErr = logger
 }
 
-func (a *app) Register(p lego.Process) (io.Closer, error) {
+func (a *app) Register(p lego2.Process) (io.Closer, error) {
 	a.Info("application registered")
 
 	return nil, nil

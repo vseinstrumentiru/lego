@@ -8,10 +8,11 @@ import (
 	"github.com/oklog/run"
 	appkiterrors "github.com/sagikazarmark/appkit/errors"
 	appkitrun "github.com/sagikazarmark/appkit/run"
-	"github.com/vseinstrumentiru/lego/internal/monitor/telemetry"
-	"github.com/vseinstrumentiru/lego/internal/transport/event"
-	"github.com/vseinstrumentiru/lego/internal/transport/grpc"
-	"github.com/vseinstrumentiru/lego/internal/transport/http"
+	lego2 "github.com/vseinstrumentiru/lego/internal/lego"
+	"github.com/vseinstrumentiru/lego/internal/lego/monitor/telemetry"
+	"github.com/vseinstrumentiru/lego/internal/lego/transport/event"
+	"github.com/vseinstrumentiru/lego/internal/lego/transport/grpc"
+	"github.com/vseinstrumentiru/lego/internal/lego/transport/http"
 	"github.com/vseinstrumentiru/lego/pkg/contexttool"
 	"github.com/vseinstrumentiru/lego/pkg/lego"
 	"logur.dev/logur"
@@ -64,7 +65,7 @@ func Run(ctx context.Context, app lego.App) {
 		closer, err := cApp.Register(s)
 		emperror.Panic(err)
 
-		defer lego.Close(closer)
+		defer lego2.Close(closer)
 	}
 
 	if httpApp, ok := app.(lego.AppWithHttp); ok {
@@ -93,21 +94,22 @@ func Run(ctx context.Context, app lego.App) {
 
 	{
 		pubApp, pubOk := app.(lego.AppWithPublishers)
-		subApp, subOk := app.(lego.AppWithSubscribers)
+		subApp, subOk := app.(lego.AppWithEventHandlers)
 		pubOk, subOk = pubOk && s.Config.Events.Enabled, subOk && s.Config.Events.Enabled
 
 		if pubOk || subOk {
-			server := event.Run(s, s.Config.Events)
-			defer server.Close()
+			em, exec, interrupt := event.Run(s, s.Config.Events)
+			defer em.Close()
 
 			if pubOk {
-				err := pubApp.RegisterEventDispatcher(server.Publisher)
+				err := pubApp.RegisterEventDispatcher(em.Publisher())
 				emperror.Panic(err)
 			}
 
 			if subOk {
-				err := subApp.RegisterEventHandlers(server.Router, server.Subscriber)
+				err := subApp.RegisterEventHandlers(em)
 				emperror.Panic(err)
+				s.Background(exec, interrupt)
 			}
 		}
 	}

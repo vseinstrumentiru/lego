@@ -10,13 +10,13 @@ import (
 	"github.com/AppsFlyer/go-sundheit/checks"
 	"github.com/facebookincubator/ent/dialect"
 	entsql "github.com/facebookincubator/ent/dialect/sql"
+	lego2 "github.com/vseinstrumentiru/lego/internal/lego"
 	"github.com/vseinstrumentiru/lego/pkg/database/mysql"
-	"github.com/vseinstrumentiru/lego/pkg/lego"
 	"reflect"
 	"time"
 )
 
-func NewSQLConnection(p lego.Process, config interface{}) (conn *sql.DB, closer lego.CloserGroup) {
+func NewSQLConnection(p lego2.Process, config interface{}) (conn *sql.DB, closer lego2.CloserGroup) {
 	var connector driver.Connector
 	var err error
 
@@ -32,7 +32,7 @@ func NewSQLConnection(p lego.Process, config interface{}) (conn *sql.DB, closer 
 	closer.Add(conn)
 	stopStats := ocsql.RecordStats(conn, 5*time.Second)
 	// Record DB stats every 5 seconds until we exit
-	closer.Add(lego.CloseFn(func() error {
+	closer.Add(lego2.CloseFn(func() error {
 		stopStats()
 		return nil
 	}))
@@ -45,7 +45,7 @@ func NewSQLConnection(p lego.Process, config interface{}) (conn *sql.DB, closer 
 	return
 }
 
-func NewEntDriver(p lego.Process, config interface{}) (drv dialect.Driver, closer lego.CloserGroup) {
+func NewEntDriver(p lego2.Process, config interface{}) (drv dialect.Driver, closer lego2.CloserGroup) {
 	var conn *sql.DB
 
 	conn, closer = NewSQLConnection(p, config)

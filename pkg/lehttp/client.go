@@ -7,7 +7,7 @@ import (
 	"github.com/go-kit/kit/transport/http/jsonrpc"
 	"github.com/go-resty/resty/v2"
 	"github.com/shurcooL/graphql"
-	"github.com/vseinstrumentiru/lego/internal/monitor/propagation"
+	"github.com/vseinstrumentiru/lego/internal/lego/monitor/propagation"
 	"go.opencensus.io/plugin/ochttp"
 	"go.opencensus.io/trace"
 	"net/http"

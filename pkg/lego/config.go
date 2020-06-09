@@ -1,21 +1,11 @@
 package lego
 
 import (
-	"github.com/spf13/pflag"
-	"github.com/spf13/viper"
+	"github.com/vseinstrumentiru/lego/internal/lego"
 )
 
-type Config interface {
-	Validatable
-	SetDefaults(env *viper.Viper, flag *pflag.FlagSet)
-}
+type Config = lego.Config
 
-type ConfigWithKey interface {
-	Validatable
-	SetDefaults(key string, env *viper.Viper, flag *pflag.FlagSet)
-}
+type ConfigWithKey = lego.ConfigWithKey
 
-type ConfigWithCustomEnvPrefix interface {
-	Config
-	GetEnvPrefix() string
-}
+type ConfigWithCustomEnvPrefix = lego.ConfigWithCustomEnvPrefix

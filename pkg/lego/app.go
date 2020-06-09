@@ -3,6 +3,7 @@ package lego
 import (
 	"github.com/ThreeDotsLabs/watermill/message"
 	"github.com/gorilla/mux"
+	"github.com/vseinstrumentiru/lego/internal/lego"
 	"go.opencensus.io/stats/view"
 	"google.golang.org/grpc"
 	"io"
@@ -14,7 +15,7 @@ type App interface {
 }
 
 type AppWithConfig interface {
-	WithCustomConfig
+	lego.WithCustomConfig
 }
 
 type AppWithHttp interface {
@@ -25,8 +26,8 @@ type AppWithGrpc interface {
 	RegisterGRPC(server *grpc.Server) error
 }
 
-type AppWithSubscribers interface {
-	RegisterEventHandlers(router *message.Router, subscriber message.Subscriber) error
+type AppWithEventHandlers interface {
+	RegisterEventHandlers(em EventManager) error
 }
 
 type AppWithPublishers interface {
@@ -38,5 +39,5 @@ type AppWithStats interface {
 }
 
 type AppWithRegistration interface {
-	Register(p Process) (io.Closer, error)
+	Register(p lego.Process) (io.Closer, error)
 }

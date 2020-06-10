@@ -11,7 +11,7 @@ import (
 
 type App interface {
 	GetName() string
-	SetLogErr(logErr lego.LogErr)
+	SetLogErr(logErr LogErr)
 }
 
 type AppWithConfig interface {

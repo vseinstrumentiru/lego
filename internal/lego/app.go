@@ -3,7 +3,6 @@ package lego
 import (
 	"github.com/ThreeDotsLabs/watermill/message"
 	"github.com/gorilla/mux"
-	"github.com/vseinstrumentiru/lego/pkg/lego"
 	"go.opencensus.io/stats/view"
 	"google.golang.org/grpc"
 	"io"
@@ -27,7 +26,7 @@ type AppWithGrpc interface {
 }
 
 type AppWithEventHandlers interface {
-	RegisterEventHandlers(em lego.EventManager) error
+	RegisterEventHandlers(em EventManager) error
 }
 
 type AppWithPublishers interface {

@@ -2,13 +2,12 @@ package LeGo
 
 import (
 	lego2 "github.com/vseinstrumentiru/lego/internal/lego"
-	"github.com/vseinstrumentiru/lego/pkg/lego"
 )
 
-type App = lego.App
+type App = lego2.App
 
 func extractConfig(target interface{}) lego2.Config {
-	if cTarget, ok := target.(lego.AppWithConfig); ok {
+	if cTarget, ok := target.(lego2.AppWithConfig); ok {
 		return cTarget.GetConfig()
 	}
 
@@ -16,7 +15,7 @@ func extractConfig(target interface{}) lego2.Config {
 }
 
 func provideConfig(target interface{}, cfg lego2.Config) {
-	if cTarget, ok := target.(lego.AppWithConfig); ok {
+	if cTarget, ok := target.(lego2.AppWithConfig); ok {
 		cTarget.SetConfig(cfg)
 	}
 }

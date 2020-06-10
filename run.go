@@ -8,13 +8,12 @@ import (
 	"github.com/oklog/run"
 	appkiterrors "github.com/sagikazarmark/appkit/errors"
 	appkitrun "github.com/sagikazarmark/appkit/run"
-	lego2 "github.com/vseinstrumentiru/lego/internal/lego"
+	"github.com/vseinstrumentiru/lego/internal/lego"
 	"github.com/vseinstrumentiru/lego/internal/lego/monitor/telemetry"
 	"github.com/vseinstrumentiru/lego/internal/lego/transport/event"
 	"github.com/vseinstrumentiru/lego/internal/lego/transport/grpc"
 	"github.com/vseinstrumentiru/lego/internal/lego/transport/http"
 	"github.com/vseinstrumentiru/lego/pkg/contexttool"
-	"github.com/vseinstrumentiru/lego/pkg/lego"
 	"logur.dev/logur"
 	"os"
 	"os/signal"
@@ -61,33 +60,36 @@ func Run(ctx context.Context, app lego.App) {
 		)
 	}
 
-	{
-		pubApp, pubOk := app.(lego.AppWithPublishers)
-		subApp, subOk := app.(lego.AppWithEventHandlers)
-		pubOk, subOk = pubOk && s.Config.Events.Enabled, subOk && s.Config.Events.Enabled
+	pubApp, pubOk := app.(lego.AppWithPublishers)
+	subApp, subOk := app.(lego.AppWithEventHandlers)
+	pubOk, subOk = pubOk && s.Config.Events.Enabled, subOk && s.Config.Events.Enabled
 
-		if pubOk || subOk {
-			em, exec, interrupt := event.Run(s, s.Config.Events)
-			defer em.Close()
+	if pubOk || subOk {
+		em, exec, interrupt := event.Run(s, s.Config.Events)
+		defer em.Close()
 
-			if pubOk {
-				err := pubApp.RegisterEventDispatcher(em.Publisher())
-				emperror.Panic(err)
-			}
-
-			if subOk {
-				err := subApp.RegisterEventHandlers(em)
-				emperror.Panic(err)
-				s.Background(exec, interrupt)
-			}
+		if pubOk {
+			err := pubApp.RegisterEventDispatcher(em.Publisher())
+			emperror.Panic(err)
 		}
-	}
 
-	if cApp, ok := app.(lego.AppWithRegistration); ok {
+		if cApp, ok := app.(lego.AppWithRegistration); ok {
+			closer, err := cApp.Register(s)
+			emperror.Panic(err)
+
+			defer lego.Close(closer)
+		}
+
+		if subOk {
+			err := subApp.RegisterEventHandlers(em)
+			emperror.Panic(err)
+			s.Background(exec, interrupt)
+		}
+	} else if cApp, ok := app.(lego.AppWithRegistration); ok {
 		closer, err := cApp.Register(s)
 		emperror.Panic(err)
 
-		defer lego2.Close(closer)
+		defer lego.Close(closer)
 	}
 
 	if httpApp, ok := app.(lego.AppWithHttp); ok {

@@ -1,43 +1,21 @@
 package lego
 
 import (
-	"github.com/ThreeDotsLabs/watermill/message"
-	"github.com/gorilla/mux"
 	"github.com/vseinstrumentiru/lego/internal/lego"
-	"go.opencensus.io/stats/view"
-	"google.golang.org/grpc"
-	"io"
 )
 
-type App interface {
-	GetName() string
-	SetLogErr(logErr LogErr)
-}
+type App = lego.App
 
-type AppWithConfig interface {
-	lego.WithCustomConfig
-}
+type AppWithConfig = lego.AppWithConfig
 
-type AppWithHttp interface {
-	RegisterHTTP(router *mux.Router) error
-}
+type AppWithHttp = lego.AppWithHttp
 
-type AppWithGrpc interface {
-	RegisterGRPC(server *grpc.Server) error
-}
+type AppWithGrpc = lego.AppWithGrpc
 
-type AppWithEventHandlers interface {
-	RegisterEventHandlers(em EventManager) error
-}
+type AppWithEventHandlers = lego.AppWithEventHandlers
 
-type AppWithPublishers interface {
-	RegisterEventDispatcher(publisher message.Publisher) error
-}
+type AppWithPublishers = lego.AppWithPublishers
 
-type AppWithStats interface {
-	GetStats() []*view.View
-}
+type AppWithStats = lego.AppWithStats
 
-type AppWithRegistration interface {
-	Register(p lego.Process) (io.Closer, error)
-}
+type AppWithRegistration = lego.AppWithRegistration

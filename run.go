@@ -61,6 +61,28 @@ func Run(ctx context.Context, app lego.App) {
 		)
 	}
 
+	{
+		pubApp, pubOk := app.(lego.AppWithPublishers)
+		subApp, subOk := app.(lego.AppWithEventHandlers)
+		pubOk, subOk = pubOk && s.Config.Events.Enabled, subOk && s.Config.Events.Enabled
+
+		if pubOk || subOk {
+			em, exec, interrupt := event.Run(s, s.Config.Events)
+			defer em.Close()
+
+			if pubOk {
+				err := pubApp.RegisterEventDispatcher(em.Publisher())
+				emperror.Panic(err)
+			}
+
+			if subOk {
+				err := subApp.RegisterEventHandlers(em)
+				emperror.Panic(err)
+				s.Background(exec, interrupt)
+			}
+		}
+	}
+
 	if cApp, ok := app.(lego.AppWithRegistration); ok {
 		closer, err := cApp.Register(s)
 		emperror.Panic(err)
@@ -90,28 +112,6 @@ func Run(ctx context.Context, app lego.App) {
 
 		err := grpcApp.RegisterGRPC(server)
 		emperror.Panic(err)
-	}
-
-	{
-		pubApp, pubOk := app.(lego.AppWithPublishers)
-		subApp, subOk := app.(lego.AppWithEventHandlers)
-		pubOk, subOk = pubOk && s.Config.Events.Enabled, subOk && s.Config.Events.Enabled
-
-		if pubOk || subOk {
-			em, exec, interrupt := event.Run(s, s.Config.Events)
-			defer em.Close()
-
-			if pubOk {
-				err := pubApp.RegisterEventDispatcher(em.Publisher())
-				emperror.Panic(err)
-			}
-
-			if subOk {
-				err := subApp.RegisterEventHandlers(em)
-				emperror.Panic(err)
-				s.Background(exec, interrupt)
-			}
-		}
 	}
 
 	// Setup signal handler

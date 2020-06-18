@@ -22,7 +22,7 @@ func Run(p lego2.Process, config Config) (*grpc.Server, io.Closer) {
 			Sampler:  trace.AlwaysSample(),
 			SpanKind: trace.SpanKindServer,
 		},
-		IsPublicEndpoint: true,
+		IsPublicEndpoint: config.IsPublic,
 	}))
 
 	addr := ":" + strconv.Itoa(config.Port)

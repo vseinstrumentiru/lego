@@ -9,6 +9,7 @@ import (
 
 type Config struct {
 	lego2.WithSwitch `mapstructure:",squash"`
+	IsPublic         bool
 
 	Port int
 }

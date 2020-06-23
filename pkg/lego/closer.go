@@ -10,3 +10,4 @@ func Close(i io.Closer) error {
 }
 
 type CloseFn = lego.CloserGroup
+type CloserGroup = lego.CloserGroup

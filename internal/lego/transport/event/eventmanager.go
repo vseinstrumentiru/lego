@@ -157,7 +157,9 @@ func newEventManager(logErr lego.LogErr, config Config) (_ *eventManager, err er
 		}
 
 		if cfg.Pub {
-			pub, pubErr := nats.NewStreamingPublisher(
+			var pub message.Publisher
+			var pubErr error
+			pub, pubErr = nats.NewStreamingPublisher(
 				nats.StreamingPublisherConfig{
 					ClusterID: cfg.ClusterID,
 					ClientID:  suffixer(cfg.ClientID + "_pub"),

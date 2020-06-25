@@ -14,6 +14,7 @@ import (
 	"github.com/vseinstrumentiru/lego/internal/lego"
 	"github.com/vseinstrumentiru/lego/internal/lego/transport/event/metrics"
 	"github.com/vseinstrumentiru/lego/pkg/eventtools/cloudevent"
+	"github.com/vseinstrumentiru/lego/pkg/lerr"
 	watermilllog "logur.dev/integration/watermill"
 	"os"
 	"regexp"
@@ -245,6 +246,18 @@ func newEventManager(logErr lego.LogErr, config Config) (_ *eventManager, err er
 	return em, err
 }
 
+func (e *eventManager) Publish(topic string, messages ...*message.Message) error {
+	err := e.publishers.Publish(topic, messages...)
+
+	if lerr.Like(err, "connection closed") {
+		e.Handle(err)
+		_ = e.Close()
+		emperror.Panic(err)
+	}
+
+	return err
+}
+
 func (e *eventManager) AddHandlers(
 	handlers []cqrs.EventHandler,
 	generateTopic func(eventName string) string,
@@ -272,7 +285,6 @@ func (e *eventManager) Publisher() message.Publisher {
 func (e *eventManager) Close() (err error) {
 	err = errors.Append(err, e.subscribers.Close())
 	err = errors.Append(err, e.publishers.Close())
-
 	return
 }
 

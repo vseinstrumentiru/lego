@@ -40,3 +40,7 @@ type AppWithStats interface {
 type AppWithRegistration interface {
 	Register(p Process) (io.Closer, error)
 }
+
+type AppWithRunner interface {
+	Run(terminate chan bool) error
+}

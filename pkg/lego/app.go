@@ -33,3 +33,7 @@ type AppWithStats interface {
 type AppWithRegistration interface {
 	lego.AppWithRegistration
 }
+
+type AppWithRunner interface {
+	lego.AppWithRunner
+}

@@ -116,6 +116,15 @@ func Run(ctx context.Context, app lego.App) {
 		emperror.Panic(err)
 	}
 
+	if runApp, ok := app.(lego.AppWithRunner); ok {
+		terminate := make(chan bool, 1)
+		s.Runner.Add(func() error {
+			return runApp.Run(terminate)
+		}, func(err error) {
+			terminate <- true
+		})
+	}
+
 	// Setup signal handler
 	s.Runner.Add(run.SignalHandler(ctx, syscall.SIGINT, syscall.SIGTERM))
 	// Setup graceful restart

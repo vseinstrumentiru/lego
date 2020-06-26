@@ -20,7 +20,7 @@ func Run(p lego.Process, config Config) (_ *eventManager, exec func() error, int
 	)
 
 	return em,
-		func() error { return em.router.Run(context.Background()) },
+		func() error { return em.Run(context.Background()) },
 		func(e error) {
 			p.Handle(e)
 			_ = em.router.Close()

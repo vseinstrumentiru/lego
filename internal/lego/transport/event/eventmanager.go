@@ -23,6 +23,7 @@ import (
 
 type publishers struct {
 	sync.Mutex
+	isStarted   bool
 	defaultName string
 	defaultPub  message.Publisher
 	items       map[string]message.Publisher
@@ -48,6 +49,10 @@ func (em *publishers) add(key, name string, publisher message.Publisher) (err er
 }
 
 func (em *publishers) Publish(topic string, messages ...*message.Message) error {
+	if !em.isStarted {
+		return errors.New("event manager not started yet")
+	}
+
 	var pub message.Publisher
 	var ok bool
 
@@ -56,6 +61,10 @@ func (em *publishers) Publish(topic string, messages ...*message.Message) error 
 		pub = em.defaultPub
 	}
 	em.Unlock()
+
+	if pub == nil {
+		return errors.New("undefined publisher")
+	}
 
 	return pub.Publish(topic, messages...)
 }
@@ -269,6 +278,11 @@ func (e *eventManager) AddHandlers(
 
 func (e *eventManager) Publisher() message.Publisher {
 	return e.publishers
+}
+
+func (e *eventManager) Run(ctx context.Context) (err error) {
+	e.publishers.isStarted = true
+	return e.router.Run(ctx)
 }
 
 func (e *eventManager) Close() (err error) {

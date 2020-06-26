@@ -6,16 +6,30 @@ import (
 
 type App = lego.App
 
-type AppWithConfig = lego.AppWithConfig
+type AppWithConfig interface {
+	lego.AppWithConfig
+}
 
-type AppWithHttp = lego.AppWithHttp
+type AppWithHttp interface {
+	lego.AppWithHttp
+}
 
-type AppWithGrpc = lego.AppWithGrpc
+type AppWithGrpc interface {
+	lego.AppWithGrpc
+}
 
-type AppWithEventHandlers = lego.AppWithEventHandlers
+type AppWithEventHandlers interface {
+	lego.AppWithEventHandlers
+}
 
-type AppWithPublishers = lego.AppWithPublishers
+type AppWithPublishers interface {
+	lego.AppWithPublishers
+}
 
-type AppWithStats = lego.AppWithStats
+type AppWithStats interface {
+	lego.AppWithStats
+}
 
-type AppWithRegistration = lego.AppWithRegistration
+type AppWithRegistration interface {
+	lego.AppWithRegistration
+}

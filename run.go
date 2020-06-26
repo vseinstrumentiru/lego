@@ -67,7 +67,6 @@ func Run(ctx context.Context, app lego.App) {
 	if pubOk || subOk {
 		em, exec, interrupt := event.Run(s, s.Config.Events)
 		defer em.Close()
-		s.Background(exec, interrupt)
 
 		if pubOk {
 			err := pubApp.RegisterEventDispatcher(em.Publisher())
@@ -84,6 +83,7 @@ func Run(ctx context.Context, app lego.App) {
 		if subOk {
 			err := subApp.RegisterEventHandlers(em)
 			emperror.Panic(err)
+			s.Background(exec, interrupt)
 		}
 	} else if cApp, ok := app.(lego.AppWithRegistration); ok {
 		closer, err := cApp.Register(s)

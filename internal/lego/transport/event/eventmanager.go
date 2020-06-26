@@ -23,7 +23,6 @@ import (
 
 type publishers struct {
 	sync.Mutex
-	isStarted   bool
 	defaultName string
 	defaultPub  message.Publisher
 	items       map[string]message.Publisher
@@ -49,10 +48,6 @@ func (em *publishers) add(key, name string, publisher message.Publisher) (err er
 }
 
 func (em *publishers) Publish(topic string, messages ...*message.Message) error {
-	if !em.isStarted {
-		return errors.New("event manager not started yet")
-	}
-
 	var pub message.Publisher
 	var ok bool
 
@@ -173,6 +168,7 @@ func newEventManager(logErr lego.LogErr, config Config) (_ *eventManager, err er
 					ClientID:  suffixer(cfg.ClientID + "_pub"),
 					StanOptions: []stan.Option{
 						stan.NatsURL(cfg.Addr),
+						stan.Pings(5, 10),
 					},
 					Marshaler: marshaller,
 				},
@@ -281,7 +277,6 @@ func (e *eventManager) Publisher() message.Publisher {
 }
 
 func (e *eventManager) Run(ctx context.Context) (err error) {
-	e.publishers.isStarted = true
 	return e.router.Run(ctx)
 }
 

@@ -4,11 +4,13 @@ import (
 	"context"
 	"emperror.dev/emperror"
 	"emperror.dev/errors"
+	"fmt"
 	"github.com/ThreeDotsLabs/watermill-nats/pkg/nats"
 	"github.com/ThreeDotsLabs/watermill/components/cqrs"
 	"github.com/ThreeDotsLabs/watermill/message"
 	"github.com/ThreeDotsLabs/watermill/message/router/middleware"
 	"github.com/ThreeDotsLabs/watermill/pubsub/gochannel"
+	originNats "github.com/nats-io/nats.go"
 	"github.com/nats-io/stan.go"
 	"github.com/sagikazarmark/kitx/correlation"
 	"github.com/vseinstrumentiru/lego/internal/lego"
@@ -162,13 +164,18 @@ func newEventManager(logErr lego.LogErr, config Config) (_ *eventManager, err er
 		if cfg.Pub {
 			var pub message.Publisher
 			var pubErr error
+			natsConn, conErr := originNats.Connect(cfg.Addr, natsConnOptions(logErr, cfg.PanicOnLost)...)
+
+			if err != nil {
+				err = errors.Append(err, conErr)
+			}
 			pub, pubErr = nats.NewStreamingPublisher(
 				nats.StreamingPublisherConfig{
 					ClusterID: cfg.ClusterID,
 					ClientID:  suffixer(cfg.ClientID + "_pub"),
 					StanOptions: []stan.Option{
-						stan.NatsURL(cfg.Addr),
-						stan.Pings(5, 10),
+						stan.NatsConn(natsConn),
+						stan.Pings(20, 10),
 					},
 					Marshaler: marshaller,
 				},
@@ -180,6 +187,12 @@ func newEventManager(logErr lego.LogErr, config Config) (_ *eventManager, err er
 		}
 
 		if cfg.Sub {
+			natsConn, conErr := originNats.Connect(cfg.Addr, natsConnOptions(logErr, cfg.PanicOnLost)...)
+
+			if err != nil {
+				err = errors.Append(err, conErr)
+			}
+
 			sub, subErr := nats.NewStreamingSubscriber(
 				nats.StreamingSubscriberConfig{
 					ClusterID:        cfg.ClusterID,
@@ -190,7 +203,8 @@ func newEventManager(logErr lego.LogErr, config Config) (_ *eventManager, err er
 					CloseTimeout:     cfg.CloseTimeout,
 					AckWaitTimeout:   cfg.AckWaitTimeout,
 					StanOptions: []stan.Option{
-						stan.NatsURL(cfg.Addr),
+						stan.NatsConn(natsConn),
+						stan.Pings(20, 10),
 					},
 					StanSubscriptionOptions: []stan.SubscriptionOption{
 						stan.DeliverAllAvailable(),
@@ -301,4 +315,32 @@ func hostSuffix(str string) string {
 	}
 
 	return str + "_" + regexp.MustCompile(`[^a-zA-Z0-9_\-]`).ReplaceAllString(name, "_")
+}
+
+func natsConnOptions(log lego.LogErr, panicOnLostConn bool, opts ...originNats.Option) []originNats.Option {
+	totalWait := 10 * time.Minute
+	reconnectDelay := time.Second
+
+	opts = append(opts, originNats.ReconnectWait(reconnectDelay))
+	opts = append(opts, originNats.MaxReconnects(int(totalWait/reconnectDelay)))
+	if panicOnLostConn {
+		opts = append(opts, originNats.DisconnectErrHandler(func(nc *originNats.Conn, err error) {
+			emperror.Panic(errors.Wrap(err, "nats disconnected"))
+		}))
+		opts = append(opts, originNats.ClosedHandler(func(nc *originNats.Conn) {
+			log.Error("Exiting, no servers available")
+		}))
+	} else {
+		opts = append(opts, originNats.DisconnectErrHandler(func(nc *originNats.Conn, err error) {
+			log.Info(fmt.Sprintf("Disconnected: will attempt reconnects for %.0fm", totalWait.Minutes()))
+		}))
+		opts = append(opts, originNats.ReconnectHandler(func(nc *originNats.Conn) {
+			log.Info(fmt.Sprintf("Reconnected [%s]", nc.ConnectedUrl()))
+		}))
+		opts = append(opts, originNats.ClosedHandler(func(nc *originNats.Conn) {
+			log.Error("Exiting, no servers available")
+		}))
+	}
+
+	return opts
 }

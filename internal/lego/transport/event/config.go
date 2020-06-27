@@ -137,6 +137,7 @@ type NatsProviderConfig struct {
 	SubscribersCount  int
 	CloseTimeout      time.Duration
 	AckWaitTimeout    time.Duration
+	PanicOnLost       bool
 	CloudEvent        struct {
 		lego2.WithSwitch `mapstructure:",squash"`
 

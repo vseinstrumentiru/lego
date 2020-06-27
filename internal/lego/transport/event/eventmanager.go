@@ -245,15 +245,12 @@ func newEventManager(logErr lego.LogErr, config Config) (_ *eventManager, err er
 		err = errors.Append(err, routerErr)
 
 		retryMiddleware := middleware.Retry{}
-		retryMiddleware.MaxRetries = 1
-		retryMiddleware.MaxInterval = time.Millisecond * 10
+		retryMiddleware.MaxRetries = config.RouterConfig.MaxRetries
+		retryMiddleware.MaxInterval = config.RouterConfig.MaxRetryInterval
 
 		router.AddMiddleware(
 			// if retries limit was exceeded, message is sent to poison queue (poison_queue topic)
 			retryMiddleware.Middleware,
-
-			// recovered recovers panic from handlers
-			middleware.Recoverer,
 
 			// correlation ID middleware adds to every produced message correlation id of consumed message,
 			// useful for debugging

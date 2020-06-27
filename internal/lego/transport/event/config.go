@@ -38,6 +38,8 @@ const (
 
 func (c Config) SetDefaults(env *viper.Viper, flag *pflag.FlagSet) {
 	env.SetDefault("srv.events.router.closeTimeout", time.Second)
+	env.SetDefault("srv.events.router.maxRetries", 1)
+	env.SetDefault("srv.events.router.maxRetryInterval", time.Millisecond*200)
 
 	for name, cfg := range c.Providers.Nats {
 		cfg.SetDefaults("srv.events.provider.nats."+name, env, flag)
@@ -104,7 +106,9 @@ func (c Config) Validate() (err error) {
 }
 
 type RouterConfig struct {
-	CloseTimeout time.Duration
+	CloseTimeout     time.Duration
+	MaxRetries       int
+	MaxRetryInterval time.Duration
 }
 
 type GoChannelProviderConfig struct {

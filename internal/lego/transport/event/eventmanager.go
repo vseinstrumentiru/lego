@@ -205,6 +205,10 @@ func newEventManager(logErr lego.LogErr, config Config) (_ *eventManager, err er
 					StanOptions: []stan.Option{
 						stan.NatsConn(natsConn),
 						stan.Pings(20, 10),
+						stan.SetConnectionLostHandler(func(conn stan.Conn, err error) {
+							em.Info("stan: connection lost")
+							_ = em.router.Close()
+						}),
 					},
 					StanSubscriptionOptions: []stan.SubscriptionOption{
 						stan.DeliverAllAvailable(),

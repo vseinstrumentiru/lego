@@ -5,10 +5,12 @@ import (
 	"emperror.dev/emperror"
 	"emperror.dev/errors/match"
 	"errors"
+	"github.com/gorilla/mux"
 	"github.com/oklog/run"
 	appkiterrors "github.com/sagikazarmark/appkit/errors"
 	appkitrun "github.com/sagikazarmark/appkit/run"
 	"github.com/vseinstrumentiru/lego/internal/lego"
+	"github.com/vseinstrumentiru/lego/internal/lego/monitor/exporter"
 	"github.com/vseinstrumentiru/lego/internal/lego/monitor/telemetry"
 	"github.com/vseinstrumentiru/lego/internal/lego/transport/event"
 	"github.com/vseinstrumentiru/lego/internal/lego/transport/grpc"
@@ -97,7 +99,13 @@ func Run(ctx context.Context, app lego.App) {
 			emperror.Panic(errors.New("http config not defined"))
 		}
 
-		httpRouter, closer := http.Run(s, s.Config.Http)
+		var mw []mux.MiddlewareFunc
+
+		if s.Config.Monitor.Exporter.NewRelic.Enabled {
+			mw = append(mw, exporter.NewRelicMiddleware(s.Config.Name, s.Config.Monitor.Exporter.NewRelic.Key, s.LogErr.WithFields(map[string]interface{}{"component": "newrelic"})))
+		}
+
+		httpRouter, closer := http.Run(s, s.Config.Http, mw...)
 		defer closer.Close()
 
 		err := httpApp.RegisterHTTP(httpRouter)

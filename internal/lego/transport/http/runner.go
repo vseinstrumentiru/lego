@@ -6,7 +6,7 @@ import (
 	"github.com/gorilla/mux"
 	appkitrun "github.com/sagikazarmark/appkit/run"
 	"github.com/sagikazarmark/ocmux"
-	lego2 "github.com/vseinstrumentiru/lego/internal/lego"
+	"github.com/vseinstrumentiru/lego/internal/lego"
 	"github.com/vseinstrumentiru/lego/internal/lego/build"
 	"github.com/vseinstrumentiru/lego/internal/lego/monitor/log"
 	"github.com/vseinstrumentiru/lego/internal/lego/monitor/propagation"
@@ -18,19 +18,28 @@ import (
 	"strconv"
 )
 
-func Run(p lego2.Process, config Config) (*mux.Router, io.Closer) {
+func Run(p lego.Process, config Config, middleware ...mux.MiddlewareFunc) (*mux.Router, io.Closer) {
 	const name = "http"
 
 	logger := logur.WithField(p.Log(), "server", name)
 
 	router := mux.NewRouter()
-	router.Use(recoverHandlerMiddleware(p.Handle), ocmux.Middleware())
 
 	traceCfg := additionalTagsConfig{DataCenter: p.DataCenterName()}
+	router.Use(
+		recoverHandlerMiddleware(p.Handle),
+		ocmux.Middleware(),
+		additionalTagsMiddleware(traceCfg),
+		build.TraceMiddleware(p.Build()),
+	)
+
+	if len(middleware) > 0 {
+		router.Use(middleware...)
+	}
 
 	server := &http.Server{
 		Handler: &ochttp.Handler{
-			Handler:     additionalTagsMiddleware(traceCfg)(build.TraceMiddleware(p.Build())(router)),
+			Handler:     router,
 			Propagation: propagation.DefaultHTTPFormat,
 			StartOptions: trace.StartOptions{
 				Sampler:  trace.AlwaysSample(),

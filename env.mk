@@ -1,0 +1,2 @@
+GOLANG_VERSION ?= 1.15
+GOTAGS = gen

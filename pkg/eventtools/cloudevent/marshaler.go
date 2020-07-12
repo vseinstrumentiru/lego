@@ -3,6 +3,7 @@ package cloudevent
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 
 	"emperror.dev/errors"
 	"github.com/ThreeDotsLabs/watermill/message"
@@ -24,6 +25,8 @@ const (
 	MetaName            = "name"
 	MetaSource          = "source"
 	MetaDataContentType = "data_content_type"
+	MetaTopic           = "topic"
+	MetaSequence        = "sequence"
 )
 
 type NamedEvent interface {
@@ -60,10 +63,12 @@ func (m Marshaller) Unmarshal(stanMsg *stan.Msg) (*message.Message, error) {
 
 	// creating clean message, to avoid invalid internal state with ack
 	msg := message.NewMessage(decodedMsg.UUID, []byte(decodedMsg.Payload))
-	msg.Metadata[MetaCreatedAt] = decodedMsg.CreatedAt
-	msg.Metadata[MetaName] = decodedMsg.Type
-	msg.Metadata[MetaDataContentType] = decodedMsg.DataContentType
-	msg.Metadata[MetaSource] = decodedMsg.Source
+	msg.Metadata.Set(MetaTopic, stanMsg.Subject)
+	msg.Metadata.Set(MetaSequence, fmt.Sprint(stanMsg.Sequence))
+	msg.Metadata.Set(MetaCreatedAt, decodedMsg.CreatedAt)
+	msg.Metadata.Set(MetaName, decodedMsg.Type)
+	msg.Metadata.Set(MetaDataContentType, decodedMsg.DataContentType)
+	msg.Metadata.Set(MetaSource, decodedMsg.Source)
 
 	return msg, nil
 }

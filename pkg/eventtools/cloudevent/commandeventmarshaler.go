@@ -3,15 +3,17 @@ package cloudevent
 import (
 	"encoding/json"
 	"errors"
+	"time"
+
 	"github.com/ThreeDotsLabs/watermill"
 	"github.com/ThreeDotsLabs/watermill/components/cqrs"
 	"github.com/ThreeDotsLabs/watermill/message"
-	"time"
 )
 
 type CommandEventMarshaller struct {
 	NewUUID      func() string
 	GenerateName func(v interface{}) string
+	ResolveName  func(msg *message.Message) string
 }
 
 func (m CommandEventMarshaller) Marshal(v interface{}) (*message.Message, error) {
@@ -81,5 +83,9 @@ func (m CommandEventMarshaller) Name(cmdOrEvent interface{}) string {
 }
 
 func (m CommandEventMarshaller) NameFromMessage(msg *message.Message) string {
-	return msg.Metadata.Get(MetaName)
+	if m.ResolveName == nil {
+		return msg.Metadata.Get(MetaName)
+	}
+
+	return m.ResolveName(msg)
 }

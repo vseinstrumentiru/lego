@@ -6,6 +6,7 @@ type likeErr struct {
 	msg string
 }
 
+// deprecated
 func NewLike(msg string) error {
 	return likeErr{msg: msg}
 }
@@ -18,6 +19,7 @@ func (e likeErr) Is(err error) bool {
 	return Like(err, e.msg)
 }
 
+// deprecated
 func Like(err error, msg string) bool {
 	if err == nil {
 		return false

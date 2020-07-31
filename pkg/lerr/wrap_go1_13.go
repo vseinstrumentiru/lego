@@ -10,6 +10,7 @@ import (
 //
 // An error is considered to match a target if it is equal to that target or if
 // it implements a method Is(error) bool such that Is(target) returns true.
+// deprecated
 func Is(err, target error) bool {
 	return errors.Is(err, target)
 }
@@ -22,6 +23,7 @@ func Is(err, target error) bool {
 //
 // The As method should set the target to its value and return true if err
 // matches the type to which target points.
+// deprecated
 func As(err error, target interface{}) bool {
 	return errors.As(err, target)
 }

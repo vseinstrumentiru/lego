@@ -15,19 +15,23 @@ require (
 	github.com/ThreeDotsLabs/watermill-nats v1.0.5
 	github.com/alecthomas/units v0.0.0-20190924025748-f65c72e2690d // indirect
 	github.com/cenkalti/backoff/v3 v3.2.2 // indirect
+	github.com/certifi/gocertifi v0.0.0-20200211180108-c7c1fbc02894 // indirect
 	github.com/cloudflare/tableflip v1.2.0
 	github.com/facebookincubator/ent v0.2.2
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
+	github.com/getsentry/raven-go v0.2.0
 	github.com/getsentry/sentry-go v0.6.1
 	github.com/go-kit/kit v0.10.0
 	github.com/go-resty/resty/v2 v2.2.0
 	github.com/go-sql-driver/mysql v1.5.1-0.20200311113236-681ffa848bae
-	github.com/gogo/protobuf v1.3.1 // indirect
+	github.com/goava/di v1.2.1
 	github.com/gorilla/mux v1.7.4
 	github.com/hashicorp/go-multierror v1.1.0 // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
+	github.com/magiconair/properties v1.8.1
 	github.com/mitchellh/mapstructure v1.3.2 // indirect
 	github.com/nats-io/jwt v1.0.1 // indirect
+	github.com/nats-io/nats.go v1.10.0
 	github.com/nats-io/nkeys v0.2.0 // indirect
 	github.com/nats-io/stan.go v0.7.0
 	github.com/newrelic/newrelic-opencensus-exporter-go v0.4.0
@@ -52,7 +56,6 @@ require (
 	github.com/uber/jaeger-client-go v2.24.0+incompatible // indirect
 	go.opencensus.io v0.22.4
 	go.uber.org/multierr v1.5.0 // indirect
-	golang.org/x/lint v0.0.0-20200302205851-738671d3881b // indirect
 	golang.org/x/net v0.0.0-20200625001655-4c5254603344 // indirect
 	golang.org/x/sys v0.0.0-20200622214017-ed371f2e16b4 // indirect
 	golang.org/x/text v0.3.3 // indirect
@@ -62,7 +65,6 @@ require (
 	google.golang.org/grpc v1.30.0
 	google.golang.org/protobuf v1.25.0 // indirect
 	gopkg.in/ini.v1 v1.57.0 // indirect
-	honnef.co/go/tools v0.0.1-2020.1.3 // indirect
 	logur.dev/adapter/logrus v0.5.0
 	logur.dev/integration/watermill v0.5.0
 	logur.dev/logur v0.16.2

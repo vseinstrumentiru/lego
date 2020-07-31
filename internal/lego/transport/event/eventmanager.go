@@ -15,7 +15,7 @@ import (
 	"github.com/sagikazarmark/kitx/correlation"
 	"github.com/vseinstrumentiru/lego/internal/lego"
 	"github.com/vseinstrumentiru/lego/internal/lego/transport/event/metrics"
-	"github.com/vseinstrumentiru/lego/pkg/eventtools/cloudevent"
+	"github.com/vseinstrumentiru/lego/tools/eventtools/cloudevent"
 	watermilllog "logur.dev/integration/watermill"
 	"os"
 	"regexp"

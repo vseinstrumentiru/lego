@@ -13,7 +13,7 @@ import (
 	"github.com/vseinstrumentiru/lego/internal/lego/transport/event"
 	"github.com/vseinstrumentiru/lego/internal/lego/transport/grpc"
 	"github.com/vseinstrumentiru/lego/internal/lego/transport/http"
-	"github.com/vseinstrumentiru/lego/pkg/contexttool"
+	"github.com/vseinstrumentiru/lego/tools/contexttool"
 	"logur.dev/logur"
 	"os"
 	"os/signal"
@@ -54,7 +54,7 @@ func Run(ctx context.Context, app lego.App) {
 			lego.NewContextAwareLogErr(
 				logur.WithField(s.Log(), "server", name),
 				s.Handler(),
-				contexttool.Extractor,
+				lecontext.Extractor,
 			).
 				WithFilter(appkiterrors.IsServiceError),
 		)

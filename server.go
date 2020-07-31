@@ -10,7 +10,7 @@ import (
 	"github.com/vseinstrumentiru/lego/internal/lego/monitor"
 	"github.com/vseinstrumentiru/lego/internal/lego/monitor/errorhandler"
 	"github.com/vseinstrumentiru/lego/internal/lego/monitor/log"
-	"github.com/vseinstrumentiru/lego/pkg/lego"
+	"github.com/vseinstrumentiru/lego/tools/lego"
 	"net"
 	"net/http"
 	"os"

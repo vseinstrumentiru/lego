@@ -1,4 +1,4 @@
-package legrpc
+package grpctools
 
 import (
 	"context"

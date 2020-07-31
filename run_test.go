@@ -3,7 +3,7 @@ package LeGo
 import (
 	"context"
 	lego2 "github.com/vseinstrumentiru/lego/internal/lego"
-	"github.com/vseinstrumentiru/lego/pkg/lego"
+	"github.com/vseinstrumentiru/lego/tools/lego"
 	"io"
 	"testing"
 	"time"

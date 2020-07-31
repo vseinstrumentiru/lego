@@ -1,13 +1,13 @@
 package eventtools
 
+import "github.com/vseinstrumentiru/lego/tools/eventtools"
+
+// deprecated: use github.com/vseinstrumentiru/lego/pkg/tools/eventtools
 type NamedEvent interface {
-	EventName() string
+	eventtools.NamedEvent
 }
 
+// deprecated: use github.com/vseinstrumentiru/lego/pkg/tools/eventtools
 func EventName(v interface{}) string {
-	if e, ok := v.(NamedEvent); ok {
-		return e.EventName()
-	}
-
-	return ""
+	return eventtools.EventName(v)
 }

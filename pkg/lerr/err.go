@@ -2,6 +2,7 @@ package lerr
 
 import "emperror.dev/errors"
 
+// deprecated
 type Typed interface {
 	ErrorType() string
 }

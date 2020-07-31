@@ -1,8 +1,10 @@
 package cloudevent
 
-import "time"
+import (
+	"github.com/vseinstrumentiru/lego/tools/eventtools/cloudevent"
+)
 
+// deprecated: use github.com/vseinstrumentiru/lego/pkg/tools/eventtools/cloudevent
 type EventWithTime interface {
-	SetCreatedAt(t time.Time)
-	GetCreatedAt() time.Time
+	cloudevent.EventWithTime
 }

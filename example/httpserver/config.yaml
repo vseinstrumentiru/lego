@@ -1,0 +1,4 @@
+name: httpserver
+dataCenter: local
+log:
+  color: true

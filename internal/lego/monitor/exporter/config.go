@@ -26,6 +26,7 @@ type Config struct {
 	NewRelic struct {
 		lego2.WithSwitch `mapstructure:",squash"`
 		Key              string
+		AppName          string
 	}
 
 	Prometheus struct {

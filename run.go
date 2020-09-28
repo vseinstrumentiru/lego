@@ -102,7 +102,13 @@ func Run(ctx context.Context, app lego.App) {
 		var mw []mux.MiddlewareFunc
 
 		if s.Config.Monitor.Exporter.NewRelic.Enabled {
-			mw = append(mw, exporter.NewRelicMiddleware(s.Config.Name, s.Config.Monitor.Exporter.NewRelic.Key, s.LogErr.WithFields(map[string]interface{}{"component": "newrelic"})))
+			name := s.Config.Name
+
+			if s.Config.Monitor.Exporter.NewRelic.AppName != "" {
+				name = s.Config.Monitor.Exporter.NewRelic.AppName
+			}
+
+			mw = append(mw, exporter.NewRelicMiddleware(name, s.Config.Monitor.Exporter.NewRelic.Key, s.LogErr.WithFields(map[string]interface{}{"component": "newrelic"})))
 		}
 
 		httpRouter, closer := http.Run(s, s.Config.Http, mw...)

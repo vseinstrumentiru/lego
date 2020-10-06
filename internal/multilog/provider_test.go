@@ -8,7 +8,8 @@ import (
 	zerologadapter "logur.dev/adapter/zerolog"
 	"logur.dev/logur"
 
-	"github.com/vseinstrumentiru/lego/components/notify/log"
+	"github.com/vseinstrumentiru/lego/multilog"
+	"github.com/vseinstrumentiru/lego/multilog/log"
 
 	container2 "github.com/vseinstrumentiru/lego/internal/container"
 )
@@ -25,7 +26,7 @@ func TestProvide(t *testing.T) {
 	ass.NoError(c.Instance(&log.Config{Stop: false}))
 	ass.NoError(c.Register(Provide))
 
-	ass.NoError(c.Execute(func(n multilog.Multilog) {
+	ass.NoError(c.Execute(func(n multilog.Logger) {
 		n.Info("test")
 	}))
 }

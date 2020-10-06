@@ -199,7 +199,11 @@ func (e *env) Sub(key string) config.Env {
 }
 
 func (e *env) SetDefault(key string, value interface{}) {
-	e.viper.SetDefault(e.path+"."+key, value)
+	path := ""
+	if e.path != "" {
+		path = e.path + "."
+	}
+	e.viper.SetDefault(path+key, value)
 }
 
 func (e *env) SetAlias(alias string, originalKey string) {

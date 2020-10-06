@@ -26,7 +26,7 @@ type args struct {
 type ctxOpt func(ctx zerolog.Context) zerolog.Context
 
 func withCaller(ctx zerolog.Context) zerolog.Context {
-	return ctx.Caller()
+	return ctx.CallerWithSkipFrameCount(8)
 }
 
 func Provide(in args) multilog.Logger {

@@ -159,7 +159,9 @@ func (c *container) resolve(i inject.Interface) error {
 	}
 
 	if val.Kind() != reflect.Ptr {
-		val = val.Addr()
+		ptr := reflect.New(val.Type())
+		ptr.Elem().Set(val)
+		val = ptr
 	}
 
 	for i := 0; i < out.Type().NumField(); i++ {

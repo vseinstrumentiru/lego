@@ -23,12 +23,20 @@ type args struct {
 	Logger logur.Logger     `optional:"true"`
 }
 
+type ctxOpt func(ctx zerolog.Context) zerolog.Context
+
+func withCaller(ctx zerolog.Context) zerolog.Context {
+	return ctx.Caller()
+}
+
 func Provide(in args) multilog.Logger {
 	var opts []multilog.Option
 
 	if in.Sentry != nil {
 		opts = append(opts, multilog.WithHandler(sentry.Handler(in.Sentry.Addr, in.Sentry.Level, in.Sentry.Stop)))
 	}
+
+	var contextOptions []ctxOpt
 
 	if in.Log != nil {
 		if in.Logger == nil {
@@ -39,13 +47,20 @@ func Provide(in args) multilog.Logger {
 					return fmt.Sprintf("%-30s|", i)
 				}
 				writer = zeroWriter
+				contextOptions = append(contextOptions, withCaller)
 			} else {
 				writer = os.Stderr
 			}
 
-			logger := zerolog.New(writer).With().
-				Timestamp().
-				Logger()
+			ctx := zerolog.New(writer).With().
+				Timestamp()
+
+			for _, o := range contextOptions {
+				ctx = o(ctx)
+			}
+
+			logger := ctx.Logger()
+
 			in.Logger = zerologadapter.New(logger)
 		}
 

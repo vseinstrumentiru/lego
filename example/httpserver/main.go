@@ -19,7 +19,10 @@ type Config struct {
 	Log                log.Config
 }
 
-type App struct{}
+type App struct {
+	b      string
+	Logger multilog.Logger
+}
 
 func (a App) ConfigureRoutes(r *mux.Router) {
 	r.Path("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -27,6 +30,8 @@ func (a App) ConfigureRoutes(r *mux.Router) {
 	})
 }
 
+var app App = App{b: "test"}
+
 func main() {
-	server.Run(App{}, &Config{})
+	server.Run(app, &Config{})
 }

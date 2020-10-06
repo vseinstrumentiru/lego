@@ -52,7 +52,7 @@ func (c *container) Make(i inject.Interface) error {
 	if err := checkStruct(val); err != nil {
 		return err
 	}
-
+	// setup providers from struct
 	if appWithProviders, ok := i.(interface{ Providers() []interface{} }); ok {
 		constructors := appWithProviders.Providers()
 		for i := 0; i < len(constructors); i++ {
@@ -62,6 +62,15 @@ func (c *container) Make(i inject.Interface) error {
 		}
 	}
 
+	// prepare to make changes to original struct
+	ptr := val
+	if val.Kind() != reflect.Ptr {
+		ptr = reflect.New(val.Type())
+		ptr.Elem().Set(val)
+		val = ptr.Elem()
+	}
+
+	// resolve constructors and collect configuration methods
 	t := val.Type()
 	var configurations []interface{}
 	for i := 0; i < t.NumMethod(); i++ {
@@ -77,10 +86,12 @@ func (c *container) Make(i inject.Interface) error {
 		}
 	}
 
-	if err := c.resolve(i); err != nil {
+	// resolve structure
+	if err := c.resolve(ptr); err != nil {
 		return errors.WithStack(err)
 	}
 
+	// execute configuration methods
 	for i := 0; i < len(configurations); i++ {
 		if err := c.Execute(configurations[i]); err != nil {
 			return err
@@ -90,18 +101,17 @@ func (c *container) Make(i inject.Interface) error {
 	return nil
 }
 
-func (c *container) resolve(i inject.Interface) error {
-	val := reflect.ValueOf(i)
-
-	if val.Kind() == reflect.Ptr {
-		val = val.Elem()
-	}
-
+func (c *container) resolve(val reflect.Value) error {
 	var inFields, outFields []reflect.StructField
-	t := val.Type()
+	t := val.Elem().Type()
 
 	for i := 0; i < t.NumField(); i++ {
 		field := t.Field(i)
+
+		if field.Anonymous || !val.Elem().Field(i).CanSet() {
+			continue
+		}
+
 		if alias, ok := field.Tag.Lookup("name"); !ok {
 			inFields = append(inFields, reflect.StructField{
 				Name: field.Name,
@@ -158,18 +168,12 @@ func (c *container) resolve(i inject.Interface) error {
 		return err
 	}
 
-	if val.Kind() != reflect.Ptr {
-		ptr := reflect.New(val.Type())
-		ptr.Elem().Set(val)
-		val = ptr
-	}
-
 	for i := 0; i < out.Type().NumField(); i++ {
 		field := out.Type().Field(i)
 		if field.Anonymous {
 			continue
 		}
-		val.FieldByName(field.Name).Set(out.FieldByName(field.Name))
+		val.Elem().FieldByName(field.Name).Set(out.FieldByName(field.Name))
 	}
 
 	return nil

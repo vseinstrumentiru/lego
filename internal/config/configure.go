@@ -34,8 +34,9 @@ func Configure(in argsIn) error {
 
 	parsed := parse(in.Config)
 
-	for key, cfg := range parsed.defaults {
-		cfg.SetDefaults(in.Env.Sub(key))
+	for i := len(parsed.defaults) - 1; i >= 0; i-- {
+		d := parsed.defaults[i]
+		d.val.SetDefaults(in.Env.Sub(d.key))
 	}
 
 	err := in.Env.Load(in.Config, parsed.keys...)
@@ -72,7 +73,6 @@ func parse(i interface{}) *parsed {
 	result := &parsed{
 		configs:          make(map[string]interface{}),
 		configTypesCount: make(map[reflect.Type]int),
-		defaults:         make(map[string]config.ConfigWithDefaults),
 		validates:        make(map[string]config.Validateable),
 	}
 
@@ -81,10 +81,15 @@ func parse(i interface{}) *parsed {
 	return result
 }
 
+type defaults struct {
+	key string
+	val config.ConfigWithDefaults
+}
+
 type parsed struct {
 	configs          map[string]interface{}
 	configTypesCount map[reflect.Type]int
-	defaults         map[string]config.ConfigWithDefaults
+	defaults         []defaults
 	validates        map[string]config.Validateable
 	keys             []string
 }
@@ -112,7 +117,7 @@ func scan(i interface{}, key string, p *parsed) {
 	}
 
 	if val, ok := i.(config.ConfigWithDefaults); ok {
-		p.defaults[key] = val
+		p.defaults = append(p.defaults, defaults{key: key, val: val})
 	}
 
 	if val, ok := i.(config.Validateable); ok {

@@ -25,8 +25,10 @@ type args struct {
 
 type ctxOpt func(ctx zerolog.Context) zerolog.Context
 
-func withCaller(ctx zerolog.Context) zerolog.Context {
-	return ctx.CallerWithSkipFrameCount(8)
+func withCaller(depth int) ctxOpt {
+	return func(ctx zerolog.Context) zerolog.Context {
+		return ctx.CallerWithSkipFrameCount(depth)
+	}
 }
 
 func Provide(in args) multilog.Logger {
@@ -47,7 +49,7 @@ func Provide(in args) multilog.Logger {
 					return fmt.Sprintf("%-30s|", i)
 				}
 				writer = zeroWriter
-				contextOptions = append(contextOptions, withCaller)
+				contextOptions = append(contextOptions, withCaller(in.Log.Depth))
 			} else {
 				writer = os.Stderr
 			}

@@ -158,6 +158,10 @@ func (c *container) resolve(i inject.Interface) error {
 		return err
 	}
 
+	if val.Kind() != reflect.Ptr {
+		val = reflect.Indirect(val)
+	}
+
 	for i := 0; i < out.Type().NumField(); i++ {
 		field := out.Type().Field(i)
 		if field.Anonymous {

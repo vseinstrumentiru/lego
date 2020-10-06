@@ -49,7 +49,9 @@ func Provide(in args) multilog.Logger {
 					return fmt.Sprintf("%-30s|", i)
 				}
 				writer = zeroWriter
-				contextOptions = append(contextOptions, withCaller(in.Log.Depth))
+				if in.Log.Depth > 0 {
+					contextOptions = append(contextOptions, withCaller(in.Log.Depth))
+				}
 			} else {
 				writer = os.Stderr
 			}

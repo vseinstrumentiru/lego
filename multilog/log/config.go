@@ -11,5 +11,5 @@ type Config struct {
 }
 
 func (c Config) SetDefaults(env config.Env) {
-	env.SetDefault("depth", 7)
+	env.SetDefault("depth", -1)
 }

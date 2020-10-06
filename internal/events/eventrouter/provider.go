@@ -22,7 +22,7 @@ type args struct {
 	Pipeline     *run.Group
 }
 
-func Provide(in args) (events.Router, error) {
+func Provide(in args) (*message.Router, error) {
 	cfg := message.RouterConfig{}
 	logger := in.Logger.WithFields(map[string]interface{}{"component": "events.router"})
 
@@ -55,7 +55,7 @@ func Provide(in args) (events.Router, error) {
 		}
 	}
 
-	router, err := newRouter(cfg, logger)
+	router, err := message.NewRouter(cfg, watermilllog.New(logger))
 
 	if err != nil {
 		return nil, err
@@ -74,15 +74,15 @@ func Provide(in args) (events.Router, error) {
 	in.Pipeline.Add(
 		func() error {
 			logger.Info("starting router")
-			if !router.hasHandlers {
-				return nil
-			}
+			// if !router.hasHandlers {
+			// 	return nil
+			// }
 			return router.Run(context.Background())
 		},
 		func(err error) {
-			if !router.hasHandlers {
-				return
-			}
+			// if !router.hasHandlers {
+			// 	return
+			// }
 			logger.Info("shutting router down")
 			_ = router.Close()
 		},

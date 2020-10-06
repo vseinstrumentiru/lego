@@ -37,6 +37,10 @@ type multilog struct {
 	extractor ContextExtractor
 }
 
+func (c multilog) HandleContext(ctx context.Context, err error) {
+	c.WithContext(ctx).Notify(err)
+}
+
 func (c multilog) Handle(err error) {
 	c.Notify(err)
 }

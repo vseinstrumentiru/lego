@@ -20,7 +20,7 @@ type Entry interface {
 
 type Logger interface {
 	logur.LoggerFacade
-	emperror.ErrorHandler
+	emperror.ErrorHandlerFacade
 	Notify(notification interface{})
 	WithContext(ctx context.Context) Logger
 	WithFilter(matcher EntryMatcher) Logger

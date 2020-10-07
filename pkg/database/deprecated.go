@@ -10,8 +10,8 @@ import (
 )
 
 // deprecated: use DI
-func NewSQLConnection(_ interface{}, _ interface{}) (conn *sql.DB, closer shutdown.CloseGroup) {
-	err := deprecated.Container.Execute(func(i *sql.DB, j shutdown.CloseGroup) {
+func NewSQLConnection(_ interface{}, _ interface{}) (conn *sql.DB, closer *shutdown.CloseGroup) {
+	err := deprecated.Container.Execute(func(i *sql.DB, j *shutdown.CloseGroup) {
 		conn = i
 		closer = j
 	})

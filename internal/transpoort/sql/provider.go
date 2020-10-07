@@ -19,7 +19,7 @@ type args struct {
 	dig.In
 	MySQL mysql.Connector `optional:"true"`
 
-	Closer shutdown.CloseGroup
+	Closer *shutdown.CloseGroup
 	Health health.Health
 }
 

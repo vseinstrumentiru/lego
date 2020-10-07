@@ -16,6 +16,7 @@ import (
 	"github.com/vseinstrumentiru/lego/internal/config"
 	environment "github.com/vseinstrumentiru/lego/internal/config/env"
 	di "github.com/vseinstrumentiru/lego/internal/container"
+	"github.com/vseinstrumentiru/lego/internal/deprecated"
 	multilogProvider "github.com/vseinstrumentiru/lego/internal/multilog"
 	"github.com/vseinstrumentiru/lego/multilog"
 	"github.com/vseinstrumentiru/lego/server/shutdown"
@@ -85,6 +86,8 @@ func Run(app interface{}, cfg interface{}) {
 	ctx := context.Background()
 	pipeline.Add(run.SignalHandler(ctx, syscall.SIGINT, syscall.SIGTERM))
 	pipeline.Add(appkitrun.GracefulRestart(ctx, upg))
+
+	deprecated.Container = container.i
 
 	for _, provider := range providers() {
 		container.register(provider)

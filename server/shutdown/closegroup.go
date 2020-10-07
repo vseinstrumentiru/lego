@@ -8,6 +8,19 @@ import (
 
 var _ io.Closer = &CloseGroup{}
 
+type SimpleCloseFn func()
+
+func (c SimpleCloseFn) Close() error {
+	c()
+	return nil
+}
+
+type CloseFn func() error
+
+func (c CloseFn) Close() error {
+	return c()
+}
+
 type CloseGroup struct {
 	closers []io.Closer
 }

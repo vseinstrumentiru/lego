@@ -4,11 +4,13 @@ import (
 	"emperror.dev/errors"
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/stan.go"
+	"go.uber.org/dig"
 
 	lestan "github.com/vseinstrumentiru/lego/transport/stan"
 )
 
 type args struct {
+	dig.In
 	Stan *lestan.Config
 	Nats *nats.Conn
 }

@@ -3,7 +3,10 @@ package stan
 import (
 	"fmt"
 	"os"
+	"regexp"
 	"time"
+
+	"emperror.dev/errors"
 
 	"github.com/vseinstrumentiru/lego/events"
 )
@@ -35,7 +38,7 @@ func (s *ClientIDGen) UnmarshalText(b []byte) error {
 }
 
 type Config struct {
-	events.Config
+	events.Config `mapstructure:",squash"`
 
 	ClientID    string
 	ClientIDGen ClientIDGen
@@ -55,6 +58,22 @@ type Config struct {
 	// PingMaxOut specifies the maximum number of PINGs without a corresponding
 	// PONG before declaring the connection permanently lost.
 	PingMaxOut *int
+}
+
+func (c *Config) Validate() (err error) {
+	if c.ClusterID == "" {
+		err = errors.Append(err, errors.New("stan: clusterID is required"))
+	}
+
+	if c.ClientID == "" {
+		err = errors.Append(err, errors.New("stan: clientID is required in"))
+	}
+
+	if !regexp.MustCompile(`^[a-zA-Z0-9_\-]+$`).MatchString(c.ClientID) {
+		err = errors.Append(err, errors.New("stan: clientID should contain only alphanumeric characters, - or _"))
+	}
+
+	return
 }
 
 func (c *Config) GetClientID() string {

@@ -1,8 +1,10 @@
 package metrics
 
-import "github.com/vseinstrumentiru/lego/events"
+import (
+	"github.com/ThreeDotsLabs/watermill/message"
+)
 
-func Register(r events.Router) {
+func Register(r *message.Router) {
 	r.AddPublisherDecorators(DecoratePublisher)
 	r.AddSubscriberDecorators(DecorateSubscriber)
 	r.AddMiddleware(Middleware)

@@ -2,12 +2,14 @@ package events
 
 import (
 	"github.com/ThreeDotsLabs/watermill/pubsub/gochannel"
+	"go.uber.org/dig"
 	watermilllog "logur.dev/integration/watermill"
 
 	"github.com/vseinstrumentiru/lego/multilog"
 )
 
 type channelArgs struct {
+	dig.In
 	Config *gochannel.Config `optional:"true"`
 	Logger multilog.Logger
 }

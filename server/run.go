@@ -16,15 +16,7 @@ import (
 	"github.com/vseinstrumentiru/lego/internal/config"
 	environment "github.com/vseinstrumentiru/lego/internal/config/env"
 	di "github.com/vseinstrumentiru/lego/internal/container"
-	"github.com/vseinstrumentiru/lego/internal/events"
-	"github.com/vseinstrumentiru/lego/internal/events/eventrouter"
-	"github.com/vseinstrumentiru/lego/internal/metrics"
-	"github.com/vseinstrumentiru/lego/internal/metrics/exporters/jaegerexporter"
-	"github.com/vseinstrumentiru/lego/internal/metrics/exporters/prometheus"
-	"github.com/vseinstrumentiru/lego/internal/metrics/propagation"
 	multilogProvider "github.com/vseinstrumentiru/lego/internal/multilog"
-	grpcProvider "github.com/vseinstrumentiru/lego/internal/transpoort/grpc"
-	"github.com/vseinstrumentiru/lego/internal/transpoort/http/httpserver"
 	"github.com/vseinstrumentiru/lego/multilog"
 	"github.com/vseinstrumentiru/lego/server/shutdown"
 	"github.com/vseinstrumentiru/lego/version"
@@ -94,24 +86,15 @@ func Run(app interface{}, cfg interface{}) {
 	pipeline.Add(run.SignalHandler(ctx, syscall.SIGINT, syscall.SIGTERM))
 	pipeline.Add(appkitrun.GracefulRestart(ctx, upg))
 
-	container.
-		// base providers
-		register(propagation.ProvideHTTP).
-		register(metrics.Provide).
-		register(httpserver.Provide).
-		register(grpcProvider.Provide).
-		// events
-		register(eventrouter.Provide).
-		register(events.ProvideKafkaPublisher).
-		register(events.ProvideKafkaSubscriber).
-		register(events.ProvideNatsSubscriber).
-		register(events.ProvideNatsPublisher).
-		register(events.ProvideChannel).
-		// constructing application
-		make(app).
-		// boot components
-		execute(jaegerexporter.Configure).
-		execute(prometheus.Configure)
+	for _, provider := range providers() {
+		container.register(provider)
+	}
+	// constructing application
+	container.make(app)
+
+	for _, exec := range executors() {
+		container.execute(exec)
+	}
 
 	// running application
 	if err := pipeline.Run(); err != nil {

@@ -6,7 +6,7 @@ require (
 	contrib.go.opencensus.io/exporter/jaeger v0.2.0
 	contrib.go.opencensus.io/exporter/ocagent v0.7.0
 	contrib.go.opencensus.io/exporter/prometheus v0.2.0
-	contrib.go.opencensus.io/integrations/ocsql v0.1.5 // indirect
+	contrib.go.opencensus.io/integrations/ocsql v0.1.5
 	emperror.dev/emperror v0.32.0
 	emperror.dev/errors v0.7.0
 	emperror.dev/handler/logur v0.4.0 // indirect
@@ -18,7 +18,7 @@ require (
 	github.com/alecthomas/units v0.0.0-20190924025748-f65c72e2690d // indirect
 	github.com/cenkalti/backoff/v3 v3.2.2 // indirect
 	github.com/certifi/gocertifi v0.0.0-20200211180108-c7c1fbc02894 // indirect
-	github.com/cloudevents/sdk-go/v2 v2.2.0
+	github.com/cloudevents/sdk-go/v2 v2.2.0 // indirect
 	github.com/cloudflare/tableflip v1.2.0
 	github.com/facebookincubator/ent v0.2.2 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
@@ -26,7 +26,7 @@ require (
 	github.com/getsentry/sentry-go v0.6.1 // indirect
 	github.com/go-kit/kit v0.10.0
 	github.com/go-resty/resty/v2 v2.2.0
-	github.com/go-sql-driver/mysql v1.5.1-0.20200311113236-681ffa848bae // indirect
+	github.com/go-sql-driver/mysql v1.5.1-0.20200311113236-681ffa848bae
 	github.com/goava/di v1.2.1 // indirect
 	github.com/google/uuid v1.1.1
 	github.com/gorilla/mux v1.7.4
@@ -39,7 +39,10 @@ require (
 	github.com/nats-io/nats.go v1.10.0
 	github.com/nats-io/nkeys v0.2.0 // indirect
 	github.com/nats-io/stan.go v0.7.0
-	github.com/newrelic/newrelic-opencensus-exporter-go v0.4.0 // indirect
+	github.com/newrelic/go-agent/v3 v3.9.0
+	github.com/newrelic/go-agent/v3/integrations/nrgorilla v1.1.0
+	github.com/newrelic/go-agent/v3/integrations/nrpkgerrors v1.0.0
+	github.com/newrelic/newrelic-opencensus-exporter-go v0.4.0
 	github.com/newrelic/newrelic-telemetry-sdk-go v0.3.0 // indirect
 	github.com/oklog/run v1.1.0
 	github.com/ompluscator/dynamic-struct v1.2.0 // indirect

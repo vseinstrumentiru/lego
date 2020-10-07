@@ -7,6 +7,8 @@ import (
 	"emperror.dev/emperror"
 	"github.com/cloudflare/tableflip"
 	"github.com/gorilla/mux"
+	"github.com/newrelic/go-agent/v3/integrations/nrgorilla"
+	"github.com/newrelic/go-agent/v3/newrelic"
 	"github.com/oklog/run"
 	appkitrun "github.com/sagikazarmark/appkit/run"
 	"github.com/sagikazarmark/ocmux"
@@ -28,6 +30,7 @@ type args struct {
 	Config      *httpcfg.Config                       `optional:"true"`
 	TraceTags   miiddleware.TraceTagsMiddlewareConfig `optional:"true"`
 	TraceConfig *tracing.Config                       `optional:"true"`
+	Newrelic    *newrelic.Application                 `optional:"true"`
 
 	Propagation *propagation.HTTPFormatCollection
 
@@ -56,6 +59,10 @@ func Provide(in args) (*http.Server, *mux.Router) {
 		}
 
 		startOptions.Sampler = trace.Sampler(in.TraceConfig.Sampler)
+	}
+
+	if in.Newrelic != nil {
+		router.Use(nrgorilla.Middleware(in.Newrelic))
 	}
 
 	handler := &ochttp.Handler{

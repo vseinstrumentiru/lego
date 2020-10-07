@@ -3,12 +3,14 @@ package nats
 import (
 	"emperror.dev/errors"
 	"github.com/nats-io/nats.go"
+	"go.uber.org/dig"
 
 	lenats "github.com/vseinstrumentiru/lego/transport/nats"
 	lestan "github.com/vseinstrumentiru/lego/transport/stan"
 )
 
 type args struct {
+	dig.In
 	Config     *lenats.Config
 	StanConfig *lestan.Config `optional:"true"`
 }

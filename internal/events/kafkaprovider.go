@@ -2,6 +2,7 @@ package events
 
 import (
 	"github.com/ThreeDotsLabs/watermill-kafka/pkg/kafka"
+	"go.uber.org/dig"
 	watermilllog "logur.dev/integration/watermill"
 
 	"github.com/vseinstrumentiru/lego/multilog"
@@ -9,12 +10,14 @@ import (
 )
 
 type kafkaPubArgs struct {
+	dig.In
 	Broker  *kafkatransport.Config
 	Logger  multilog.Logger
 	Encoder kafka.Marshaler
 }
 
 type kafkaSubArgs struct {
+	dig.In
 	Broker  *kafkatransport.Config
 	Logger  multilog.Logger
 	Decoder kafka.Unmarshaler

@@ -74,15 +74,9 @@ func Provide(in args) (*message.Router, error) {
 	in.Pipeline.Add(
 		func() error {
 			logger.Info("starting router")
-			// if !router.hasHandlers {
-			// 	return nil
-			// }
 			return router.Run(context.Background())
 		},
 		func(err error) {
-			// if !router.hasHandlers {
-			// 	return
-			// }
 			logger.Info("shutting router down")
 			_ = router.Close()
 		},

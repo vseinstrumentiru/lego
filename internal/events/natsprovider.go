@@ -3,6 +3,7 @@ package events
 import (
 	"github.com/ThreeDotsLabs/watermill-nats/pkg/nats"
 	"github.com/nats-io/stan.go"
+	"go.uber.org/dig"
 	watermilllog "logur.dev/integration/watermill"
 
 	"github.com/vseinstrumentiru/lego/multilog"
@@ -10,12 +11,14 @@ import (
 )
 
 type natsPubArgs struct {
+	dig.In
 	Stan    stan.Conn
 	Logger  multilog.Logger
 	Encoder nats.Marshaler
 }
 
 type natsSubArgs struct {
+	dig.In
 	Config  lestan.Config
 	Stan    stan.Conn
 	Logger  multilog.Logger

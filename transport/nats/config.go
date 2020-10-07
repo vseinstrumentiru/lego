@@ -1,6 +1,10 @@
 package nats
 
-import "time"
+import (
+	"time"
+
+	"emperror.dev/errors"
+)
 
 type Config struct {
 	// Addr represents a single NATS server url to which the client
@@ -24,4 +28,12 @@ type Config struct {
 	// ReconnectWait sets the time to backoff after attempting a reconnect
 	// to a server that we were already connected to previously.
 	ReconnectWait *time.Duration
+}
+
+func (c Config) Validate() (err error) {
+	if c.Addr == "" {
+		err = errors.Append(err, errors.New("nats: addr is required"))
+	}
+
+	return
 }

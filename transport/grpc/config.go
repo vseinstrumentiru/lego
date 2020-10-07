@@ -1,4 +1,4 @@
-package http
+package grpc
 
 import (
 	"github.com/vseinstrumentiru/lego/config"

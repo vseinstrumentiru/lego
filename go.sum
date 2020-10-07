@@ -496,6 +496,15 @@ github.com/nats-io/stan.go v0.4.5/go.mod h1:Ji7mK6gRZJSH1nc3ZJH6vi7zn/QnZhpR9Arm
 github.com/nats-io/stan.go v0.5.0/go.mod h1:dYqB+vMN3C2F9pT1FRQpg9eHbjPj6mP0yYuyBNuXHZE=
 github.com/nats-io/stan.go v0.7.0 h1:sMVHD9RkxPOl6PJfDVBQd+gbxWkApeYl6GrH+10msO4=
 github.com/nats-io/stan.go v0.7.0/go.mod h1:Ci6mUIpGQTjl++MqK2XzkWI/0vF+Bl72uScx7ejSYmU=
+github.com/newrelic/go-agent v1.11.0 h1:jnd8+H6dB+93UTJHFT1wJoij5spKNN/xZ0nkw0kvt7o=
+github.com/newrelic/go-agent v3.9.0+incompatible h1:W2Zummx9jNATZVX6QVjYksX1TwxJGf4E6x1Wf3CG/jY=
+github.com/newrelic/go-agent/v3 v3.0.0/go.mod h1:H28zDNUC0U/b7kLoY4EFOhuth10Xu/9dchozUiOseQQ=
+github.com/newrelic/go-agent/v3 v3.9.0 h1:5bcTbdk/Up5cIYIkQjCG92Y+uNoett9wmhuz4kPiFlM=
+github.com/newrelic/go-agent/v3 v3.9.0/go.mod h1:1A1dssWBwzB7UemzRU6ZVaGDsI+cEn5/bNxI0wiYlIc=
+github.com/newrelic/go-agent/v3/integrations/nrgorilla v1.1.0 h1:3RDWj/QcU5CBP0lJnkh4CwK7tIxsSH53C+GPo5OGFCE=
+github.com/newrelic/go-agent/v3/integrations/nrgorilla v1.1.0/go.mod h1:1XnCVdRSKjS5ikMycFh7VKXBkk0oYPaKQb+sd6aSCoA=
+github.com/newrelic/go-agent/v3/integrations/nrpkgerrors v1.0.0 h1:xPokgQpLh2oW1DpvpAbOPmqV4mTPDlALS2Rq24lSqDY=
+github.com/newrelic/go-agent/v3/integrations/nrpkgerrors v1.0.0/go.mod h1:yXUqcAzlKNVIsSyoaI2ILdpvBeMCz3Ko/ASl4Vbg2i4=
 github.com/newrelic/newrelic-opencensus-exporter-go v0.4.0 h1:BjzhyzSrzc8/WtyZDWBF8XATW4M92EoZiy38kgL3gfo=
 github.com/newrelic/newrelic-opencensus-exporter-go v0.4.0/go.mod h1:gSMlmRnmdRq5c2NTNuh+JtBGXSvnJDqIudxiXwQ07m0=
 github.com/newrelic/newrelic-telemetry-sdk-go v0.2.0 h1:W8+lNIfAldCScGiikToSprbf3DCaMXk0VIM9l73BIpY=

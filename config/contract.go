@@ -11,7 +11,7 @@ type Env interface {
 }
 
 type Validateable interface {
-	Validate() error
+	Validate() (err error)
 }
 
 type ConfigWithDefaults interface {

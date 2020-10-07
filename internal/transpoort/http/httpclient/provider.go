@@ -7,7 +7,7 @@ import (
 	"go.opencensus.io/trace"
 )
 
-func ProvideClient() *http.Client {
+func Provide() *http.Client {
 	return &http.Client{
 		Transport: &ochttp.Transport{
 			Base: http.DefaultTransport,

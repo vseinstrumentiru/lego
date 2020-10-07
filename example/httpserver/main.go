@@ -19,8 +19,13 @@ type Config struct {
 	Log                log.Config
 }
 
+type Tmp struct {
+	Val string
+}
+
 type App struct {
 	b      string
+	tmp    Tmp
 	Logger multilog.Logger
 }
 

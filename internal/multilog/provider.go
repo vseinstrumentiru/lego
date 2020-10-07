@@ -5,7 +5,6 @@ import (
 	"io"
 	"os"
 
-	"github.com/newrelic/go-agent/v3/newrelic"
 	"github.com/rs/zerolog"
 	"go.uber.org/dig"
 	zerologadapter "logur.dev/adapter/zerolog"
@@ -13,7 +12,6 @@ import (
 
 	"github.com/vseinstrumentiru/lego/multilog"
 	"github.com/vseinstrumentiru/lego/multilog/log"
-	lenewrelic "github.com/vseinstrumentiru/lego/multilog/newrelic"
 	"github.com/vseinstrumentiru/lego/multilog/sentry"
 )
 
@@ -21,10 +19,9 @@ type args struct {
 	dig.In
 	Config *multilog.Config `optional:"true"`
 
-	Sentry   *sentry.Config        `optional:"true"`
-	NewRelic *newrelic.Application `optional:"true"`
-	Log      *log.Config           `optional:"true"`
-	Logger   logur.Logger          `optional:"true"`
+	Sentry *sentry.Config `optional:"true"`
+	Log    *log.Config    `optional:"true"`
+	Logger logur.Logger   `optional:"true"`
 }
 
 type ctxOpt func(ctx zerolog.Context) zerolog.Context
@@ -40,10 +37,6 @@ func Provide(in args) multilog.Logger {
 
 	if in.Sentry != nil {
 		opts = append(opts, multilog.WithHandler(sentry.Handler(in.Sentry.Addr, in.Sentry.Level, in.Sentry.Stop)))
-	}
-
-	if in.NewRelic != nil {
-		opts = append(opts, multilog.WithHandler(lenewrelic.Handler(in.NewRelic)))
 	}
 
 	var contextOptions []ctxOpt
@@ -72,6 +65,12 @@ func Provide(in args) multilog.Logger {
 			}
 
 			logger := ctx.Logger()
+
+			if in.Log.Level >= 1 {
+				logger = logger.Level(zerolog.Level(in.Log.Level - 1))
+			} else {
+				logger = logger.Level(zerolog.Level(in.Log.Level))
+			}
 
 			in.Logger = zerologadapter.New(logger)
 		}

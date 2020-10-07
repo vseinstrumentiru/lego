@@ -12,7 +12,7 @@ import (
 type args struct {
 	dig.In
 	App    *config.Application
-	Config *exporters.NewRelic
+	Config *exporters.NewRelic `optional:"true"`
 	Logger multilog.Logger
 }
 
@@ -41,6 +41,10 @@ func (l loggerWrap) DebugEnabled() bool {
 }
 
 func Provide(in args) (app *newrelic.Application, err error) {
+	if in.Config == nil {
+		return nil, nil
+	}
+
 	app, err = newrelic.NewApplication(
 		newrelic.ConfigAppName(in.App.FullName()),
 		newrelic.ConfigLicense(in.Config.Key),

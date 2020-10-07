@@ -37,19 +37,23 @@ type multilog struct {
 	extractor ContextExtractor
 }
 
-func (c multilog) HandleContext(ctx context.Context, err error) {
-	c.WithContext(ctx).Notify(err)
+func (l multilog) WithHandler(handler EntryHandler) {
+	l.handler = AppendHandler(l.handler, handler)
 }
 
-func (c multilog) Handle(err error) {
-	c.Notify(err)
+func (l multilog) HandleContext(ctx context.Context, err error) {
+	l.WithContext(ctx).Notify(err)
 }
 
-func (c multilog) WithFields(fields map[string]interface{}) Logger {
-	if len(c.fields) > 0 {
-		_fields := make(map[string]interface{}, len(c.fields)+len(fields))
+func (l multilog) Handle(err error) {
+	l.Notify(err)
+}
 
-		for key, value := range c.fields {
+func (l multilog) WithFields(fields map[string]interface{}) Logger {
+	if len(l.fields) > 0 {
+		_fields := make(map[string]interface{}, len(l.fields)+len(fields))
+
+		for key, value := range l.fields {
 			_fields[key] = value
 		}
 
@@ -61,18 +65,18 @@ func (c multilog) WithFields(fields map[string]interface{}) Logger {
 	}
 
 	return multilog{
-		level:     c.level,
-		handler:   c.handler,
+		level:     l.level,
+		handler:   l.handler,
 		fields:    fields,
-		extractor: c.extractor,
+		extractor: l.extractor,
 	}
 }
 
-func (c multilog) LevelEnabled(level logur.Level) bool {
-	return c.level >= level
+func (l multilog) LevelEnabled(level logur.Level) bool {
+	return l.level >= level
 }
 
-func (c multilog) Notify(notification interface{}) {
+func (l multilog) Notify(notification interface{}) {
 	var n Entry
 
 	switch t := notification.(type) {
@@ -84,49 +88,49 @@ func (c multilog) Notify(notification interface{}) {
 		}
 		n = errorNotification{
 			err:    errors.WithStackDepthIf(t, 1),
-			fields: c.fields,
+			fields: l.fields,
 		}
 	case string:
-		n = NewNotification(logur.Info, t, c.fields)
+		n = NewNotification(logur.Info, t, l.fields)
 	default:
 		return
 	}
 
-	c.handler.Handle(n)
+	l.handler.Handle(n)
 }
 
-func (c multilog) WithFilter(matcher EntryMatcher) Logger {
+func (l multilog) WithFilter(matcher EntryMatcher) Logger {
 	return &multilog{
-		level:     c.level,
-		handler:   WithFilter(c.handler, matcher),
-		extractor: c.extractor,
+		level:     l.level,
+		handler:   WithFilter(l.handler, matcher),
+		extractor: l.extractor,
 	}
 }
 
-func (c multilog) WithErrFilter(matcher EntryErrMatcher) Logger {
+func (l multilog) WithErrFilter(matcher EntryErrMatcher) Logger {
 	return &multilog{
-		level:     c.level,
-		handler:   WithErrFilter(c.handler, matcher),
-		extractor: c.extractor,
+		level:     l.level,
+		handler:   WithErrFilter(l.handler, matcher),
+		extractor: l.extractor,
 	}
 }
 
-func (c multilog) WithContext(ctx context.Context) Logger {
-	if c.extractor == nil {
-		return c
+func (l multilog) WithContext(ctx context.Context) Logger {
+	if l.extractor == nil {
+		return l
 	}
-	return c.WithFields(c.extractor(ctx))
+	return l.WithFields(l.extractor(ctx))
 }
 
-func (c multilog) notify(level logur.Level, msg string, fields ...map[string]interface{}) {
-	if c.level > level {
+func (l multilog) notify(level logur.Level, msg string, fields ...map[string]interface{}) {
+	if l.level > level {
 		return
 	}
 
 	_fields := make(map[string]interface{})
 
-	if len(c.fields) != 0 {
-		for key, val := range c.fields {
+	if len(l.fields) != 0 {
+		for key, val := range l.fields {
 			_fields[key] = val
 		}
 	}
@@ -139,53 +143,53 @@ func (c multilog) notify(level logur.Level, msg string, fields ...map[string]int
 
 	n := NewNotification(level, msg, _fields)
 
-	c.Notify(n)
+	l.Notify(n)
 }
 
-func (c multilog) Trace(msg string, fields ...map[string]interface{}) {
-	c.notify(logur.Trace, msg, fields...)
+func (l multilog) Trace(msg string, fields ...map[string]interface{}) {
+	l.notify(logur.Trace, msg, fields...)
 }
 
-func (c multilog) Debug(msg string, fields ...map[string]interface{}) {
-	c.notify(logur.Debug, msg, fields...)
+func (l multilog) Debug(msg string, fields ...map[string]interface{}) {
+	l.notify(logur.Debug, msg, fields...)
 }
 
-func (c multilog) Info(msg string, fields ...map[string]interface{}) {
-	c.notify(logur.Info, msg, fields...)
+func (l multilog) Info(msg string, fields ...map[string]interface{}) {
+	l.notify(logur.Info, msg, fields...)
 }
 
-func (c multilog) Warn(msg string, fields ...map[string]interface{}) {
-	c.notify(logur.Warn, msg, fields...)
+func (l multilog) Warn(msg string, fields ...map[string]interface{}) {
+	l.notify(logur.Warn, msg, fields...)
 }
 
-func (c multilog) Error(msg string, fields ...map[string]interface{}) {
-	c.notify(logur.Error, msg, fields...)
+func (l multilog) Error(msg string, fields ...map[string]interface{}) {
+	l.notify(logur.Error, msg, fields...)
 }
 
-func (c multilog) notifyContext(ctx context.Context, level logur.Level, msg string, fields ...map[string]interface{}) {
-	if c.extractor != nil {
-		fields = append(fields, c.extractor(ctx))
+func (l multilog) notifyContext(ctx context.Context, level logur.Level, msg string, fields ...map[string]interface{}) {
+	if l.extractor != nil {
+		fields = append(fields, l.extractor(ctx))
 	}
 
-	c.notify(level, msg, fields...)
+	l.notify(level, msg, fields...)
 }
 
-func (c multilog) TraceContext(ctx context.Context, msg string, fields ...map[string]interface{}) {
-	c.notifyContext(ctx, logur.Trace, msg, fields...)
+func (l multilog) TraceContext(ctx context.Context, msg string, fields ...map[string]interface{}) {
+	l.notifyContext(ctx, logur.Trace, msg, fields...)
 }
 
-func (c multilog) DebugContext(ctx context.Context, msg string, fields ...map[string]interface{}) {
-	c.notifyContext(ctx, logur.Debug, msg, fields...)
+func (l multilog) DebugContext(ctx context.Context, msg string, fields ...map[string]interface{}) {
+	l.notifyContext(ctx, logur.Debug, msg, fields...)
 }
 
-func (c multilog) InfoContext(ctx context.Context, msg string, fields ...map[string]interface{}) {
-	c.notifyContext(ctx, logur.Info, msg, fields...)
+func (l multilog) InfoContext(ctx context.Context, msg string, fields ...map[string]interface{}) {
+	l.notifyContext(ctx, logur.Info, msg, fields...)
 }
 
-func (c multilog) WarnContext(ctx context.Context, msg string, fields ...map[string]interface{}) {
-	c.notifyContext(ctx, logur.Warn, msg, fields...)
+func (l multilog) WarnContext(ctx context.Context, msg string, fields ...map[string]interface{}) {
+	l.notifyContext(ctx, logur.Warn, msg, fields...)
 }
 
-func (c multilog) ErrorContext(ctx context.Context, msg string, fields ...map[string]interface{}) {
-	c.notifyContext(ctx, logur.Error, msg, fields...)
+func (l multilog) ErrorContext(ctx context.Context, msg string, fields ...map[string]interface{}) {
+	l.notifyContext(ctx, logur.Error, msg, fields...)
 }

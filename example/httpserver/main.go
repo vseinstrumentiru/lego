@@ -15,7 +15,7 @@ import (
 type Config struct {
 	config.Application `mapstructure:",squash"`
 	Http               httpcfg.Config
-	Notify             multilog.Config
+	Logger             multilog.Config
 	Log                log.Config
 }
 

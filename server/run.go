@@ -45,7 +45,7 @@ func Run(app interface{}, cfg interface{}) {
 	container.
 		register(func() di.Container { return container.i }).
 		// configuration
-		register(func() config.RawConfig { return cfg }).
+		register(func() config.Config { return cfg }).
 		register(func() environment.Env { return env }).
 		execute(config.Configure).
 		execute(func(cfg *baseCfg.Application) {
@@ -100,11 +100,14 @@ func Run(app interface{}, cfg interface{}) {
 		register(metrics.Provide).
 		register(httpserver.Provide).
 		register(grpcProvider.Provide).
+		// events
 		register(eventrouter.Provide).
-		register(events.ProvideKafka).
-		register(events.ProvideNats).
+		register(events.ProvideKafkaPublisher).
+		register(events.ProvideKafkaSubscriber).
+		register(events.ProvideNatsSubscriber).
+		register(events.ProvideNatsPublisher).
 		register(events.ProvideChannel).
-		// making application
+		// constructing application
 		make(app).
 		// boot components
 		execute(jaegerexporter.Configure).

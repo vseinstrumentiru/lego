@@ -2,69 +2,54 @@ package events
 
 import (
 	"github.com/ThreeDotsLabs/watermill-nats/pkg/nats"
-	"github.com/ThreeDotsLabs/watermill/message"
 	"github.com/nats-io/stan.go"
 	watermilllog "logur.dev/integration/watermill"
 
-	"github.com/vseinstrumentiru/lego/events"
 	"github.com/vseinstrumentiru/lego/multilog"
+	lestan "github.com/vseinstrumentiru/lego/transport/stan"
 )
 
-type natsArgs struct {
-	Config *events.Config `optional:"true"`
-	Stan   stan.Conn
-	Logger multilog.Logger
+type natsPubArgs struct {
+	Stan    stan.Conn
+	Logger  multilog.Logger
+	Encoder nats.Marshaler
 }
 
-type natsProvider struct {
-	events.Config
-	conn   stan.Conn
-	logger multilog.Logger
+type natsSubArgs struct {
+	Config  lestan.Config
+	Stan    stan.Conn
+	Logger  multilog.Logger
+	Decoder nats.Unmarshaler
 }
 
-func ProvideNats(in natsArgs) events.StanProvider {
-	c := natsProvider{
-		conn:   in.Stan,
-		logger: in.Logger.WithFields(map[string]interface{}{"provider": "stan"}),
-	}
-
-	if in.Config != nil {
-		c.Config = *in.Config
-	}
-
-	return c
-}
-
-func (n natsProvider) NewPublisher(m nats.Marshaler) (message.Publisher, error) {
+func ProvideNatsPublisher(in natsPubArgs) (*nats.StreamingPublisher, error) {
 	return nats.NewStreamingPublisherWithStanConn(
-		n.conn,
+		in.Stan,
 		nats.StreamingPublisherPublishConfig{
-			Marshaler: m,
+			Marshaler: in.Encoder,
 		},
-		watermilllog.New(n.logger.WithFields(map[string]interface{}{"component": "events.publisher"})),
+		watermilllog.New(in.Logger.WithFields(map[string]interface{}{"provider": "stan", "component": "events.publisher"})),
 	)
 }
 
-func (n natsProvider) NewSubscriber(cfg events.NatsSubscriberConfig) (message.Subscriber, error) {
+func ProvideNatsSubscriber(in natsSubArgs) (*nats.StreamingSubscriber, error) {
 	subCfg := nats.StreamingSubscriberSubscriptionConfig{
-		AckWaitTimeout: cfg.AckTimeout,
-		CloseTimeout:   cfg.CloseTimeout,
-		DurableName:    cfg.DurableName,
-		QueueGroup:     cfg.GroupName,
-		Unmarshaler:    cfg.Decoder,
+		DurableName: in.Config.DurableName,
+		QueueGroup:  in.Config.GroupName,
+		Unmarshaler: in.Decoder,
 	}
 
-	if subCfg.AckWaitTimeout <= 0 && n.AckWaitTimeout != nil {
-		subCfg.AckWaitTimeout = *n.AckWaitTimeout
+	if in.Config.AckTimeout != nil && *in.Config.AckTimeout > 0 {
+		subCfg.AckWaitTimeout = *in.Config.AckTimeout
 	}
 
-	if subCfg.CloseTimeout <= 0 && n.CloseTimeout != nil {
-		subCfg.CloseTimeout = *n.CloseTimeout
+	if in.Config.CloseTimeout != nil && *in.Config.CloseTimeout > 0 {
+		subCfg.CloseTimeout = *in.Config.CloseTimeout
 	}
 
 	return nats.NewStreamingSubscriberWithStanConn(
-		n.conn,
+		in.Stan,
 		subCfg,
-		watermilllog.New(n.logger.WithFields(map[string]interface{}{"component": "events.subscriber"})),
+		watermilllog.New(in.Logger.WithFields(map[string]interface{}{"provider": "stan", "component": "events.subscriber"})),
 	)
 }

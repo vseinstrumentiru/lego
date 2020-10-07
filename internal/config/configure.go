@@ -13,11 +13,11 @@ import (
 	di "github.com/vseinstrumentiru/lego/internal/container"
 )
 
-type RawConfig interface{}
+type Config interface{}
 
 type argsIn struct {
 	dig.In
-	Config    RawConfig
+	Config    Config
 	Env       env.Env
 	Container di.Container
 }

@@ -4,7 +4,7 @@ package lego
 type CloserGroup struct{}
 
 // deprecated
-func (CloserGroup) Close() {}
+func (CloserGroup) Close() error { return nil }
 
 // deprecated
-func (CloserGroup) Add() {}
+func (CloserGroup) Add(interface{}) {}

@@ -8,7 +8,7 @@ require (
 	contrib.go.opencensus.io/exporter/prometheus v0.2.0
 	contrib.go.opencensus.io/integrations/ocsql v0.1.5
 	emperror.dev/emperror v0.32.0
-	emperror.dev/errors v0.7.0
+	emperror.dev/errors v0.8.0
 	emperror.dev/handler/logur v0.4.0 // indirect
 	github.com/AppsFlyer/go-sundheit v0.2.0
 	github.com/Shopify/sarama v1.23.1
@@ -20,6 +20,7 @@ require (
 	github.com/certifi/gocertifi v0.0.0-20200211180108-c7c1fbc02894 // indirect
 	github.com/cloudevents/sdk-go/v2 v2.2.0 // indirect
 	github.com/cloudflare/tableflip v1.2.0
+	github.com/dave/jennifer v1.4.1
 	github.com/facebookincubator/ent v0.2.2 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/getsentry/raven-go v0.2.0
@@ -58,18 +59,17 @@ require (
 	github.com/sirupsen/logrus v1.6.0 // indirect
 	github.com/spf13/afero v1.3.0 // indirect
 	github.com/spf13/cast v1.3.1 // indirect
+	github.com/spf13/cobra v1.0.0
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.7.0
-	github.com/stretchr/testify v1.5.1
+	github.com/stretchr/testify v1.6.1
 	github.com/uber/jaeger-client-go v2.24.0+incompatible // indirect
 	go.opencensus.io v0.22.4
 	go.uber.org/dig v1.10.0
-	go.uber.org/multierr v1.5.0 // indirect
-	golang.org/x/net v0.0.0-20200625001655-4c5254603344 // indirect
 	golang.org/x/sys v0.0.0-20200622214017-ed371f2e16b4 // indirect
 	golang.org/x/text v0.3.3 // indirect
-	golang.org/x/tools v0.0.0-20200426102838-f3a5411a4c3b // indirect
+	golang.org/x/tools v0.0.0-20200921210052-fa0125251cc4
 	google.golang.org/api v0.28.0 // indirect
 	google.golang.org/genproto v0.0.0-20200624020401-64a14ca9d1ad // indirect
 	google.golang.org/grpc v1.30.0
@@ -79,4 +79,6 @@ require (
 	logur.dev/adapter/zerolog v0.5.0
 	logur.dev/integration/watermill v0.5.0
 	logur.dev/logur v0.16.2
+	sagikazarmark.dev/mga v0.4.2
+	sigs.k8s.io/controller-tools v0.4.0
 )

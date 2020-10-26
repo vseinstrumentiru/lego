@@ -1,4 +1,4 @@
-package bootstrap
+package structure
 
 import (
 	"os"
@@ -14,18 +14,37 @@ import (
 )
 
 var Command = &cobra.Command{
-	Use:  "bootstrap",
+	Use:  "init",
 	Args: cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		if path, err := cmd.Flags().GetString("config"); err == nil && path != "" {
-			viper.AddConfigPath(path)
-		}
+		viper.SetDefault("structure", map[string]interface{}{
+			"cmd": map[string]interface{}{
+				"server": "legostarter",
+			},
+			"internal": map[string]interface{}{
+				"app": map[string]interface{}{
+					"example": "legoservice",
+				},
+				"platform": map[string]interface{}{
+					".gitkeep": "emptyfile",
+				},
+				"common": map[string]interface{}{
+					".gitkeep": "emptyfile",
+				},
+			},
+			"pkg": map[string]interface{}{
+				".gitkeep": "emptyfile",
+			},
+		})
 
 		if len(args) == 0 {
 			args = append(args, "")
 		}
 
-		emperror.Panic(viper.ReadInConfig())
+		if path, err := cmd.Flags().GetString("config"); err == nil && path != "" {
+			viper.AddConfigPath(path)
+			emperror.Panic(viper.ReadInConfig())
+		}
 
 		path, err := os.Getwd()
 		emperror.Panic(err)

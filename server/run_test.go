@@ -9,5 +9,5 @@ type testConfig struct {
 }
 
 func Test_Start(t *testing.T) {
-	Run(testApp{}, &testConfig{})
+	Run(testApp{}, &testConfig{}, NoWait)
 }

@@ -27,7 +27,35 @@ const (
 	defaultConfigPath = "app"
 )
 
-func Run(app interface{}, cfg interface{}) {
+func newRunTime(opts []Option) *Runtime {
+	runtime := &Runtime{options: map[string]bool{}}
+
+	for _, opt := range opts {
+		opt(runtime)
+	}
+
+	return runtime
+}
+
+type Runtime struct {
+	options map[string]bool
+}
+
+func (r *Runtime) Is(key string) bool {
+	v, ok := r.options[key]
+	return ok && v
+}
+
+func (r *Runtime) Not(key string) bool {
+	v, ok := r.options[key]
+	return !ok || !v
+}
+
+type Option func(r *Runtime)
+
+func Run(app interface{}, cfg interface{}, opts ...Option) {
+	runtume := newRunTime(opts)
+
 	// core container instance
 	container := newContainer()
 
@@ -99,8 +127,10 @@ func Run(app interface{}, cfg interface{}) {
 		container.execute(exec)
 	}
 
-	// running application
-	if err := pipeline.Run(); err != nil {
-		logger.WithErrFilter(match.As(&run.SignalError{}).MatchError).Notify(err)
+	if runtume.Not(rtNoWait) {
+		// running application
+		if err := pipeline.Run(); err != nil {
+			logger.WithErrFilter(match.As(&run.SignalError{}).MatchError).Notify(err)
+		}
 	}
 }

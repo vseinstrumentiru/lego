@@ -1,0 +1,104 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+      - next
+  pull_request:
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    env:
+      GOFLAGS: -mod=readonly
+
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.15
+
+      - name: Compile Go stdlib for Darwin
+        run: go install -v std
+        env:
+          GOOS: darwin
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Please
+        uses: sagikazarmark/setup-please-action@v0
+
+      - name: Generate
+        run: plz generate
+
+      - name: Test
+        run: |
+          plz test //...
+          plz gotest
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    env:
+      GOFLAGS: -mod=readonly
+
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.15
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Please
+        uses: sagikazarmark/setup-please-action@v0
+
+      - name: Lint
+        run: plz lint
+
+  artifacts:
+    name: Artifacts
+    runs-on: ubuntu-latest
+    env:
+      GOFLAGS: -mod=readonly
+
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.15
+
+      - name: Compile Go stdlib for Darwin
+        run: go install -v std
+        env:
+          GOOS: darwin
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Please
+        uses: sagikazarmark/setup-please-action@v0
+
+      - name: Build
+        run: plz build :artifacts
+
+      - name: Upload linux artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: mga_linux_amd64.tar.gz
+          path: plz-out/gen/mga_linux_amd64.tar.gz
+
+      - name: Upload darwin artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: mga_darwin_amd64.tar.gz
+          path: plz-out/gen/mga_darwin_amd64.tar.gz
+
+      - name: Upload checksums
+        uses: actions/upload-artifact@v1
+        with:
+          name: checksums.txt
+          path: plz-out/gen/checksums.txt

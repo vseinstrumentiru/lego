@@ -20,5 +20,6 @@ func MkDir(segments ...string) error {
 
 func PackageName(path string) string {
 	s := strings.Split(path, string(os.PathSeparator))
+
 	return s[len(s)-1]
 }

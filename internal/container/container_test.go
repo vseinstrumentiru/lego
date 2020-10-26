@@ -24,27 +24,27 @@ func NewType1() Type1 {
 
 func Test_Singleton(t *testing.T) {
 	c := New()
-	c.Register(NewType1Pointer)
+	assert.NoError(t, c.Register(NewType1Pointer))
 	var type1 *Type1
-	c.Execute(func(a *Type1) { type1 = a })
+	assert.NoError(t, c.Execute(func(a *Type1) { type1 = a }))
 	assert.NotNil(t, type1)
 	assert.Equal(t, 1, type1.Val)
 	type1.Val = 2
 	var type2 *Type1
-	c.Execute(func(a *Type1) { type2 = a })
+	assert.NoError(t, c.Execute(func(a *Type1) { type2 = a }))
 	assert.Equal(t, 2, type2.Val)
 }
 
 func Test_Not_Singleton(t *testing.T) {
 	c := New()
-	c.Register(NewType1)
+	assert.NoError(t, c.Register(NewType1))
 	var type1 Type1
-	c.Execute(func(a Type1) { type1 = a })
+	assert.NoError(t, c.Execute(func(a Type1) { type1 = a }))
 	assert.Equal(t, 1, type1.Val)
 	type1.Val = 2
 	assert.Equal(t, 2, type1.Val)
 	var type2 Type1
-	c.Execute(func(a Type1) { type2 = a })
+	assert.NoError(t, c.Execute(func(a Type1) { type2 = a }))
 	assert.Equal(t, 1, type2.Val)
 }
 
@@ -52,15 +52,15 @@ func Test_Instance(t *testing.T) {
 	c := New()
 	{
 		type1 := Type1{Val: 5}
-		c.Instance(type1)
+		assert.NoError(t, c.Instance(type1))
 	}
 	var type1 Type1
-	c.Execute(func(a Type1) { type1 = a })
+	assert.NoError(t, c.Execute(func(a Type1) { type1 = a }))
 	assert.Equal(t, 5, type1.Val)
 	type1.Val = 2
 	assert.Equal(t, 2, type1.Val)
 	var type2 Type1
-	c.Execute(func(a Type1) { type2 = a })
+	assert.NoError(t, c.Execute(func(a Type1) { type2 = a }))
 	assert.Equal(t, 5, type2.Val)
 }
 
@@ -68,15 +68,15 @@ func Test_Instance_Pointer(t *testing.T) {
 	c := New()
 	{
 		type1 := &Type1{Val: 5}
-		c.Instance(type1)
+		assert.NoError(t, c.Instance(type1))
 	}
 	var type1 *Type1
-	c.Execute(func(a *Type1) { type1 = a })
+	assert.NoError(t, c.Execute(func(a *Type1) { type1 = a }))
 	assert.Equal(t, 5, type1.Val)
 	type1.Val = 2
 	assert.Equal(t, 2, type1.Val)
 	var type2 *Type1
-	c.Execute(func(a *Type1) { type2 = a })
+	assert.NoError(t, c.Execute(func(a *Type1) { type2 = a }))
 	assert.Equal(t, 2, type2.Val)
 }
 
@@ -104,10 +104,10 @@ func (app *App) ProvideType2() Type2 {
 
 func TestContainer_MakeApp(t *testing.T) {
 	c := New()
-	c.Register(NewType1)
+	assert.NoError(t, c.Register(NewType1))
 	app := App{}
 
-	c.Make(&app)
+	assert.NoError(t, c.Make(&app))
 
 	ass := assert.New(t)
 	ass.Equal(1, app.T1.Val)

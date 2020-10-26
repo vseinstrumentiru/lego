@@ -12,6 +12,7 @@ type SimpleCloseFn func()
 
 func (c SimpleCloseFn) Close() error {
 	c()
+
 	return nil
 }
 

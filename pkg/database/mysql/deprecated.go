@@ -1,4 +1,4 @@
 package mysql
 
-// deprecated: already sets
+// Deprecated: already sets.
 func SetLogger(interface{}) {}

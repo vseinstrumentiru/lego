@@ -23,6 +23,7 @@ func NoGeneration(clientID string) string {
 
 func HostSuffixed(clientID string) string {
 	host, _ := os.Hostname()
+
 	return fmt.Sprintf("%s_%s", clientID, host)
 }
 

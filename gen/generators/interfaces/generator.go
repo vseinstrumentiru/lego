@@ -118,9 +118,9 @@ func (g generator) generatePackage(ctx *genall.GenerationContext, root *loader.P
 		if marker := info.Markers.Get(g.mark.Name); marker == nil {
 			if marker := info.Markers.Get(g.implementation.Name); marker == nil {
 				return
-			} else {
-				isImplementation = true
 			}
+
+			isImplementation = true
 		}
 
 		typeInfo := root.TypesInfo.TypeOf(info.RawSpec.Name)

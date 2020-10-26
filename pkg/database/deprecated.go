@@ -9,7 +9,7 @@ import (
 	"github.com/vseinstrumentiru/lego/server/shutdown"
 )
 
-// deprecated: use DI
+// Deprecated: use DI.
 func NewSQLConnection(_ interface{}, _ interface{}) (conn *sql.DB, closer *shutdown.CloseGroup) {
 	err := deprecated.Container.Execute(func(i *sql.DB, j *shutdown.CloseGroup) {
 		conn = i

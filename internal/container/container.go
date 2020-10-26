@@ -185,35 +185,6 @@ func instanceFn(i reflect.Value) func(args []reflect.Value) []reflect.Value {
 	}
 }
 
-func resolveFn(i interface{}) interface{} {
-	var outFields []reflect.StructField
-	val := reflect.ValueOf(i)
-	t := val.Type()
-
-	outFields = append(outFields, reflect.StructField{
-		Type:      reflect.TypeOf(dig.Out{}),
-		Anonymous: true,
-	})
-
-	for i := 0; i < t.NumField(); i++ {
-		field := t.Field(i)
-
-		outFields = append(outFields, reflect.StructField{
-			Name: field.Name,
-			Type: field.Type,
-		})
-	}
-
-	result := reflect.New(reflect.StructOf(outFields))
-
-	for i := 0; i < result.NumField(); i++ {
-		field := result.Field(i)
-		field.Set(val.Field(i))
-	}
-
-	return result
-}
-
 func checkStruct(t reflect.Value) error {
 	if t.Kind() == reflect.Ptr {
 		if t.IsNil() || !t.IsValid() {

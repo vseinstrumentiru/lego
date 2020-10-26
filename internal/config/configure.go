@@ -83,7 +83,7 @@ func parse(i interface{}) *parsed {
 
 type defaults struct {
 	key string
-	val config.ConfigWithDefaults
+	val config.WithDefaults
 }
 
 type parsed struct {
@@ -116,7 +116,7 @@ func scan(i interface{}, key string, p *parsed) {
 		return
 	}
 
-	if val, ok := i.(config.ConfigWithDefaults); ok {
+	if val, ok := i.(config.WithDefaults); ok {
 		p.defaults = append(p.defaults, defaults{key: key, val: val})
 	}
 
@@ -166,7 +166,7 @@ func getFieldName(f reflect.StructField) (string, bool) {
 		}
 
 		// If "squash" is specified in the tag, we squash the field down.
-		squash := strings.Index(tagValue[index+1:], "squash") != -1
+		squash := strings.Contains(tagValue[index+1:], "squash")
 		if squash && f.Type.Kind() == reflect.Struct {
 			return "", true
 		}

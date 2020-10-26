@@ -1,10 +1,11 @@
 package metrics
 
 import (
+	"time"
+
 	"github.com/ThreeDotsLabs/watermill/message"
 	"go.opencensus.io/stats"
 	"go.opencensus.io/tag"
-	"time"
 )
 
 var (

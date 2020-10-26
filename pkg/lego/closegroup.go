@@ -1,10 +1,10 @@
 package lego
 
-// deprecated
+// Deprecated: will deleted in next versions.
 type CloserGroup struct{}
 
-// deprecated
+// Deprecated: will deleted in next versions.
 func (CloserGroup) Close() error { return nil }
 
-// deprecated
+// Deprecated: will deleted in next versions.
 func (CloserGroup) Add(interface{}) {}

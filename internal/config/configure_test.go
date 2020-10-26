@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	le "github.com/vseinstrumentiru/lego/container"
+	le "github.com/vseinstrumentiru/lego/inject"
 
 	"github.com/vseinstrumentiru/lego/config"
 	"github.com/vseinstrumentiru/lego/internal/config/env"
@@ -44,18 +44,14 @@ func Test_ParseConfig(t *testing.T) {
 		}
 	}{}
 
-	res := parse(&test, "app")
+	res := parse(&test)
 	assert.NotEmpty(t, res.defaults)
-	assert.NotNil(t, res.defaults["app.a1"])
-	assert.NotNil(t, res.defaults["app.a3"])
-	assert.NotNil(t, res.defaults["app.a5"])
-	assert.NotNil(t, res.defaults["app.a5.b1"])
 	assert.NotEmpty(t, res.validates)
-	assert.NotNil(t, res.validates["app.a2"])
-	assert.NotNil(t, res.validates["app.a3"])
-	assert.NotNil(t, res.validates["app.a5"])
-	assert.NotNil(t, res.validates["app.a5.b2"])
-	assert.NotNil(t, res.validates["app.a5.b2.c2"])
+	assert.NotNil(t, res.validates["a2"])
+	assert.NotNil(t, res.validates["a3"])
+	assert.NotNil(t, res.validates["a5"])
+	assert.NotNil(t, res.validates["a5.b2"])
+	assert.NotNil(t, res.validates["a5.b2.c2"])
 }
 
 type TestRootConfig struct {
@@ -121,16 +117,16 @@ func Test_Provide(t *testing.T) {
 func Test_ConfigInContainer(t *testing.T) {
 	preloadEnvs()
 
-	var config TestRootConfig
-	container := container.New()
+	var cfg TestRootConfig
+	c := container.New()
 	_ = Configure(argsIn{
-		Config:    config,
+		Config:    &cfg,
 		Env:       env.New("test"),
-		Container: container,
+		Container: c,
 	})
 	ass := assert.New(t)
 
-	container.Execute(func(cfg *TestRootConfig) {
+	ass.NoError(c.Execute(func(cfg *TestRootConfig) {
 		ass.NotNil(cfg)
 		ass.Equal("test-a", cfg.A)
 		ass.Equal(1, cfg.B)
@@ -141,35 +137,35 @@ func Test_ConfigInContainer(t *testing.T) {
 		ass.Equal("test-c-a", cfg.C.A)
 		ass.Equal("test-f-a", cfg.F.A)
 		ass.Equal(4, cfg.F.B)
-	})
+	}))
 
-	container.Execute(func(in struct {
+	ass.NoError(c.Execute(func(in struct {
 		le.In
 		Cfg *TestSub1Config `name:"cfg.c"`
 	}) {
 		ass.NotNil(in.Cfg)
 		ass.Equal("test-c-a", in.Cfg.A)
-	})
+	}))
 
-	container.Execute(func(cfg *TestSub2Config) {
+	ass.NoError(c.Execute(func(cfg *TestSub2Config) {
 		ass.NotNil(cfg)
 		ass.Equal(2, cfg.A)
 		ass.Equal("test-d-b-a", cfg.B.A)
 		ass.Equal(3, cfg.B.B)
-	})
+	}))
 
-	container.Execute(func(cfg *TestSubSubConfig) {
+	ass.NoError(c.Execute(func(cfg *TestSubSubConfig) {
 		ass.NotNil(cfg)
 		ass.Equal("test-d-b-a", cfg.A)
 		ass.Equal(3, cfg.B)
-	})
+	}))
 
-	container.Execute(func(in struct {
+	ass.NoError(c.Execute(func(in struct {
 		le.In
 		Cfg *TestSub1Config `name:"cfg.f"`
 	}) {
 		ass.NotNil(in.Cfg)
 		ass.Equal("test-f-a", in.Cfg.A)
 		ass.Equal(4, in.Cfg.B)
-	})
+	}))
 }

@@ -1,6 +1,0 @@
-name: httpserver
-dataCenter: local
-logger:
-  level: trace
-log:
-  color: true

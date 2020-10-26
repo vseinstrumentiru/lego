@@ -95,7 +95,8 @@ func WithErrFilter(handler EntryHandler, matcher EntryErrMatcher) EntryHandler {
 
 func AppendHandler(parent EntryHandler, add EntryHandler) EntryHandler {
 	if c, ok := parent.(compositeHandler); ok {
-		parent = append(c, add)
+		c = append(c, add)
+		parent = c
 	} else {
 		parent = compositeHandler{parent, add}
 	}

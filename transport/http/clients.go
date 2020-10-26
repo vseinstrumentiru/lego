@@ -19,7 +19,7 @@ func NewGraphQLClient(client *http.Client, endpoint string) *graphql.Client {
 	return graphql.NewClient(endpoint, client)
 }
 
-func NewJsonRPCClient(addr, method string, client *http.Client, option ...jsonrpc.ClientOption) *jsonrpc.Client {
+func NewJSONRPCClient(addr, method string, client *http.Client, option ...jsonrpc.ClientOption) *jsonrpc.Client {
 	u, err := url.Parse(addr)
 	emperror.Panic(errors.Wrap(err, "can't create JsonRPC client"))
 

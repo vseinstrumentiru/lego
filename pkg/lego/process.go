@@ -2,7 +2,7 @@ package lego
 
 import "github.com/vseinstrumentiru/lego/multilog"
 
-// deprecated: use DI
+// Deprecated: use DI
 type Process struct {
 	multilog.Logger
 }

@@ -51,8 +51,9 @@ func (s *Sampler) FromString(b []byte) error {
 			return errors.WithStack(err)
 		} else {
 			*s = Sampler(trace.ProbabilitySampler(fraction))
-			return nil
 		}
+
+		return nil
 	}
 
 	switch text {

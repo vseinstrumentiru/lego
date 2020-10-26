@@ -20,7 +20,6 @@ func (c Config) SetDefaults(env config.Env) {
 	env.SetDefault("rejectReadOnly", true)
 	env.SetDefault("allowNativePasswords", true)
 	env.SetDefault("trace.query", true)
-	return
 }
 
 func (c Config) Validate() (err error) {

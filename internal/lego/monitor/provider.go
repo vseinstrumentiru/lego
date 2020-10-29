@@ -1,23 +1,24 @@
 package monitor
 
 import (
+	"net/http"
+
 	"contrib.go.opencensus.io/exporter/jaeger"
 	"contrib.go.opencensus.io/exporter/ocagent"
 	"contrib.go.opencensus.io/exporter/prometheus"
 	"emperror.dev/emperror"
 	health "github.com/AppsFlyer/go-sundheit"
 	"github.com/newrelic/newrelic-opencensus-exporter-go/nrcensus"
+
 	lego2 "github.com/vseinstrumentiru/lego/internal/lego"
 	lepropagation "github.com/vseinstrumentiru/lego/internal/lego/monitor/propagation"
-	"strings"
+	"go.opencensus.io/plugin/ochttp/propagation/tracecontext"
+	"go.opencensus.io/stats/view"
+	"go.opencensus.io/trace"
 
 	// jaegerPropagation "contrib.go.opencensus.io/exporter/jaeger/propagation"
 	jaegerPropagation "github.com/vseinstrumentiru/lego/internal/lego/monitor/propagation/jaegerwrap"
 	"github.com/vseinstrumentiru/lego/internal/lego/monitor/telemetry"
-	"go.opencensus.io/plugin/ochttp/propagation/tracecontext"
-	"go.opencensus.io/stats/view"
-	"go.opencensus.io/trace"
-	"net/http"
 )
 
 func Provide(p lego2.Process, config Config) (*http.ServeMux, health.Health) {
@@ -77,12 +78,14 @@ func Provide(p lego2.Process, config Config) (*http.ServeMux, health.Health) {
 		p.Info("prometheus exporter enabled")
 
 		exporter, err := prometheus.NewExporter(prometheus.Options{
-			Namespace: strings.ReplaceAll(p.Name(), "-", "_"),
 			OnError: emperror.WithDetails(
 				p.Handler(),
 				"component", "opencensus",
 				"exporter", "prometheus",
 			).Handle,
+			ConstLabels: map[string]string{
+				"app": p.Name(),
+			},
 		})
 		emperror.Panic(err)
 

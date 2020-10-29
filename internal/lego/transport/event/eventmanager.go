@@ -32,7 +32,7 @@ type publishers struct {
 
 func (em *publishers) add(key, name string, publisher message.Publisher) (err error) {
 	var pubErr error
-	publisher, pubErr = metrics.DecoratePublisher(name, publisher)
+	publisher, pubErr = metrics.DecoratePublisher(publisher)
 	err = errors.Append(err, pubErr)
 	publisher, pubErr = message.MessageTransformPublisherDecorator(func(msg *message.Message) {
 		if cid, ok := correlation.FromContext(msg.Context()); ok {
@@ -83,7 +83,7 @@ type subscribers struct {
 
 func (em *subscribers) add(key, name string, subscriber message.Subscriber) (err error) {
 	var subErr error
-	subscriber, subErr = metrics.DecorateSubscriber(name, subscriber)
+	subscriber, subErr = metrics.DecorateSubscriber(subscriber)
 	err = errors.Append(err, subErr)
 	subscriber, subErr = message.MessageTransformSubscriberDecorator(func(msg *message.Message) {
 		if cid := middleware.MessageCorrelationID(msg); cid != "" {

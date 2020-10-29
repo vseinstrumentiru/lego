@@ -1,10 +1,19 @@
 package metrics
 
 import (
+	"time"
+
 	"github.com/ThreeDotsLabs/watermill/message"
 	"go.opencensus.io/stats"
 	"go.opencensus.io/tag"
-	"time"
+)
+
+var (
+	publisherLabelKeys = []string{
+		labelKeyHandlerName,
+		labelKeyPublisherName,
+		labelSuccess,
+	}
 )
 
 type PublisherDecorator struct {
@@ -19,22 +28,18 @@ func (p *PublisherDecorator) Publish(topic string, messages ...*message.Message)
 
 	// TODO: take ctx not only from first msg. Might require changing the signature of Publish, which is planned anyway.
 	ctx := messages[0].Context()
-
-	publisherName := message.PublisherNameFromCtx(ctx)
-	if publisherName == "" {
-		publisherName = p.publisherName
+	labels := labelsFromCtx(ctx, publisherLabelKeys...)
+	if labels[labelKeyPublisherName] == "" {
+		labels[labelKeyPublisherName] = p.publisherName
 	}
-
-	handlerName := message.HandlerNameFromCtx(ctx)
-	if handlerName == "" {
-		handlerName = tagValueNoHandler
+	if labels[labelKeyHandlerName] == "" {
+		labels[labelKeyHandlerName] = labelValueNoHandler
 	}
 
 	tags := []tag.Mutator{
-		tag.Upsert(PublisherName, publisherName),
-		tag.Upsert(HandlerName, handlerName),
+		tag.Upsert(PublisherName, labels[labelKeyPublisherName]),
+		tag.Upsert(HandlerName, labels[labelKeyHandlerName]),
 	}
-
 	start := time.Now()
 
 	defer func() {
@@ -49,7 +54,7 @@ func (p *PublisherDecorator) Publish(topic string, messages ...*message.Message)
 			tags = append(tags, tag.Upsert(Success, "true"))
 		}
 
-		_ = stats.RecordWithTags(ctx, tags, PublisherPublishTime.M(float64(time.Since(start))/float64(time.Millisecond)))
+		_ = stats.RecordWithTags(ctx, tags, PublisherPublishTime.M(time.Since(start).Seconds()))
 	}()
 
 	for _, msg := range messages {
@@ -64,9 +69,9 @@ func (p *PublisherDecorator) Close() error {
 }
 
 // DecoratePublisher decorates a publisher with instrumentation.
-func DecoratePublisher(name string, pub message.Publisher) (message.Publisher, error) {
+func DecoratePublisher(pub message.Publisher) (message.Publisher, error) {
 	return &PublisherDecorator{
 		pub:           pub,
-		publisherName: name,
+		publisherName: StructName(pub),
 	}, nil
 }

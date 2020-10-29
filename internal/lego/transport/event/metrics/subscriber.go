@@ -7,9 +7,15 @@ import (
 	"go.opencensus.io/tag"
 )
 
+var (
+	subscriberLabelKeys = []string{
+		labelKeyHandlerName,
+		labelKeySubscriberName,
+	}
+)
+
 type SubscriberDecorator struct {
 	message.Subscriber
-	sub            message.Subscriber
 	subscriberName string
 }
 
@@ -19,20 +25,18 @@ func (s *SubscriberDecorator) recordMetrics(msg *message.Message) {
 	}
 
 	ctx := msg.Context()
+	labels := labelsFromCtx(ctx, subscriberLabelKeys...)
 
-	subscriberName := message.SubscriberNameFromCtx(ctx)
-	if subscriberName == "" {
-		subscriberName = s.subscriberName
+	if labels[labelKeySubscriberName] == "" {
+		labels[labelKeySubscriberName] = s.subscriberName
 	}
-
-	handlerName := message.HandlerNameFromCtx(ctx)
-	if handlerName == "" {
-		handlerName = tagValueNoHandler
+	if labels[labelKeyHandlerName] == "" {
+		labels[labelKeyHandlerName] = labelValueNoHandler
 	}
 
 	tags := []tag.Mutator{
-		tag.Upsert(SubscriberName, subscriberName),
-		tag.Upsert(HandlerName, handlerName),
+		tag.Upsert(SubscriberName, labels[labelKeySubscriberName]),
+		tag.Upsert(HandlerName, labels[labelKeyHandlerName]),
 	}
 
 	go func() {
@@ -54,15 +58,10 @@ func (s *SubscriberDecorator) recordMetrics(msg *message.Message) {
 	msg.SetContext(setSubscribeObservedToCtx(msg.Context()))
 }
 
-func (s *SubscriberDecorator) Close() error {
-	return s.sub.Close()
-}
-
 // DecorateSubscriber decorates a publisher with instrumentation.
-func DecorateSubscriber(name string, sub message.Subscriber) (message.Subscriber, error) {
+func DecorateSubscriber(sub message.Subscriber) (message.Subscriber, error) {
 	d := &SubscriberDecorator{
-		sub:            sub,
-		subscriberName: name,
+		subscriberName: StructName(sub),
 	}
 
 	var err error

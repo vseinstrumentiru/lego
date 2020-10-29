@@ -1,15 +1,12 @@
 package metrics
 
 import (
+	"time"
+
 	"github.com/ThreeDotsLabs/watermill/message"
 	"go.opencensus.io/stats"
 	"go.opencensus.io/tag"
-	"time"
 )
-
-func Register(r *message.Router) {
-	r.AddMiddleware(Middleware)
-}
 
 func Middleware(h message.HandlerFunc) message.HandlerFunc {
 	return func(msg *message.Message) (msgs []*message.Message, err error) {
@@ -27,7 +24,7 @@ func Middleware(h message.HandlerFunc) message.HandlerFunc {
 				tags = append(tags, tag.Upsert(Success, "true"))
 			}
 
-			_ = stats.RecordWithTags(ctx, tags, HandlerExecutionTime.M(float64(time.Since(now))/float64(time.Millisecond)))
+			_ = stats.RecordWithTags(ctx, tags, HandlerExecutionTime.M(time.Since(now).Seconds()))
 		}()
 
 		return h(msg)

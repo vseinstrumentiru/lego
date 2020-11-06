@@ -6,6 +6,7 @@ builds:
   - env:
       - CGO_ENABLED=0
     ldflags: "-s -w -X main.version={{ .Version }} -X main.commitHash={{ .ShortCommit }} -X main.buildDate={{ .Date }}"
+    main: ./gen/main.go
     flags:
       - -tags=gen
     goos:

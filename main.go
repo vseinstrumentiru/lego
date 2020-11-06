@@ -9,8 +9,8 @@ import (
 	"emperror.dev/emperror"
 	"github.com/spf13/cobra"
 
-	"github.com/vseinstrumentiru/lego/gen/commands/service"
-	"github.com/vseinstrumentiru/lego/gen/commands/structure"
+	"github.com/vseinstrumentiru/lego/v2/gen/commands/service"
+	"github.com/vseinstrumentiru/lego/v2/gen/commands/structure"
 )
 
 // Provisioned by ldflags

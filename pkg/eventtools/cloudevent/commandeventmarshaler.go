@@ -3,10 +3,11 @@ package cloudevent
 import (
 	"encoding/json"
 	"errors"
+	"time"
+
 	"github.com/ThreeDotsLabs/watermill"
 	"github.com/ThreeDotsLabs/watermill/components/cqrs"
 	"github.com/ThreeDotsLabs/watermill/message"
-	"time"
 )
 
 type CommandEventMarshaller struct {

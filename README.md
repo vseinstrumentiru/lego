@@ -10,12 +10,12 @@
 ### Быстрый запуск
 #### Генератор
 ```bash
-curl -sfL https://git.io/JTKpJ | bash -s ./project-name
+curl -sfL https://git.io/JThEj | bash -s ./project-name
 ```
 
 Алиас
 ```bash
-alias lego:new="curl -sfL https://git.io/JTKpJ | bash -s"
+alias lego:new="curl -sfL https://git.io/JThEj | bash -s"
 
 lego:new ./project-name
 ```

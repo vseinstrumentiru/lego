@@ -7,7 +7,7 @@ import (
 	"github.com/getsentry/raven-go"
 	"logur.dev/logur"
 
-	"github.com/vseinstrumentiru/lego/multilog"
+	"github.com/vseinstrumentiru/lego/v2/multilog"
 )
 
 type handler struct {

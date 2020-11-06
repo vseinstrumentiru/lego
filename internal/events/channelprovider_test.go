@@ -11,7 +11,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/vseinstrumentiru/lego/multilog"
+	"github.com/vseinstrumentiru/lego/v2/multilog"
 )
 
 func TestPubSub(t *testing.T) {

@@ -6,7 +6,7 @@ import (
 	"github.com/nats-io/stan.go"
 	"go.uber.org/dig"
 
-	lestan "github.com/vseinstrumentiru/lego/transport/stan"
+	lestan "github.com/vseinstrumentiru/lego/v2/transport/stan"
 )
 
 type args struct {

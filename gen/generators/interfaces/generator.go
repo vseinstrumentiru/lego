@@ -18,7 +18,7 @@ import (
 	"sigs.k8s.io/controller-tools/pkg/loader"
 	"sigs.k8s.io/controller-tools/pkg/markers"
 
-	"github.com/vseinstrumentiru/lego/gen/helpers/parser"
+	"github.com/vseinstrumentiru/lego/v2/gen/helpers/parser"
 )
 
 type implementationMark struct {

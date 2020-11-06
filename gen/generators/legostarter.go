@@ -5,7 +5,7 @@ package generators
 import (
 	. "github.com/dave/jennifer/jen"
 
-	"github.com/vseinstrumentiru/lego/gen/helpers"
+	"github.com/vseinstrumentiru/lego/v2/gen/helpers"
 )
 
 func NewLeGoStarter(path string) error {
@@ -22,11 +22,11 @@ func NewLeGoStarter(path string) error {
 	}
 
 	f := NewFile("main")
-	f.ImportName("github.com/vseinstrumentiru/lego/server", "server")
+	f.ImportName("github.com/vseinstrumentiru/lego/v2/server", "server")
 
 	f.Func().Id("main").Params().
 		Block(
-			Qual("github.com/vseinstrumentiru/lego/server", "Run").Call(
+			Qual("github.com/vseinstrumentiru/lego/v2/server", "Run").Call(
 				Id("application").Values(),
 				Op("&").Id("config").Values(),
 			),
@@ -38,12 +38,12 @@ func NewLeGoStarter(path string) error {
 func newLegoStarterConfig(path string) error {
 	f := NewFile("main")
 
-	f.ImportAlias("github.com/vseinstrumentiru/lego/config", "cfg")
+	f.ImportAlias("github.com/vseinstrumentiru/lego/v2/config", "cfg")
 
 	f.Type().Id("config").Struct(
-		Id("App").Qual("github.com/vseinstrumentiru/lego/config", "Application"),
-		Id("Logger").Qual("github.com/vseinstrumentiru/lego/multilog", "Config"),
-		Id("Console").Qual("github.com/vseinstrumentiru/lego/multilog/log", "Config"),
+		Id("App").Qual("github.com/vseinstrumentiru/lego/v2/config", "Application"),
+		Id("Logger").Qual("github.com/vseinstrumentiru/lego/v2/multilog", "Config"),
+		Id("Console").Qual("github.com/vseinstrumentiru/lego/v2/multilog/log", "Config"),
 	)
 
 	return f.Save(helpers.Path(path, "config.go"))
@@ -54,7 +54,7 @@ func newLegoStarterApp(path string) error {
 
 	f.Type().Id("application").Struct(
 		Comment("Log will injected automatically"),
-		Id("Log").Qual("github.com/vseinstrumentiru/lego/multilog", "Logger"),
+		Id("Log").Qual("github.com/vseinstrumentiru/lego/v2/multilog", "Logger"),
 	)
 
 	f.Func().

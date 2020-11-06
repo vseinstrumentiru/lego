@@ -12,14 +12,14 @@ import (
 	"github.com/oklog/run"
 	appkitrun "github.com/sagikazarmark/appkit/run"
 
-	baseCfg "github.com/vseinstrumentiru/lego/config"
-	di "github.com/vseinstrumentiru/lego/internal/container"
-	"github.com/vseinstrumentiru/lego/internal/deprecated"
-	environment "github.com/vseinstrumentiru/lego/internal/env"
-	multilogProvider "github.com/vseinstrumentiru/lego/internal/multilog"
-	"github.com/vseinstrumentiru/lego/multilog"
-	"github.com/vseinstrumentiru/lego/server/shutdown"
-	"github.com/vseinstrumentiru/lego/version"
+	baseCfg "github.com/vseinstrumentiru/lego/v2/config"
+	di "github.com/vseinstrumentiru/lego/v2/internal/container"
+	"github.com/vseinstrumentiru/lego/v2/internal/deprecated"
+	environment "github.com/vseinstrumentiru/lego/v2/internal/env"
+	multilogProvider "github.com/vseinstrumentiru/lego/v2/internal/multilog"
+	"github.com/vseinstrumentiru/lego/v2/multilog"
+	"github.com/vseinstrumentiru/lego/v2/server/shutdown"
+	"github.com/vseinstrumentiru/lego/v2/version"
 )
 
 type Option func(r *Runtime)

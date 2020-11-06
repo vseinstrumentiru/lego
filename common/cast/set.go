@@ -6,7 +6,7 @@ import (
 
 	"emperror.dev/errors"
 
-	"github.com/vseinstrumentiru/lego/common/set"
+	"github.com/vseinstrumentiru/lego/v2/common/set"
 )
 
 type CastableRWSet interface {

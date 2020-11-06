@@ -5,7 +5,7 @@ import (
 	"emperror.dev/errors"
 	"github.com/go-sql-driver/mysql"
 
-	"github.com/vseinstrumentiru/lego/config"
+	"github.com/vseinstrumentiru/lego/v2/config"
 )
 
 type Config struct {

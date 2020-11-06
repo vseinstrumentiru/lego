@@ -11,8 +11,8 @@ import (
 	"github.com/AppsFlyer/go-sundheit/checks"
 	"go.uber.org/dig"
 
-	"github.com/vseinstrumentiru/lego/server/shutdown"
-	"github.com/vseinstrumentiru/lego/transport/database"
+	"github.com/vseinstrumentiru/lego/v2/server/shutdown"
+	"github.com/vseinstrumentiru/lego/v2/transport/database"
 )
 
 type args struct {

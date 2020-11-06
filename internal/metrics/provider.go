@@ -17,10 +17,10 @@ import (
 	"go.opencensus.io/zpages"
 	"go.uber.org/dig"
 
-	"github.com/vseinstrumentiru/lego/metrics"
-	"github.com/vseinstrumentiru/lego/metrics/tracing"
-	"github.com/vseinstrumentiru/lego/multilog"
-	"github.com/vseinstrumentiru/lego/version"
+	"github.com/vseinstrumentiru/lego/v2/metrics"
+	"github.com/vseinstrumentiru/lego/v2/metrics/tracing"
+	"github.com/vseinstrumentiru/lego/v2/multilog"
+	"github.com/vseinstrumentiru/lego/v2/version"
 )
 
 type args struct {

@@ -3,7 +3,7 @@ package log
 import (
 	"logur.dev/logur"
 
-	"github.com/vseinstrumentiru/lego/multilog"
+	"github.com/vseinstrumentiru/lego/v2/multilog"
 )
 
 func Handler(logger logur.Logger, stop bool) *handler {

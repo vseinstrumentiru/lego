@@ -6,8 +6,8 @@ import (
 	"go.uber.org/dig"
 	watermilllog "logur.dev/integration/watermill"
 
-	"github.com/vseinstrumentiru/lego/multilog"
-	lestan "github.com/vseinstrumentiru/lego/transport/stan"
+	"github.com/vseinstrumentiru/lego/v2/multilog"
+	lestan "github.com/vseinstrumentiru/lego/v2/transport/stan"
 )
 
 type natsPubArgs struct {

@@ -11,10 +11,10 @@ import (
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 
-	"github.com/vseinstrumentiru/lego/common/cast"
-	"github.com/vseinstrumentiru/lego/config"
-	"github.com/vseinstrumentiru/lego/inject"
-	di "github.com/vseinstrumentiru/lego/internal/container"
+	"github.com/vseinstrumentiru/lego/v2/common/cast"
+	"github.com/vseinstrumentiru/lego/v2/config"
+	"github.com/vseinstrumentiru/lego/v2/inject"
+	di "github.com/vseinstrumentiru/lego/v2/internal/container"
 )
 
 func NewBaseEnv(path string) *baseEnv {

@@ -13,10 +13,10 @@ import (
 	"go.uber.org/dig"
 	"google.golang.org/grpc"
 
-	"github.com/vseinstrumentiru/lego/config"
-	di "github.com/vseinstrumentiru/lego/internal/container"
-	"github.com/vseinstrumentiru/lego/multilog"
-	"github.com/vseinstrumentiru/lego/server/shutdown"
+	"github.com/vseinstrumentiru/lego/v2/config"
+	di "github.com/vseinstrumentiru/lego/v2/internal/container"
+	"github.com/vseinstrumentiru/lego/v2/multilog"
+	"github.com/vseinstrumentiru/lego/v2/server/shutdown"
 )
 
 func NewApp(dApp App) (interface{}, *FullConfig) {

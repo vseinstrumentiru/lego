@@ -1,9 +1,9 @@
 package server
 
 import (
-	"github.com/vseinstrumentiru/lego/common/cast"
-	"github.com/vseinstrumentiru/lego/common/set"
-	"github.com/vseinstrumentiru/lego/internal/env"
+	"github.com/vseinstrumentiru/lego/v2/common/cast"
+	"github.com/vseinstrumentiru/lego/v2/common/set"
+	"github.com/vseinstrumentiru/lego/v2/internal/env"
 )
 
 const (

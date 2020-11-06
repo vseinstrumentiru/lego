@@ -1,6 +1,6 @@
 package mysql
 
-import "github.com/vseinstrumentiru/lego/transport/mysql"
+import "github.com/vseinstrumentiru/lego/v2/transport/mysql"
 
 // Deprecated: use mysql.Config.
 type Config struct {

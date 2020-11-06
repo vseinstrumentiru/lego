@@ -5,7 +5,7 @@ import (
 	"github.com/newrelic/go-agent/v3/newrelic"
 	"logur.dev/logur"
 
-	"github.com/vseinstrumentiru/lego/multilog"
+	"github.com/vseinstrumentiru/lego/v2/multilog"
 )
 
 func Handler(app *newrelic.Application) *handler {

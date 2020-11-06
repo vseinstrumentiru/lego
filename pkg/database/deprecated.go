@@ -5,8 +5,8 @@ import (
 
 	"emperror.dev/emperror"
 
-	"github.com/vseinstrumentiru/lego/internal/deprecated"
-	"github.com/vseinstrumentiru/lego/server/shutdown"
+	"github.com/vseinstrumentiru/lego/v2/internal/deprecated"
+	"github.com/vseinstrumentiru/lego/v2/server/shutdown"
 )
 
 // Deprecated: use DI.

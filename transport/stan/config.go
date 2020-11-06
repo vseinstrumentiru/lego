@@ -8,8 +8,8 @@ import (
 
 	"emperror.dev/errors"
 
-	"github.com/vseinstrumentiru/lego/config"
-	"github.com/vseinstrumentiru/lego/events"
+	"github.com/vseinstrumentiru/lego/v2/config"
+	"github.com/vseinstrumentiru/lego/v2/events"
 )
 
 const (

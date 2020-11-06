@@ -8,7 +8,7 @@ import (
 	"emperror.dev/errors"
 	"go.uber.org/dig"
 
-	"github.com/vseinstrumentiru/lego/inject"
+	"github.com/vseinstrumentiru/lego/v2/inject"
 )
 
 func New() *container {

@@ -7,10 +7,10 @@ import (
 	"go.opencensus.io/trace"
 	"go.uber.org/dig"
 
-	"github.com/vseinstrumentiru/lego/config"
-	"github.com/vseinstrumentiru/lego/internal/metrics/propagation"
-	"github.com/vseinstrumentiru/lego/metrics/exporters"
-	"github.com/vseinstrumentiru/lego/multilog"
+	"github.com/vseinstrumentiru/lego/v2/config"
+	"github.com/vseinstrumentiru/lego/v2/internal/metrics/propagation"
+	"github.com/vseinstrumentiru/lego/v2/metrics/exporters"
+	"github.com/vseinstrumentiru/lego/v2/multilog"
 )
 
 type argsIn struct {

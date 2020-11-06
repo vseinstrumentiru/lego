@@ -8,9 +8,9 @@ import (
 	"github.com/go-resty/resty/v2"
 	"github.com/shurcooL/graphql"
 
-	"github.com/vseinstrumentiru/lego/internal/deprecated"
-	"github.com/vseinstrumentiru/lego/internal/transpoort/http/httpclient"
-	httpTransport "github.com/vseinstrumentiru/lego/transport/http"
+	"github.com/vseinstrumentiru/lego/v2/internal/deprecated"
+	"github.com/vseinstrumentiru/lego/v2/internal/transpoort/http/httpclient"
+	httpTransport "github.com/vseinstrumentiru/lego/v2/transport/http"
 )
 
 type ClientOption = httpTransport.ClientOption

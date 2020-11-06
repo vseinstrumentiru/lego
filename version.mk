@@ -1,1 +1,1 @@
-LDFLAGS += github.com/vseinstrumentiru/lego/version.Version=${VERSION} -X github.com/vseinstrumentiru/lego/version.CommitHash=${COMMIT_HASH} -X github.com/vseinstrumentiru/lego/version.BuildDate=${BUILD_DATE}
+LDFLAGS += github.com/vseinstrumentiru/lego/v2/version.Version=${VERSION} -X github.com/vseinstrumentiru/lego/v2/version.CommitHash=${COMMIT_HASH} -X github.com/vseinstrumentiru/lego/v2/version.BuildDate=${BUILD_DATE}

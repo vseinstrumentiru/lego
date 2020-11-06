@@ -9,9 +9,9 @@ import (
 	"github.com/oklog/run"
 	"go.uber.org/dig"
 
-	"github.com/vseinstrumentiru/lego/config"
-	"github.com/vseinstrumentiru/lego/multilog"
-	"github.com/vseinstrumentiru/lego/version"
+	"github.com/vseinstrumentiru/lego/v2/config"
+	"github.com/vseinstrumentiru/lego/v2/multilog"
+	"github.com/vseinstrumentiru/lego/v2/version"
 )
 
 type Process interface {

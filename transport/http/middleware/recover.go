@@ -5,7 +5,7 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"github.com/vseinstrumentiru/lego/multilog"
+	"github.com/vseinstrumentiru/lego/v2/multilog"
 )
 
 func RecoverHandlerMiddleware(handler multilog.Logger) mux.MiddlewareFunc {

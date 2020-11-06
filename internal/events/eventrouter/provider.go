@@ -10,9 +10,9 @@ import (
 	"go.uber.org/dig"
 	watermilllog "logur.dev/integration/watermill"
 
-	"github.com/vseinstrumentiru/lego/events"
-	"github.com/vseinstrumentiru/lego/internal/events/eventrouter/metrics"
-	"github.com/vseinstrumentiru/lego/multilog"
+	"github.com/vseinstrumentiru/lego/v2/events"
+	"github.com/vseinstrumentiru/lego/v2/internal/events/eventrouter/metrics"
+	"github.com/vseinstrumentiru/lego/v2/multilog"
 )
 
 type args struct {

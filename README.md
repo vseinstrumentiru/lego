@@ -25,8 +25,8 @@ lego:new ./project-name
 package main
 
 import (
-    "github.com/vseinstrumentiru/lego/server"
-    "github.com/vseinstrumentiru/lego/transport/http"
+    "github.com/vseinstrumentiru/lego/v2/server"
+    "github.com/vseinstrumentiru/lego/v2/transport/http"
 )
 
 // ...
@@ -79,12 +79,12 @@ App - это первый аргумент, для запуск сервера. 
 ### Multilog Logger
 Многоуровневый логгер приложения.
 ```go
-import "github.com/vseinstrumentiru/lego/multilog"
+import "github.com/vseinstrumentiru/lego/v2/multilog"
 ```
 
 Настройка уровня логирования:
 ```go
-import "github.com/vseinstrumentiru/lego/multilog"
+import "github.com/vseinstrumentiru/lego/v2/multilog"
 
 type Config struct {
     Multilog multilog.Config
@@ -101,7 +101,7 @@ app:
 Може отправлять логи в:
 1. stdout
     ```go
-    import "github.com/vseinstrumentiru/lego/multilog/log"
+    import "github.com/vseinstrumentiru/lego/v2/multilog/log"
 
     type Config struct {
         Log log.Config
@@ -119,7 +119,7 @@ app:
     ```
 1. Sentry
     ```go
-    import "github.com/vseinstrumentiru/lego/multilog/sentry"
+    import "github.com/vseinstrumentiru/lego/v2/multilog/sentry"
     type Config struct {
         Sentry sentry.Config
     }
@@ -136,7 +136,7 @@ app:
     ```
 1. NewRelic (в процессе)
     ```go
-    import "github.com/vseinstrumentiru/lego/metrics/exporters"
+    import "github.com/vseinstrumentiru/lego/v2/metrics/exporters"
     type Config struct {
         NewRelic exporters.NewRelic
     }

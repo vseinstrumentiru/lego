@@ -1,7 +1,7 @@
 package env
 
 import (
-	base "github.com/vseinstrumentiru/lego/config"
+	base "github.com/vseinstrumentiru/lego/v2/config"
 )
 
 func NewNoConfigEnv(path string) Env {

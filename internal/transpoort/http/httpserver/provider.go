@@ -17,12 +17,12 @@ import (
 	"go.opencensus.io/trace"
 	"go.uber.org/dig"
 
-	"github.com/vseinstrumentiru/lego/internal/metrics/propagation"
-	"github.com/vseinstrumentiru/lego/metrics/tracing"
-	"github.com/vseinstrumentiru/lego/multilog"
-	httpcfg "github.com/vseinstrumentiru/lego/transport/http"
-	"github.com/vseinstrumentiru/lego/transport/http/middleware"
-	"github.com/vseinstrumentiru/lego/version"
+	"github.com/vseinstrumentiru/lego/v2/internal/metrics/propagation"
+	"github.com/vseinstrumentiru/lego/v2/metrics/tracing"
+	"github.com/vseinstrumentiru/lego/v2/multilog"
+	httpcfg "github.com/vseinstrumentiru/lego/v2/transport/http"
+	"github.com/vseinstrumentiru/lego/v2/transport/http/middleware"
+	"github.com/vseinstrumentiru/lego/v2/version"
 )
 
 type args struct {

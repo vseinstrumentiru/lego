@@ -8,7 +8,7 @@ import (
 	"github.com/mitchellh/mapstructure"
 	"github.com/spf13/viper"
 
-	base "github.com/vseinstrumentiru/lego/config"
+	base "github.com/vseinstrumentiru/lego/v2/config"
 )
 
 func NewConfigEnv(path string) Env {

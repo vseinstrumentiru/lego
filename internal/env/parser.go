@@ -6,7 +6,7 @@ import (
 
 	"github.com/iancoleman/strcase"
 
-	"github.com/vseinstrumentiru/lego/config"
+	"github.com/vseinstrumentiru/lego/v2/config"
 )
 
 func newParser() *parser {

@@ -3,8 +3,8 @@ package server
 import (
 	"emperror.dev/emperror"
 
-	"github.com/vseinstrumentiru/lego/inject"
-	"github.com/vseinstrumentiru/lego/internal/container"
+	"github.com/vseinstrumentiru/lego/v2/inject"
+	"github.com/vseinstrumentiru/lego/v2/internal/container"
 )
 
 func newContainer() *bootContainer {

@@ -3,8 +3,8 @@ package pkg
 import (
 	"context"
 
-	"github.com/vseinstrumentiru/lego/internal/deprecated"
-	"github.com/vseinstrumentiru/lego/server"
+	"github.com/vseinstrumentiru/lego/v2/internal/deprecated"
+	"github.com/vseinstrumentiru/lego/v2/server"
 )
 
 // Deprecated: use server.Run(app, config)

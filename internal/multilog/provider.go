@@ -10,9 +10,9 @@ import (
 	zerologadapter "logur.dev/adapter/zerolog"
 	"logur.dev/logur"
 
-	"github.com/vseinstrumentiru/lego/multilog"
-	"github.com/vseinstrumentiru/lego/multilog/log"
-	"github.com/vseinstrumentiru/lego/multilog/sentry"
+	"github.com/vseinstrumentiru/lego/v2/multilog"
+	"github.com/vseinstrumentiru/lego/v2/multilog/log"
+	"github.com/vseinstrumentiru/lego/v2/multilog/sentry"
 )
 
 type args struct {

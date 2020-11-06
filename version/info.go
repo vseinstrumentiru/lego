@@ -5,7 +5,7 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/vseinstrumentiru/lego/config"
+	"github.com/vseinstrumentiru/lego/v2/config"
 )
 
 // Provisioned by ldflags

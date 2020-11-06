@@ -1,6 +1,6 @@
 package container
 
-import di "github.com/vseinstrumentiru/lego/inject"
+import di "github.com/vseinstrumentiru/lego/v2/inject"
 
 type Container interface {
 	Register(constructor di.Constructor, options ...di.RegisterOption) error

@@ -5,7 +5,7 @@ package generators
 import (
 	. "github.com/dave/jennifer/jen"
 
-	"github.com/vseinstrumentiru/lego/gen/helpers"
+	"github.com/vseinstrumentiru/lego/v2/gen/helpers"
 )
 
 func NewLegoService(path string) error {

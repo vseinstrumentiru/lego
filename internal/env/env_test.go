@@ -9,7 +9,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"gotest.tools/assert"
 
-	"github.com/vseinstrumentiru/lego/config"
+	"github.com/vseinstrumentiru/lego/v2/config"
 )
 
 type SubStruct struct{ S1 string }

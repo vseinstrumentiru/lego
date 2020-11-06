@@ -11,8 +11,8 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/vseinstrumentiru/lego/gen/generators"
-	"github.com/vseinstrumentiru/lego/gen/helpers"
+	"github.com/vseinstrumentiru/lego/v2/gen/generators"
+	"github.com/vseinstrumentiru/lego/v2/gen/helpers"
 )
 
 var Command = &cobra.Command{

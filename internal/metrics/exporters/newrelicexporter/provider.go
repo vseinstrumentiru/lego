@@ -4,9 +4,9 @@ import (
 	newrelic "github.com/newrelic/go-agent/v3/newrelic"
 	"go.uber.org/dig"
 
-	"github.com/vseinstrumentiru/lego/config"
-	"github.com/vseinstrumentiru/lego/metrics/exporters"
-	"github.com/vseinstrumentiru/lego/multilog"
+	"github.com/vseinstrumentiru/lego/v2/config"
+	"github.com/vseinstrumentiru/lego/v2/metrics/exporters"
+	"github.com/vseinstrumentiru/lego/v2/multilog"
 )
 
 type args struct {

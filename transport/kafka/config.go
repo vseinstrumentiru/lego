@@ -5,8 +5,8 @@ import (
 	"github.com/Shopify/sarama"
 	"github.com/ThreeDotsLabs/watermill-kafka/pkg/kafka"
 
-	"github.com/vseinstrumentiru/lego/config"
-	"github.com/vseinstrumentiru/lego/events"
+	"github.com/vseinstrumentiru/lego/v2/config"
+	"github.com/vseinstrumentiru/lego/v2/events"
 )
 
 type Config struct {

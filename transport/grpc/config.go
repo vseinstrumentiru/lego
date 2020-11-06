@@ -1,7 +1,7 @@
 package grpc
 
 import (
-	"github.com/vseinstrumentiru/lego/config"
+	"github.com/vseinstrumentiru/lego/v2/config"
 )
 
 type Config struct {

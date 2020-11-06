@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"go.opencensus.io/trace"
 
-	"github.com/vseinstrumentiru/lego/internal/env"
+	"github.com/vseinstrumentiru/lego/v2/internal/env"
 )
 
 func TestSampler_ProbabilityUnmarshall(t *testing.T) {

@@ -8,7 +8,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/vseinstrumentiru/lego/gen/generators/interfaces"
+	"github.com/vseinstrumentiru/lego/v2/gen/generators/interfaces"
 )
 
 var Command = &cobra.Command{

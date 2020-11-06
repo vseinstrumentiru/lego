@@ -1,4 +1,4 @@
-module github.com/vseinstrumentiru/lego
+module github.com/vseinstrumentiru/lego/v2
 
 go 1.15
 

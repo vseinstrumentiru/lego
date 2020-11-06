@@ -3,7 +3,7 @@ package middleware
 import (
 	"github.com/gorilla/mux"
 
-	"github.com/vseinstrumentiru/lego/transport/http/middleware"
+	"github.com/vseinstrumentiru/lego/v2/transport/http/middleware"
 )
 
 // Deprecated: use middleware.LogRequestWithMaxLenMiddleware, middleware.LogResponseWithMaxLenMiddleware

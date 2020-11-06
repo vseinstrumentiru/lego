@@ -7,7 +7,7 @@ import (
 	"emperror.dev/emperror"
 	"logur.dev/logur"
 
-	"github.com/vseinstrumentiru/lego/multilog"
+	"github.com/vseinstrumentiru/lego/v2/multilog"
 )
 
 // Deprecated: use multilog.Logger

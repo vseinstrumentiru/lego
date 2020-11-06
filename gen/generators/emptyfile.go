@@ -5,7 +5,7 @@ package generators
 import (
 	"os"
 
-	"github.com/vseinstrumentiru/lego/gen/helpers"
+	"github.com/vseinstrumentiru/lego/v2/gen/helpers"
 )
 
 func EmptyFile(name string, path string) error {

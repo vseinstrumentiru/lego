@@ -7,15 +7,15 @@ import (
 	"emperror.dev/emperror"
 	"github.com/ThreeDotsLabs/watermill/pubsub/gochannel"
 
-	"github.com/vseinstrumentiru/lego/config"
-	"github.com/vseinstrumentiru/lego/metrics/exporters"
-	"github.com/vseinstrumentiru/lego/metrics/tracing"
-	"github.com/vseinstrumentiru/lego/multilog/log"
-	"github.com/vseinstrumentiru/lego/multilog/sentry"
-	"github.com/vseinstrumentiru/lego/transport/grpc"
-	"github.com/vseinstrumentiru/lego/transport/http"
-	"github.com/vseinstrumentiru/lego/transport/nats"
-	"github.com/vseinstrumentiru/lego/transport/stan"
+	"github.com/vseinstrumentiru/lego/v2/config"
+	"github.com/vseinstrumentiru/lego/v2/metrics/exporters"
+	"github.com/vseinstrumentiru/lego/v2/metrics/tracing"
+	"github.com/vseinstrumentiru/lego/v2/multilog/log"
+	"github.com/vseinstrumentiru/lego/v2/multilog/sentry"
+	"github.com/vseinstrumentiru/lego/v2/transport/grpc"
+	"github.com/vseinstrumentiru/lego/v2/transport/http"
+	"github.com/vseinstrumentiru/lego/v2/transport/nats"
+	"github.com/vseinstrumentiru/lego/v2/transport/stan"
 )
 
 // Deprecated: use LeGo V2

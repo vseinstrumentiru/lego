@@ -6,7 +6,7 @@ import (
 	"go.opencensus.io/plugin/ochttp"
 	"go.opencensus.io/trace"
 
-	"github.com/vseinstrumentiru/lego/internal/metrics/propagation"
+	"github.com/vseinstrumentiru/lego/v2/internal/metrics/propagation"
 )
 
 type Constructor func(name string) *http.Client

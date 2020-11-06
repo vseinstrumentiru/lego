@@ -7,9 +7,9 @@ import (
 	"go.uber.org/dig"
 	"logur.dev/logur"
 
-	"github.com/vseinstrumentiru/lego/multilog"
-	"github.com/vseinstrumentiru/lego/transport/database"
-	lemysql "github.com/vseinstrumentiru/lego/transport/mysql"
+	"github.com/vseinstrumentiru/lego/v2/multilog"
+	"github.com/vseinstrumentiru/lego/v2/transport/database"
+	lemysql "github.com/vseinstrumentiru/lego/v2/transport/mysql"
 )
 
 type args struct {

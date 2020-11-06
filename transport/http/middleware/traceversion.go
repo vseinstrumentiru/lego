@@ -6,7 +6,7 @@ import (
 	"github.com/gorilla/mux"
 	"go.opencensus.io/trace"
 
-	"github.com/vseinstrumentiru/lego/version"
+	"github.com/vseinstrumentiru/lego/v2/version"
 )
 
 func TraceVersionMiddleware(buildInfo version.Info) mux.MiddlewareFunc {

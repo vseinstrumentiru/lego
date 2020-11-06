@@ -5,7 +5,7 @@ import (
 
 	"emperror.dev/errors"
 
-	"github.com/vseinstrumentiru/lego/internal/deprecated"
+	"github.com/vseinstrumentiru/lego/v2/internal/deprecated"
 )
 
 // Deprecated: will deleted in next versions.

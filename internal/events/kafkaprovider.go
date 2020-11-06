@@ -5,8 +5,8 @@ import (
 	"go.uber.org/dig"
 	watermilllog "logur.dev/integration/watermill"
 
-	"github.com/vseinstrumentiru/lego/multilog"
-	kafkatransport "github.com/vseinstrumentiru/lego/transport/kafka"
+	"github.com/vseinstrumentiru/lego/v2/multilog"
+	kafkatransport "github.com/vseinstrumentiru/lego/v2/transport/kafka"
 )
 
 type kafkaPubArgs struct {

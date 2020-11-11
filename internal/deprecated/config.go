@@ -27,7 +27,7 @@ type Config interface {
 type FullConfig struct {
 	App interface{}
 	Srv struct {
-		AppConfig config.Application `mapstructure:",squash"`
+		AppConfig config.Application `mapstructure:",squash" load:"true"`
 		Debug     bool
 		Http      *http.Config
 		Grpc      *grpc.Config

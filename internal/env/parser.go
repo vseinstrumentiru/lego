@@ -129,24 +129,28 @@ func getFieldName(field reflect.Value, typ reflect.StructField) (string, bool) {
 		return "", false
 	}
 
-	tagValue := typ.Tag.Get("mapstructure")
+	loadTag := typ.Tag.Get("load")
+	if loadTag == "true" {
+		return typ.Name, true
+	}
 
-	if index := strings.Index(tagValue, ","); index != -1 {
-		if tagValue[:index] == "-" {
+	mapTag := typ.Tag.Get("mapstructure")
+	if index := strings.Index(mapTag, ","); index != -1 {
+		if mapTag[:index] == "-" {
 			return "", false
 		}
 
-		squash := strings.Contains(tagValue[index+1:], "squash")
+		squash := strings.Contains(mapTag[index+1:], "squash")
 		if squash && typ.Type.Kind() == reflect.Struct {
 			return "", true
 		}
 
-		return tagValue[:index], true
-	} else if len(tagValue) > 0 {
-		if tagValue == "-" {
+		return mapTag[:index], true
+	} else if len(mapTag) > 0 {
+		if mapTag == "-" {
 			return "", false
 		}
-		return tagValue, true
+		return mapTag, true
 	}
 
 	return typ.Name, true

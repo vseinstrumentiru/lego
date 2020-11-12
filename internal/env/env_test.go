@@ -180,18 +180,21 @@ func Test_normalizeStructValue(t *testing.T) {
 
 func Test_parse(t *testing.T) {
 	tests := []struct {
-		name string
-		args interface{}
-		want *parser
+		name    string
+		args    interface{}
+		want    *parser
+		wantErr bool
 	}{
 		{"defaults",
 			&struct{ A structWithDefaults }{},
 			&parser{
-				configs: map[string]interface{}{
-					"a": &structWithDefaults{},
-				},
-				configTypesCount: map[reflect.Type]int{
-					reflect.TypeOf(structWithDefaults{}): 1,
+				configs: map[reflect.Type]*Instances{
+					reflect.TypeOf(structWithDefaults{}): &Instances{
+						DefaultKey: 0,
+						Items: []Instance{
+							{Key: "a", Val: &structWithDefaults{}},
+						},
+					},
 				},
 				defaults: []defaults{
 					{"a", &structWithDefaults{}},
@@ -199,15 +202,18 @@ func Test_parse(t *testing.T) {
 				validates: map[string]config.Validatable{},
 				keys:      nil,
 			},
+			false,
 		},
 		{"defaults_pointer",
 			&struct{ A *structWithDefaults }{},
 			&parser{
-				configs: map[string]interface{}{
-					"a": &structWithDefaults{},
-				},
-				configTypesCount: map[reflect.Type]int{
-					reflect.TypeOf(structWithDefaults{}): 1,
+				configs: map[reflect.Type]*Instances{
+					reflect.TypeOf(structWithDefaults{}): &Instances{
+						DefaultKey: 0,
+						Items: []Instance{
+							{Key: "a", Val: &structWithDefaults{}},
+						},
+					},
 				},
 				defaults: []defaults{
 					{"a", &structWithDefaults{}},
@@ -215,15 +221,18 @@ func Test_parse(t *testing.T) {
 				validates: map[string]config.Validatable{},
 				keys:      nil,
 			},
+			false,
 		},
 		{"validates",
 			&struct{ A structWithValidates }{},
 			&parser{
-				configs: map[string]interface{}{
-					"a": &structWithValidates{},
-				},
-				configTypesCount: map[reflect.Type]int{
-					reflect.TypeOf(structWithValidates{}): 1,
+				configs: map[reflect.Type]*Instances{
+					reflect.TypeOf(structWithValidates{}): &Instances{
+						DefaultKey: 0,
+						Items: []Instance{
+							{Key: "a", Val: &structWithValidates{}},
+						},
+					},
 				},
 				defaults: nil,
 				validates: map[string]config.Validatable{
@@ -231,15 +240,18 @@ func Test_parse(t *testing.T) {
 				},
 				keys: nil,
 			},
+			false,
 		},
 		{"validates_pointer",
 			&struct{ A *structWithValidates }{},
 			&parser{
-				configs: map[string]interface{}{
-					"a": &structWithValidates{},
-				},
-				configTypesCount: map[reflect.Type]int{
-					reflect.TypeOf(structWithValidates{}): 1,
+				configs: map[reflect.Type]*Instances{
+					reflect.TypeOf(structWithValidates{}): &Instances{
+						DefaultKey: 0,
+						Items: []Instance{
+							{Key: "a", Val: &structWithValidates{}},
+						},
+					},
 				},
 				defaults: nil,
 				validates: map[string]config.Validatable{
@@ -247,6 +259,7 @@ func Test_parse(t *testing.T) {
 				},
 				keys: nil,
 			},
+			false,
 		},
 		{"unexported",
 			&struct {
@@ -265,12 +278,12 @@ func Test_parse(t *testing.T) {
 				_   *SubStruct
 			}{},
 			&parser{
-				configs:          map[string]interface{}{},
-				configTypesCount: map[reflect.Type]int{},
-				defaults:         nil,
-				validates:        map[string]config.Validatable{},
-				keys:             nil,
+				configs:   map[reflect.Type]*Instances{},
+				defaults:  nil,
+				validates: map[string]config.Validatable{},
+				keys:      nil,
 			},
+			false,
 		},
 		{"fields",
 			&struct {
@@ -294,14 +307,16 @@ func Test_parse(t *testing.T) {
 				}
 			}{},
 			&parser{
-				configs: map[string]interface{}{
-					"a3":           &SubStruct{},
-					"a4":           &SubStruct{},
-					"a5.subStruct": &SubStruct{},
-					"a6.subStruct": &SubStruct{},
-				},
-				configTypesCount: map[reflect.Type]int{
-					reflect.TypeOf(SubStruct{}): 4,
+				configs: map[reflect.Type]*Instances{
+					reflect.TypeOf(SubStruct{}): &Instances{
+						DefaultKey: 0,
+						Items: []Instance{
+							{Key: "a3", Val: &SubStruct{}},
+							{Key: "a4", Val: &SubStruct{}},
+							{Key: "a5.subStruct", Val: &SubStruct{}},
+							{Key: "a6.subStruct", Val: &SubStruct{}},
+						},
+					},
 				},
 				defaults:  nil,
 				validates: map[string]config.Validatable{},
@@ -318,6 +333,7 @@ func Test_parse(t *testing.T) {
 					"a6.s1",
 				},
 			},
+			false,
 		},
 		{"embedded_fields",
 			&struct {
@@ -345,14 +361,16 @@ func Test_parse(t *testing.T) {
 				}
 			}{},
 			&parser{
-				configs: map[string]interface{}{
-					"a1.subStruct": &SubStruct{},
-					"a2.subStruct": &SubStruct{},
-					"a3.b1":        &SubStruct{},
-					"a4.b1":        &SubStruct{},
-				},
-				configTypesCount: map[reflect.Type]int{
-					reflect.TypeOf(SubStruct{}): 4,
+				configs: map[reflect.Type]*Instances{
+					reflect.TypeOf(SubStruct{}): &Instances{
+						DefaultKey: 0,
+						Items: []Instance{
+							{Key: "a1.subStruct", Val: &SubStruct{}},
+							{Key: "a2.subStruct", Val: &SubStruct{}},
+							{Key: "a3.b1", Val: &SubStruct{}},
+							{Key: "a4.b1", Val: &SubStruct{}},
+						},
+					},
 				},
 				defaults: []defaults{
 					{"a1", &struct {
@@ -387,6 +405,7 @@ func Test_parse(t *testing.T) {
 					"a6.s1",
 				},
 			},
+			false,
 		},
 	}
 	opts := []cmp.Option{
@@ -403,81 +422,14 @@ func Test_parse(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := parse(reflect.ValueOf(tt.args))
-			assert.DeepEqual(t, tt.want.configs, got.configs, opts...)
-			assert.DeepEqual(t, tt.want.configTypesCount, got.configTypesCount, opts...)
-			assert.DeepEqual(t, tt.want.defaults, got.defaults, opts...)
-			assert.DeepEqual(t, tt.want.validates, got.validates, opts...)
-			assert.DeepEqual(t, tt.want.keys, got.keys, opts...)
-		})
-	}
-}
-
-func Test_parsed_exist(t *testing.T) {
-	type fields struct {
-		configs          map[string]interface{}
-		configTypesCount map[reflect.Type]int
-		defaults         []defaults
-		validates        map[string]config.Validatable
-		keys             []string
-	}
-	type args struct {
-		i interface{}
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		args   args
-		want   bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			p := &parser{
-				configs:          tt.fields.configs,
-				configTypesCount: tt.fields.configTypesCount,
-				defaults:         tt.fields.defaults,
-				validates:        tt.fields.validates,
-				keys:             tt.fields.keys,
-			}
-			if got := p.exist(tt.args.i); got != tt.want {
-				t.Errorf("exist() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func Test_parsed_isDouble(t *testing.T) {
-	type fields struct {
-		configs          map[string]interface{}
-		configTypesCount map[reflect.Type]int
-		defaults         []defaults
-		validates        map[string]config.Validatable
-		keys             []string
-	}
-	type args struct {
-		i interface{}
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		args   args
-		want   bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			p := &parser{
-				configs:          tt.fields.configs,
-				configTypesCount: tt.fields.configTypesCount,
-				defaults:         tt.fields.defaults,
-				validates:        tt.fields.validates,
-				keys:             tt.fields.keys,
-			}
-			if got := p.isDouble(tt.args.i); got != tt.want {
-				t.Errorf("isDouble() = %v, want %v", got, tt.want)
+			got := newParser()
+			err := got.scan(reflect.ValueOf(tt.args), "", flags{})
+			assert.Equal(t, err != nil, tt.wantErr)
+			if err == nil {
+				assert.DeepEqual(t, tt.want.configs, got.configs, opts...)
+				assert.DeepEqual(t, tt.want.defaults, got.defaults, opts...)
+				assert.DeepEqual(t, tt.want.validates, got.validates, opts...)
+				assert.DeepEqual(t, tt.want.keys, got.keys, opts...)
 			}
 		})
 	}

@@ -26,7 +26,7 @@ func (e *noConfigEnv) Configure() error {
 		}
 	}
 
-	e.instances = append(e.instances, instance{val: app})
+	e.instances = append(e.instances, Instance{Val: app, IsDefault: true})
 
 	return nil
 }

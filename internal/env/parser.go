@@ -4,6 +4,8 @@ import (
 	"reflect"
 	"strings"
 
+	"emperror.dev/emperror"
+	"emperror.dev/errors"
 	"github.com/iancoleman/strcase"
 
 	"github.com/vseinstrumentiru/lego/v2/config"
@@ -11,16 +13,16 @@ import (
 
 func newParser() *parser {
 	return &parser{
-		configs:          make(map[string]interface{}),
-		configTypesCount: make(map[reflect.Type]int),
-		validates:        make(map[string]config.Validatable),
+		configs:   make(map[reflect.Type]*Instances),
+		validates: make(map[string]config.Validatable),
 	}
 }
 
+// Deprecated: use newParser().scan()
 func parse(v reflect.Value) *parser {
 	result := newParser()
 
-	result.scan(v, "", false)
+	emperror.Panic(result.scan(v, "", flags{}))
 
 	return result
 }
@@ -30,22 +32,49 @@ type defaults struct {
 	val config.WithDefaults
 }
 
+type Instance struct {
+	Val       interface{}
+	IsDefault bool
+	Key       string
+}
+
+type Instances struct {
+	DefaultKey int
+	Items      []Instance
+}
+
+func (i *Instances) add(v interface{}, key string, isDefault bool) error {
+	i.Items = append(i.Items, Instance{
+		Val:       v,
+		IsDefault: isDefault,
+		Key:       key,
+	})
+
+	if isDefault {
+		if len(i.Items) > 1 && i.Items[i.DefaultKey].IsDefault {
+			return errors.New("two default configs with same type")
+		}
+
+		i.DefaultKey = len(i.Items) - 1
+	}
+
+	return nil
+}
+
+type flags struct {
+	isSquash  bool
+	isDefault bool
+}
+
 type parser struct {
-	configs          map[string]interface{}
-	configTypesCount map[reflect.Type]int
-	defaults         []defaults
-	validates        map[string]config.Validatable
-	keys             []string
+	configs   map[reflect.Type]*Instances
+	defaults  []defaults
+	validates map[string]config.Validatable
+	keys      []string
 }
 
 func (p *parser) isDouble(i interface{}) bool {
-	v, ok := normalizeStruct(i)
-
-	if !ok {
-		return false
-	}
-
-	return p.configTypesCount[v.Type()] > 1
+	return false
 }
 
 func (p *parser) exist(i interface{}) bool {
@@ -55,10 +84,12 @@ func (p *parser) exist(i interface{}) bool {
 		return false
 	}
 
-	return p.configTypesCount[v.Type()] > 0
+	_, ok = p.configs[v.Type()]
+
+	return ok
 }
 
-func (p *parser) scan(v reflect.Value, key string, isSquash bool) {
+func (p *parser) scan(v reflect.Value, key string, f flags) error {
 	{
 		var ok bool
 		v, ok = normalizeStructValue(v)
@@ -67,21 +98,28 @@ func (p *parser) scan(v reflect.Value, key string, isSquash bool) {
 			if key != "" {
 				p.keys = append(p.keys, key)
 			}
-			return
+			return nil
 		}
 	}
 
 	typ := v.Type()
 	ptrI := v.Addr().Interface()
-	isAnonymousStructure := typ.Name() == "" || isSquash
+	isAnonymousStructure := typ.Name() == "" || (f.isSquash && !f.isDefault)
 
 	if !isAnonymousStructure {
 		configKey := key
 		if key == "" {
 			configKey = "cfg"
 		}
-		p.configs[configKey] = ptrI
-		p.configTypesCount[typ]++
+
+		i, ok := p.configs[typ]
+		if !ok {
+			i = &Instances{}
+			p.configs[typ] = i
+		}
+		if err := i.add(ptrI, configKey, f.isDefault); err != nil {
+			return err
+		}
 	}
 
 	if val, ok := ptrI.(config.WithDefaults); ok {
@@ -95,18 +133,18 @@ func (p *parser) scan(v reflect.Value, key string, isSquash bool) {
 	for i := 0; i < v.NumField(); i++ {
 		f := v.Field(i)
 		t := v.Type().Field(i)
-		name, ok := getFieldName(f, t)
+		info := getFieldInfo(f, t)
 
-		if !ok {
+		if info.Ignore {
 			continue
 		}
 
 		nextKey := key
-		if name != "" {
+		if info.Name != "" {
 			if nextKey != "" {
 				nextKey += "."
 			}
-			nextKey += strcase.ToLowerCamel(name)
+			nextKey += strcase.ToLowerCamel(info.Name)
 		}
 
 		val, ok := normalizeStructValue(f)
@@ -116,44 +154,65 @@ func (p *parser) scan(v reflect.Value, key string, isSquash bool) {
 			f.Set(val)
 		}
 
-		p.scan(val, nextKey, name == "")
+		if err := p.scan(val, nextKey, flags{isSquash: info.IsSquashed, isDefault: info.IsDefault}); err != nil {
+			return err
+		}
 	}
+
+	return nil
 }
 
-func getFieldName(field reflect.Value, typ reflect.StructField) (string, bool) {
+type FieldInfo struct {
+	Name       string
+	Ignore     bool
+	IsDefault  bool
+	IsSquashed bool
+}
+
+func getFieldInfo(field reflect.Value, typ reflect.StructField) FieldInfo {
 	if !field.CanInterface() {
-		return "", false
+		return FieldInfo{Ignore: true}
 	}
 
 	if typ.Anonymous && !field.CanSet() {
-		return "", false
+		return FieldInfo{Ignore: true}
+	}
+
+	f := FieldInfo{Name: typ.Name}
+
+	if defaultTag := typ.Tag.Get("default"); defaultTag == "true" {
+		f.IsDefault = true
 	}
 
 	loadTag := typ.Tag.Get("load")
 	if loadTag == "true" {
-		return typ.Name, true
+		return f
 	}
 
 	mapTag := typ.Tag.Get("mapstructure")
 	if index := strings.Index(mapTag, ","); index != -1 {
 		if mapTag[:index] == "-" {
-			return "", false
+			return FieldInfo{Ignore: true}
 		}
 
 		squash := strings.Contains(mapTag[index+1:], "squash")
-		if squash && typ.Type.Kind() == reflect.Struct {
-			return "", true
+		if squash && (typ.Type.Kind() == reflect.Struct || (typ.Type.Kind() == reflect.Ptr && typ.Type.Elem().Kind() == reflect.Struct)) {
+			f.Name = ""
+			f.IsSquashed = true
+			return f
 		}
 
-		return mapTag[:index], true
+		f.Name = mapTag[:index]
+		return f
 	} else if len(mapTag) > 0 {
 		if mapTag == "-" {
-			return "", false
+			return FieldInfo{Ignore: true}
 		}
-		return mapTag, true
+		f.Name = mapTag
+		return f
 	}
 
-	return typ.Name, true
+	return f
 }
 
 func normalizeStruct(i interface{}) (reflect.Value, bool) {

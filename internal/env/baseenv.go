@@ -27,26 +27,21 @@ func NewBaseEnv(path string) *baseEnv {
 	}
 }
 
-type instance struct {
-	val interface{}
-	key string
-}
-
 type baseEnv struct {
 	path      string
 	viper     *viper.Viper
 	flag      *pflag.FlagSet
-	instances []instance
+	instances []Instance
 }
 
 func (e *baseEnv) ConfigureInstances(container di.Container) error {
 	for _, i := range e.instances {
 		var opts []inject.RegisterOption
-		if i.key != "" {
-			opts = append(opts, di.WithName(i.key))
+		if !i.IsDefault {
+			opts = append(opts, di.WithName(i.Key))
 		}
 
-		if err := container.Instance(i.val, opts...); err != nil {
+		if err := container.Instance(i.Val, opts...); err != nil {
 			return err
 		}
 	}

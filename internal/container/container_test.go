@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/dig"
 )
 
 type Type1 struct {
@@ -113,4 +114,19 @@ func TestContainer_MakeApp(t *testing.T) {
 	ass.Equal(1, app.T1.Val)
 	ass.Equal(2, app.T2.Val)
 	ass.Equal(3, app.T3.Val)
+}
+
+func TestContainer_SameInstances(t *testing.T) {
+	c := New()
+	assert.NoError(t, c.Instance(Type1{Val: 1}))
+	assert.Error(t, c.Instance(Type1{Val: 1}))
+	assert.NoError(t, c.Instance(Type1{Val: 2}, dig.Name("second")))
+
+	err := c.Execute(func(in struct {
+		dig.In
+		First  Type1
+		Second Type1 `name:"second"`
+	}) { assert.Equal(t, 1, in.First.Val); assert.Equal(t, 2, in.Second.Val) })
+
+	assert.NoError(t, err)
 }

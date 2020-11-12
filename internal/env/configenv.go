@@ -55,7 +55,7 @@ func (e *configEnv) Configure(cfg Config) error {
 			}
 		}
 
-		e.instances = append(e.instances, instance{val: app})
+		e.instances = append(e.instances, Instance{Val: app, IsDefault: true})
 	}
 
 	return nil
@@ -73,9 +73,9 @@ func (e *configEnv) configureParser(cfg Config) (*parser, error) {
 		v.Set(reflect.New(v.Type()))
 	}
 
-	parsed.scan(v, "", false)
+	err := parsed.scan(v, "", flags{})
 
-	return parsed, nil
+	return parsed, err
 }
 
 func (e *configEnv) setDefaults(def []defaults) {
@@ -94,11 +94,10 @@ func (e *configEnv) validate(validates map[string]base.Validatable) (err error) 
 }
 
 func (e *configEnv) setInstances(parsed *parser) {
-	for key, i := range parsed.configs {
-		if parsed.isDouble(i) {
-			e.instances = append(e.instances, instance{i, key})
-		} else {
-			e.instances = append(e.instances, instance{val: i})
+	for _, coll := range parsed.configs {
+		coll.Items[coll.DefaultKey].IsDefault = true
+		for _, i := range coll.Items {
+			e.instances = append(e.instances, i)
 		}
 	}
 }

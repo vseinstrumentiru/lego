@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 
+## [2.0.3] - 2020-11-12
+
+
 ## [2.0.2] - 2020-11-11
 
 ## [2.0.1] - 2020-11-06
@@ -21,7 +24,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## 1.0.0 - 2020-09-28
 
-[Unreleased]: https://github.com/vseinstrumentiru/lego/compare/v2.0.2...HEAD
+[Unreleased]: https://github.com/vseinstrumentiru/lego/compare/v2.0.3...HEAD
+[2.0.3]: https://github.com/vseinstrumentiru/lego/compare/v2.0.2...v2.0.3
 [2.0.2]: https://github.com/vseinstrumentiru/lego/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/vseinstrumentiru/lego/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/vseinstrumentiru/lego/compare/v1.0.2...v2.0.0

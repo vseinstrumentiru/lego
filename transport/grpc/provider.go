@@ -1,4 +1,4 @@
-package http
+package grpc
 
 import (
 	"fmt"
@@ -16,14 +16,13 @@ import (
 	"github.com/vseinstrumentiru/lego/v2/internal/metrics/propagation"
 	"github.com/vseinstrumentiru/lego/v2/metrics/tracing"
 	"github.com/vseinstrumentiru/lego/v2/multilog"
-	grpccfg "github.com/vseinstrumentiru/lego/v2/transport/grpc"
 	"github.com/vseinstrumentiru/lego/v2/transport/http/middleware"
 	"github.com/vseinstrumentiru/lego/v2/version"
 )
 
 type args struct {
 	dig.In
-	Config      *grpccfg.Config                      `optional:"true"`
+	Config      *Config                              `optional:"true"`
 	TraceTags   middleware.TraceTagsMiddlewareConfig `optional:"true"`
 	TraceConfig *tracing.Config                      `optional:"true"`
 
@@ -37,7 +36,7 @@ type args struct {
 
 func Provide(in args) *grpc.Server {
 	if in.Config == nil {
-		in.Config = grpccfg.NewDefaultConfig()
+		in.Config = NewDefaultConfig()
 	}
 
 	logger := in.Logger.WithFields(map[string]interface{}{"component": "grpc"})

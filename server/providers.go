@@ -1,18 +1,18 @@
 package server
 
 import (
-	"github.com/vseinstrumentiru/lego/v2/internal/events"
-	"github.com/vseinstrumentiru/lego/v2/internal/events/eventrouter"
 	"github.com/vseinstrumentiru/lego/v2/internal/metrics"
 	"github.com/vseinstrumentiru/lego/v2/internal/metrics/exporters/newrelicexporter"
 	"github.com/vseinstrumentiru/lego/v2/internal/metrics/propagation"
-	grpcProvider "github.com/vseinstrumentiru/lego/v2/internal/transpoort/grpc"
-	"github.com/vseinstrumentiru/lego/v2/internal/transpoort/http/httpclient"
-	"github.com/vseinstrumentiru/lego/v2/internal/transpoort/http/httpserver"
-	"github.com/vseinstrumentiru/lego/v2/internal/transpoort/mysql"
-	"github.com/vseinstrumentiru/lego/v2/internal/transpoort/nats"
-	"github.com/vseinstrumentiru/lego/v2/internal/transpoort/sql"
-	"github.com/vseinstrumentiru/lego/v2/internal/transpoort/stan"
+	events2 "github.com/vseinstrumentiru/lego/v2/transport/events"
+	eventrouter2 "github.com/vseinstrumentiru/lego/v2/transport/events/eventrouter"
+	"github.com/vseinstrumentiru/lego/v2/transport/grpc"
+	"github.com/vseinstrumentiru/lego/v2/transport/http/httpclient"
+	"github.com/vseinstrumentiru/lego/v2/transport/http/httpserver"
+	mysql2 "github.com/vseinstrumentiru/lego/v2/transport/mysql"
+	nats2 "github.com/vseinstrumentiru/lego/v2/transport/nats"
+	"github.com/vseinstrumentiru/lego/v2/transport/sql"
+	stan2 "github.com/vseinstrumentiru/lego/v2/transport/stan"
 )
 
 func providers() []interface{} {
@@ -25,18 +25,18 @@ func providers() []interface{} {
 		httpserver.Provide,
 		httpclient.Provide,
 		httpclient.ConstructorProvider,
-		grpcProvider.Provide,
+		grpc.Provide,
 		// database
-		mysql.Provide,
+		mysql2.Provide,
 		sql.Provide,
 		// events
-		nats.Provide,
-		stan.Provide,
-		eventrouter.Provide,
-		events.ProvideKafkaPublisher,
-		events.ProvideKafkaSubscriber,
-		events.ProvideNatsSubscriber,
-		events.ProvideNatsPublisher,
-		events.ProvideChannel,
+		nats2.Provide,
+		stan2.Provide,
+		eventrouter2.Provide,
+		events2.ProvideKafkaPublisher,
+		events2.ProvideKafkaSubscriber,
+		events2.ProvideNatsSubscriber,
+		events2.ProvideNatsPublisher,
+		events2.ProvideChannel,
 	}
 }

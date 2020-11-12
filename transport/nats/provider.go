@@ -5,13 +5,12 @@ import (
 	"github.com/nats-io/nats.go"
 	"go.uber.org/dig"
 
-	lenats "github.com/vseinstrumentiru/lego/v2/transport/nats"
 	lestan "github.com/vseinstrumentiru/lego/v2/transport/stan"
 )
 
 type args struct {
 	dig.In
-	Config     *lenats.Config
+	Config     *Config
 	StanConfig *lestan.Config `optional:"true"`
 }
 

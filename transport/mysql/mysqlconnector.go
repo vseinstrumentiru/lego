@@ -1,7 +1,7 @@
-package database
+package mysql
 
 import "database/sql/driver"
 
-type MySQLConnector struct {
+type Connector struct {
 	driver.Connector
 }

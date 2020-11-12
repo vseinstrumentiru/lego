@@ -8,17 +8,15 @@ import (
 	"logur.dev/logur"
 
 	"github.com/vseinstrumentiru/lego/v2/multilog"
-	"github.com/vseinstrumentiru/lego/v2/transport/database"
-	lemysql "github.com/vseinstrumentiru/lego/v2/transport/mysql"
 )
 
 type args struct {
 	dig.In
-	Config *lemysql.Config
+	Config *Config
 	Logger multilog.Logger
 }
 
-func Provide(in args) (*database.MySQLConnector, error) {
+func Provide(in args) (*Connector, error) {
 	connector, err := mysql.NewConnector(&in.Config.Config)
 
 	if err != nil {
@@ -28,7 +26,7 @@ func Provide(in args) (*database.MySQLConnector, error) {
 	logger := in.Logger.WithFields(map[string]interface{}{"component": "mysql"})
 	_ = mysql.SetLogger(logur.NewErrorPrintLogger(logger))
 
-	return &database.MySQLConnector{
+	return &Connector{
 		Connector: ocsql.WrapConnector(
 			connector,
 			ocsql.WithOptions(in.Config.Trace),

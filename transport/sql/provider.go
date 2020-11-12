@@ -12,12 +12,12 @@ import (
 	"go.uber.org/dig"
 
 	"github.com/vseinstrumentiru/lego/v2/server/shutdown"
-	"github.com/vseinstrumentiru/lego/v2/transport/database"
+	"github.com/vseinstrumentiru/lego/v2/transport/mysql"
 )
 
 type args struct {
 	dig.In
-	MySQL *database.MySQLConnector `optional:"true"`
+	MySQL *mysql.Connector `optional:"true"`
 
 	Closer *shutdown.CloseGroup
 	Health health.Health

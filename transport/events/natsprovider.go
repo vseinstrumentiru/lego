@@ -10,14 +10,14 @@ import (
 	lestan "github.com/vseinstrumentiru/lego/v2/transport/stan"
 )
 
-type natsPubArgs struct {
+type NatsPubArgs struct {
 	dig.In
 	Stan    stan.Conn
 	Logger  multilog.Logger
 	Encoder nats.Marshaler
 }
 
-type natsSubArgs struct {
+type NatsSubArgs struct {
 	dig.In
 	Config  *lestan.Config
 	Stan    stan.Conn
@@ -25,7 +25,7 @@ type natsSubArgs struct {
 	Decoder nats.Unmarshaler
 }
 
-func ProvideNatsPublisher(in natsPubArgs) (*nats.StreamingPublisher, error) {
+func ProvideNatsPublisher(in NatsPubArgs) (*nats.StreamingPublisher, error) {
 	return nats.NewStreamingPublisherWithStanConn(
 		in.Stan,
 		nats.StreamingPublisherPublishConfig{
@@ -35,7 +35,7 @@ func ProvideNatsPublisher(in natsPubArgs) (*nats.StreamingPublisher, error) {
 	)
 }
 
-func ProvideNatsSubscriber(in natsSubArgs) (*nats.StreamingSubscriber, error) {
+func ProvideNatsSubscriber(in NatsSubArgs) (*nats.StreamingSubscriber, error) {
 	subCfg := nats.StreamingSubscriberSubscriptionConfig{
 		DurableName: in.Config.DurableName,
 		QueueGroup:  in.Config.GroupName,

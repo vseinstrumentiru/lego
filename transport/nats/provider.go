@@ -8,13 +8,13 @@ import (
 	lestan "github.com/vseinstrumentiru/lego/v2/transport/stan"
 )
 
-type args struct {
+type Args struct {
 	dig.In
 	Config     *Config
 	StanConfig *lestan.Config `optional:"true"`
 }
 
-func Provide(in args) (*nats.Conn, error) {
+func Provide(in Args) (*nats.Conn, error) {
 	if in.Config == nil {
 		return nil, errors.New("nats config not found")
 	}

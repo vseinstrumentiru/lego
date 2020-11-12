@@ -25,7 +25,7 @@ import (
 	"github.com/vseinstrumentiru/lego/v2/version"
 )
 
-type args struct {
+type Args struct {
 	dig.In
 	Config      *httpcfg.Config                      `optional:"true"`
 	TraceTags   middleware.TraceTagsMiddlewareConfig `optional:"true"`
@@ -40,7 +40,7 @@ type args struct {
 	Upg      *tableflip.Upgrader
 }
 
-func Provide(in args) (*http.Server, *mux.Router) {
+func Provide(in Args) (*http.Server, *mux.Router) {
 	if in.Config == nil {
 		in.Config = httpcfg.NewDefaultConfig()
 	}

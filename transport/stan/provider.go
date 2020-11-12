@@ -7,13 +7,13 @@ import (
 	"go.uber.org/dig"
 )
 
-type args struct {
+type Args struct {
 	dig.In
 	Stan *Config
 	Nats *nats.Conn
 }
 
-func Provide(in args) (stan.Conn, error) {
+func Provide(in Args) (stan.Conn, error) {
 	if in.Stan == nil {
 		return nil, errors.New("stan config not found")
 	}

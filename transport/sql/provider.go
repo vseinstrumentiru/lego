@@ -15,7 +15,7 @@ import (
 	"github.com/vseinstrumentiru/lego/v2/transport/mysql"
 )
 
-type args struct {
+type Args struct {
 	dig.In
 	MySQL *mysql.Connector `optional:"true"`
 
@@ -23,7 +23,7 @@ type args struct {
 	Health health.Health
 }
 
-func Provide(in args) (*sql.DB, error) {
+func Provide(in Args) (*sql.DB, error) {
 	var connector driver.Connector
 
 	if in.MySQL != nil {

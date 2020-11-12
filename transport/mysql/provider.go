@@ -10,13 +10,13 @@ import (
 	"github.com/vseinstrumentiru/lego/v2/multilog"
 )
 
-type args struct {
+type Args struct {
 	dig.In
 	Config *Config
 	Logger multilog.Logger
 }
 
-func Provide(in args) (*Connector, error) {
+func Provide(in Args) (*Connector, error) {
 	connector, err := mysql.NewConnector(&in.Config.Config)
 
 	if err != nil {

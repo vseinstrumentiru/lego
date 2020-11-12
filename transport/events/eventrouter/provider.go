@@ -15,14 +15,14 @@ import (
 	"github.com/vseinstrumentiru/lego/v2/multilog"
 )
 
-type args struct {
+type Args struct {
 	dig.In
 	RouterConfig *events.RouterConfig `optional:"true"`
 	Logger       multilog.Logger
 	Pipeline     *run.Group
 }
 
-func Provide(in args) (*message.Router, error) {
+func Provide(in Args) (*message.Router, error) {
 	cfg := message.RouterConfig{}
 	logger := in.Logger.WithFields(map[string]interface{}{"component": "events.router"})
 

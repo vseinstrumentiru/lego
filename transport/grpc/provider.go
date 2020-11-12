@@ -20,7 +20,7 @@ import (
 	"github.com/vseinstrumentiru/lego/v2/version"
 )
 
-type args struct {
+type Args struct {
 	dig.In
 	Config      *Config                              `optional:"true"`
 	TraceTags   middleware.TraceTagsMiddlewareConfig `optional:"true"`
@@ -34,7 +34,7 @@ type args struct {
 	Upg      *tableflip.Upgrader
 }
 
-func Provide(in args) *grpc.Server {
+func Provide(in Args) *grpc.Server {
 	if in.Config == nil {
 		in.Config = NewDefaultConfig()
 	}

@@ -17,7 +17,7 @@ import (
 func TestPubSub(t *testing.T) {
 	ass := assert.New(t)
 
-	c, err := ProvideChannel(channelArgs{
+	c, err := ProvideChannel(ChannelArgs{
 		Logger: multilog.New(0),
 	})
 	ass.NoError(err)

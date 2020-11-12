@@ -9,21 +9,21 @@ import (
 	kafkatransport "github.com/vseinstrumentiru/lego/v2/transport/kafka"
 )
 
-type kafkaPubArgs struct {
+type KafkaPubArgs struct {
 	dig.In
 	Broker  *kafkatransport.Config
 	Logger  multilog.Logger
 	Encoder kafka.Marshaler
 }
 
-type kafkaSubArgs struct {
+type KafkaSubArgs struct {
 	dig.In
 	Broker  *kafkatransport.Config
 	Logger  multilog.Logger
 	Decoder kafka.Unmarshaler
 }
 
-func ProvideKafkaPublisher(in kafkaPubArgs) (*kafka.Publisher, error) {
+func ProvideKafkaPublisher(in KafkaPubArgs) (*kafka.Publisher, error) {
 	pub, err := kafka.NewPublisher(
 		in.Broker.Addr,
 		in.Encoder,
@@ -34,7 +34,7 @@ func ProvideKafkaPublisher(in kafkaPubArgs) (*kafka.Publisher, error) {
 	return pub.(*kafka.Publisher), err
 }
 
-func ProvideKafkaSubscriber(in kafkaSubArgs) (*kafka.Subscriber, error) {
+func ProvideKafkaSubscriber(in KafkaSubArgs) (*kafka.Subscriber, error) {
 	subCfg := kafka.SubscriberConfig{
 		Brokers:                in.Broker.Addr,
 		ConsumerGroup:          in.Broker.GroupName,

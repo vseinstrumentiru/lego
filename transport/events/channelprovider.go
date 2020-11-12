@@ -8,13 +8,13 @@ import (
 	"github.com/vseinstrumentiru/lego/v2/multilog"
 )
 
-type channelArgs struct {
+type ChannelArgs struct {
 	dig.In
 	Config *gochannel.Config `optional:"true"`
 	Logger multilog.Logger
 }
 
-func ProvideChannel(in channelArgs) (*gochannel.GoChannel, error) {
+func ProvideChannel(in ChannelArgs) (*gochannel.GoChannel, error) {
 	cfg := gochannel.Config{}
 
 	if in.Config != nil {

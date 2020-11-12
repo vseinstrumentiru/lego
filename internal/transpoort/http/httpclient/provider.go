@@ -7,11 +7,10 @@ import (
 	"go.opencensus.io/trace"
 
 	"github.com/vseinstrumentiru/lego/v2/internal/metrics/propagation"
+	httpTransport "github.com/vseinstrumentiru/lego/v2/transport/http"
 )
 
-type Constructor func(name string) *http.Client
-
-func ConstructorProvider(httpProp *propagation.HTTPFormatCollection) Constructor {
+func ConstructorProvider(httpProp *propagation.HTTPFormatCollection) httpTransport.Constructor {
 	return func(name string) *http.Client {
 		return &http.Client{
 			Transport: &ochttp.Transport{

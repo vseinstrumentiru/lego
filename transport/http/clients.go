@@ -14,6 +14,8 @@ import (
 	"go.opencensus.io/trace"
 )
 
+type Constructor func(name string) *http.Client
+
 type ClientOption func(*http.Client)
 
 func SetSpanNameFormatter(formatter func(req *http.Request) string) ClientOption {

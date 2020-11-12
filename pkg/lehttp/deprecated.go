@@ -9,7 +9,6 @@ import (
 	"github.com/shurcooL/graphql"
 
 	"github.com/vseinstrumentiru/lego/v2/internal/deprecated"
-	"github.com/vseinstrumentiru/lego/v2/internal/transpoort/http/httpclient"
 	httpTransport "github.com/vseinstrumentiru/lego/v2/transport/http"
 )
 
@@ -18,7 +17,7 @@ type ClientOption = httpTransport.ClientOption
 // Deprecated: use DI with httpclient.Constructor
 func NewClient(name string, opts ...ClientOption) *baseHttp.Client {
 	var client *baseHttp.Client
-	err := deprecated.Container.Execute(func(c httpclient.Constructor) {
+	err := deprecated.Container.Execute(func(c httpTransport.Constructor) {
 		client = c(name)
 	})
 

@@ -2,10 +2,8 @@ package container
 
 import (
 	"go.uber.org/dig"
-
-	"github.com/vseinstrumentiru/lego/v2/inject"
 )
 
-func WithName(name string) inject.RegisterOption {
+func WithName(name string) dig.ProvideOption {
 	return dig.Name(name)
 }

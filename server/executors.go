@@ -9,23 +9,16 @@ import (
 )
 
 func executors(r *Runtime) (exec []interface{}) {
-	execList := map[string][]interface{}{
-		optUseJaeger:     {jaegerexporter.Configure},
-		optUsePrometheus: {prometheus.Configure},
-		optUseOpencensus: {opencensusexporter.Configure},
-		optUseNewRelic:   {newrelicexporter.Configure},
-		optUseTrace:      {metrics.ConfigureTrace},
-		optUseStats:      {metrics.ConfigureStats},
-		optUseMonitoring: {metrics.ConfigureStats},
+	if r.Is(optWithoutProviders) {
+		return nil
 	}
 
-	ignoreProviders := r.Is(optWithoutProviders)
-
-	for key, cfg := range execList {
-		if !ignoreProviders || r.Is(key) {
-			exec = append(exec, cfg...)
-		}
+	return []interface{}{
+		jaegerexporter.Configure,
+		prometheus.Configure,
+		opencensusexporter.Configure,
+		newrelicexporter.Configure,
+		metrics.ConfigureTrace,
+		metrics.ConfigureStats,
 	}
-
-	return exec
 }

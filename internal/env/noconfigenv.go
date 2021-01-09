@@ -1,11 +1,13 @@
 package env
 
 import (
+	"github.com/spf13/pflag"
+
 	base "github.com/vseinstrumentiru/lego/v2/config"
 )
 
-func NewNoConfigEnv(path string) Env {
-	return &noConfigEnv{NewBaseEnv(path)}
+func NewNoConfigEnv(set *pflag.FlagSet, path string) Env {
+	return &noConfigEnv{NewBaseEnv(set, path)}
 }
 
 type noConfigEnv struct {

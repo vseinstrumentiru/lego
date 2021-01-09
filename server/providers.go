@@ -15,26 +15,43 @@ import (
 	"github.com/vseinstrumentiru/lego/v2/transport/stan"
 )
 
-func providers(runtime *Runtime) []interface{} {
-	if runtime.Is(optWithoutProviders) {
-		return []interface{}{}
-	}
-
+func provideMinimal() []interface{} {
 	return []interface{}{
-		// metric providers
 		propagation.ProvideHTTP,
-		newrelicexporter.Provide,
 		metrics.ProvideHealthChecker,
+	}
+}
+
+func provideMonitoring() []interface{} {
+	return []interface{}{
+		newrelicexporter.Provide,
 		metrics.ProvideMonitoringServer,
-		// http / grpc
+	}
+}
+
+func provideHttp() []interface{} {
+	return []interface{}{
 		httpserver.Provide,
 		httpclient.Provide,
 		httpclient.ConstructorProvider,
+	}
+}
+
+func provideGrpc() []interface{} {
+	return []interface{}{
 		grpc.Provide,
-		// database
+	}
+}
+
+func provideSql() []interface{} {
+	return []interface{}{
 		mysql.Provide,
 		sql.Provide,
-		// events
+	}
+}
+
+func provideEvents() []interface{} {
+	return []interface{}{
 		nats.Provide,
 		stan.Provide,
 		eventrouter.Provide,
@@ -44,4 +61,25 @@ func providers(runtime *Runtime) []interface{} {
 		events.ProvideNatsPublisher,
 		events.ProvideChannel,
 	}
+}
+
+func providers(runtime *Runtime) []interface{} {
+	if runtime.Is(optWithoutProviders) {
+		return []interface{}{}
+	}
+
+	var res []interface{}
+
+	res = append(res, provideMinimal()...)
+
+	if runtime.Not(optWithoutMonitoring) {
+		res = append(res, provideMonitoring()...)
+	}
+
+	res = append(res, provideHttp()...)
+	res = append(res, provideGrpc()...)
+	res = append(res, provideSql()...)
+	res = append(res, provideEvents()...)
+
+	return res
 }

@@ -1,6 +1,8 @@
 package server
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/vseinstrumentiru/lego/v2/common/cast"
 	"github.com/vseinstrumentiru/lego/v2/common/set"
 	"github.com/vseinstrumentiru/lego/v2/internal/env"
@@ -11,7 +13,13 @@ const (
 )
 
 func newRuntime(opts []Option) *Runtime {
-	runtime := &Runtime{opts: cast.NewCastableRWSet(set.NewSimple())}
+	runtime := &Runtime{
+		opts: cast.NewCastableRWSet(set.NewSimple()),
+		cmd: &cobra.Command{
+			Use:    "lego",
+			Hidden: true,
+		},
+	}
 
 	for _, opt := range opts {
 		opt(runtime)
@@ -23,6 +31,7 @@ func newRuntime(opts []Option) *Runtime {
 type Runtime struct {
 	opts cast.CastableRWSet
 	cfg  interface{}
+	cmd  *cobra.Command
 }
 
 func (r *Runtime) On(key string, callback interface{}) (ok bool) {
@@ -55,8 +64,8 @@ func (r *Runtime) newEnv() env.Env {
 	})
 
 	if r.cfg == nil {
-		return env.NewNoConfigEnv(path)
+		return env.NewNoConfigEnv(r.cmd.Flags(), path)
 	}
 
-	return env.NewConfigEnv(path)
+	return env.NewConfigEnv(r.cmd.Flags(), path)
 }

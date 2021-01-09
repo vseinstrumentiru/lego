@@ -14,13 +14,17 @@ import (
 
 type Args struct {
 	dig.In
-	Router  *http.ServeMux
+	Router  *http.ServeMux `optional:"true"`
 	App     *config.Application
 	Log     multilog.Logger
 	Version version.Info
 }
 
 func Configure(in Args) error {
+	if in.Router == nil {
+		return nil
+	}
+
 	log := in.Log.WithFields(map[string]interface{}{"component": "exporter.prometheus"})
 
 	exp, err := prometheus.NewExporter(prometheus.Options{

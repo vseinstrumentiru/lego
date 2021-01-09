@@ -2,8 +2,8 @@ package server
 
 import (
 	"emperror.dev/emperror"
+	"go.uber.org/dig"
 
-	"github.com/vseinstrumentiru/lego/v2/inject"
 	"github.com/vseinstrumentiru/lego/v2/internal/container"
 )
 
@@ -17,25 +17,25 @@ type bootContainer struct {
 	i container.Container
 }
 
-func (c *bootContainer) register(constructor inject.Constructor, options ...inject.RegisterOption) *bootContainer {
+func (c *bootContainer) register(constructor interface{}, options ...dig.ProvideOption) *bootContainer {
 	emperror.Panic(c.i.Register(constructor, options...))
 
 	return c
 }
 
-func (c *bootContainer) execute(invocation inject.Invocation) *bootContainer {
-	emperror.Panic(c.i.Execute(invocation))
+func (c *bootContainer) execute(function interface{}) *bootContainer {
+	emperror.Panic(c.i.Execute(function))
 
 	return c
 }
 
-func (c *bootContainer) instance(instance interface{}, options ...inject.RegisterOption) *bootContainer {
+func (c *bootContainer) instance(instance interface{}, options ...dig.ProvideOption) *bootContainer {
 	emperror.Panic(c.i.Instance(instance, options...))
 
 	return c
 }
 
-func (c *bootContainer) make(i inject.Interface) *bootContainer {
+func (c *bootContainer) make(i interface{}) *bootContainer {
 	emperror.Panic(c.i.Make(i))
 
 	return c

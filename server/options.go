@@ -6,15 +6,8 @@ const (
 
 	optLocalDebug = "opt_local_debug"
 
-	optWithoutProviders = "opt_without_providers"
-
-	optUseJaeger     = "opt_use_jaeger"
-	optUsePrometheus = "opt_use_prometheus"
-	optUseOpencensus = "opt_use_opencensus"
-	optUseNewRelic   = "opt_use_newrelic"
-	optUseTrace      = "opt_use_trace"
-	optUseStats      = "opt_use_stats"
-	optUseMonitoring = "opt_use_monitoring"
+	optWithoutProviders  = "opt_without_providers"
+	optWithoutMonitoring = "opt_without_monitoring"
 )
 
 func LocalDebug() Option {
@@ -26,6 +19,13 @@ func LocalDebug() Option {
 func NoDefaultProviders() Option {
 	return func(r *Runtime) {
 		r.opts.Set(optWithoutProviders, true)
+	}
+}
+
+func CommandMode() Option {
+	return func(r *Runtime) {
+		r.opts.Set(optNoWait, true)
+		r.opts.Set(optWithoutMonitoring, true)
 	}
 }
 

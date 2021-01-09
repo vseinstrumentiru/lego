@@ -6,6 +6,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/spf13/pflag"
 	"github.com/stretchr/testify/assert"
 	"go.opencensus.io/trace"
 
@@ -74,7 +75,7 @@ func TestSampler_ViperUnmarshall(t *testing.T) {
 	_ = os.Setenv("CFG_SAMPLER", "probability:0.5")
 	var c Config
 
-	e := env.NewConfigEnv("cfg").(interface{ Configure(cfg env.Config) error })
+	e := env.NewConfigEnv(pflag.NewFlagSet("test", pflag.ExitOnError), "cfg").(interface{ Configure(cfg env.Config) error })
 	err := e.Configure(&c)
 
 	ass := assert.New(t)

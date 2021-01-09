@@ -7,8 +7,6 @@ import (
 
 	"emperror.dev/errors"
 	"go.uber.org/dig"
-
-	"github.com/vseinstrumentiru/lego/v2/inject"
 )
 
 func New() *container {
@@ -25,11 +23,11 @@ type container struct {
 	di *dig.Container
 }
 
-func (c *container) Register(constructor inject.Constructor, options ...inject.RegisterOption) error {
+func (c *container) Register(constructor interface{}, options ...dig.ProvideOption) error {
 	return errors.WithStack(c.di.Provide(constructor, options...))
 }
 
-func (c *container) Instance(instance interface{}, options ...inject.RegisterOption) error {
+func (c *container) Instance(instance interface{}, options ...dig.ProvideOption) error {
 	t := reflect.ValueOf(instance)
 
 	if err := checkStruct(t); err != nil {
@@ -42,11 +40,11 @@ func (c *container) Instance(instance interface{}, options ...inject.RegisterOpt
 	return c.Register(f.Interface(), options...)
 }
 
-func (c *container) Execute(function inject.Invocation) error {
+func (c *container) Execute(function interface{}) error {
 	return errors.WithStack(c.di.Invoke(function))
 }
 
-func (c *container) Make(i inject.Interface) error {
+func (c *container) Make(i interface{}) error {
 	val := reflect.ValueOf(i)
 
 	if err := checkStruct(val); err != nil {

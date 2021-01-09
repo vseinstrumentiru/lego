@@ -11,6 +11,7 @@ import (
 	"github.com/cloudflare/tableflip"
 	"github.com/oklog/run"
 	appkitrun "github.com/sagikazarmark/appkit/run"
+	"github.com/spf13/cobra"
 
 	baseCfg "github.com/vseinstrumentiru/lego/v2/config"
 	di "github.com/vseinstrumentiru/lego/v2/internal/container"
@@ -35,7 +36,8 @@ func Run(app interface{}, opts ...Option) {
 
 	container.
 		register(func() di.Container { return container.i }).
-		register(func() environment.Env { return env })
+		register(func() environment.Env { return env }).
+		register(func() *cobra.Command { return runtime.cmd })
 	// configuration
 	runtime.onConfig(func(cfg interface{}) {
 		container.register(func() environment.Config { return cfg })
@@ -52,6 +54,7 @@ func Run(app interface{}, opts ...Option) {
 
 	container.
 		execute(func(cfg *baseCfg.Application) {
+			runtime.cmd.Use = cfg.Name
 			ver = version.New(cfg)
 		}).
 		instance(ver)
@@ -123,6 +126,8 @@ func Run(app interface{}, opts ...Option) {
 		if err := pipeline.Run(); err != nil {
 			logger.WithErrFilter(match.As(&run.SignalError{}).MatchError).Notify(err)
 		}
+	} else {
+		emperror.Panic(runtime.cmd.Execute())
 	}
 	logger.Trace("application stopped")
 }

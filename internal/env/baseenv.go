@@ -10,20 +10,20 @@ import (
 	"emperror.dev/errors"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
+	"go.uber.org/dig"
 
 	"github.com/vseinstrumentiru/lego/v2/common/cast"
 	"github.com/vseinstrumentiru/lego/v2/config"
-	"github.com/vseinstrumentiru/lego/v2/inject"
 	di "github.com/vseinstrumentiru/lego/v2/internal/container"
 )
 
-func NewBaseEnv(path string) *baseEnv {
-	v, p := viper.New(), pflag.NewFlagSet("lego", pflag.ExitOnError)
+func NewBaseEnv(set *pflag.FlagSet, path string) *baseEnv {
+	v := viper.New()
 	v.SetEnvPrefix(path)
 
 	return &baseEnv{
 		viper: v,
-		flag:  p,
+		flag:  set,
 	}
 }
 
@@ -36,7 +36,7 @@ type baseEnv struct {
 
 func (e *baseEnv) ConfigureInstances(container di.Container) error {
 	for _, i := range e.instances {
-		var opts []inject.RegisterOption
+		var opts []dig.ProvideOption
 		if !i.IsDefault {
 			opts = append(opts, di.WithName(i.Key))
 		}

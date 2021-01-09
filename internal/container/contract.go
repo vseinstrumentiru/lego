@@ -1,10 +1,12 @@
 package container
 
-import di "github.com/vseinstrumentiru/lego/v2/inject"
+import (
+	"go.uber.org/dig"
+)
 
 type Container interface {
-	Register(constructor di.Constructor, options ...di.RegisterOption) error
-	Instance(instance interface{}, options ...di.RegisterOption) error
-	Execute(invocation di.Invocation) error
-	Make(i di.Interface) error
+	Register(constructor interface{}, options ...dig.ProvideOption) error
+	Instance(instance interface{}, options ...dig.ProvideOption) error
+	Execute(function interface{}) error
+	Make(i interface{}) error
 }

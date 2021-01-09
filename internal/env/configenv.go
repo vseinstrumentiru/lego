@@ -4,6 +4,7 @@ import (
 	"reflect"
 
 	"emperror.dev/errors"
+	"github.com/spf13/pflag"
 
 	"github.com/mitchellh/mapstructure"
 	"github.com/spf13/viper"
@@ -11,8 +12,8 @@ import (
 	base "github.com/vseinstrumentiru/lego/v2/config"
 )
 
-func NewConfigEnv(path string) Env {
-	return &configEnv{NewBaseEnv(path)}
+func NewConfigEnv(set *pflag.FlagSet, path string) Env {
+	return &configEnv{NewBaseEnv(set, path)}
 }
 
 type configEnv struct {
@@ -26,8 +27,8 @@ func (e *configEnv) Configure(cfg Config) error {
 		return err
 	}
 
-	e.flag.String("config", "", "Configuration file")
-	e.flag.String("config-path", "", "Search path for configuration file")
+	e.flag.String("config", "", "Configuration file (default: config.yaml, config.yml, config.toml, config.json)")
+	e.flag.String("config-path", "", "Search path for configuration file (default: ./")
 
 	e.setDefaults(parsed.defaults)
 

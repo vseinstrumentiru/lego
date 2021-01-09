@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/spf13/pflag"
 	"gotest.tools/assert"
 
 	"github.com/vseinstrumentiru/lego/v2/config"
@@ -75,7 +76,7 @@ func TestConfigure(t *testing.T) {
 	}{
 		{
 			"success",
-			NewConfigEnv("test").(*configEnv),
+			NewConfigEnv(pflag.NewFlagSet("test", pflag.ExitOnError), "test").(*configEnv),
 			args{&TestRootConfig{}},
 			false,
 			&TestRootConfig{

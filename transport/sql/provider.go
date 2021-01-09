@@ -17,6 +17,8 @@ import (
 
 type Args struct {
 	dig.In
+	Connector driver.Connector `optional:"true"`
+	// Deprecated: use driver.Connector
 	MySQL *mysql.Connector `optional:"true"`
 
 	Closer *shutdown.CloseGroup
@@ -24,15 +26,15 @@ type Args struct {
 }
 
 func Provide(in Args) (*sql.DB, error) {
-	var connector driver.Connector
-
-	if in.MySQL != nil {
-		connector = in.MySQL
-	} else {
-		return nil, errors.New("connector not found. you must provide connector")
+	if in.Connector == nil {
+		if in.MySQL != nil {
+			in.Connector = in.MySQL.Connector
+		} else {
+			return nil, errors.New("connector not found. you must provide `driver.Connector`")
+		}
 	}
 
-	conn := sql.OpenDB(connector)
+	conn := sql.OpenDB(in.Connector)
 	stopStats := ocsql.RecordStats(conn, 5*time.Second)
 
 	err := in.Health.RegisterCheck(&health.Config{

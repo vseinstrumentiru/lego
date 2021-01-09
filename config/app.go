@@ -1,15 +1,19 @@
 package config
 
-func Undefined() *Application {
+const Undefined = "undefined"
+
+func UndefinedApplication() *Application {
 	return &Application{
-		Name:       "undefined",
-		DataCenter: "undefined",
+		Name:       Undefined,
+		DataCenter: Undefined,
 	}
 }
 
 type Application struct {
 	Name       string
 	DataCenter string
+	DebugMode  bool
+	LocalMode  bool
 }
 
 func (c Application) FullName() string {

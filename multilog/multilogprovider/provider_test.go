@@ -1,4 +1,4 @@
-package multilog
+package multilogprovider
 
 import (
 	"testing"
@@ -8,6 +8,7 @@ import (
 	zerologadapter "logur.dev/adapter/zerolog"
 	"logur.dev/logur"
 
+	"github.com/vseinstrumentiru/lego/v2/config"
 	"github.com/vseinstrumentiru/lego/v2/multilog"
 	"github.com/vseinstrumentiru/lego/v2/multilog/log"
 
@@ -22,6 +23,7 @@ func TestProvide(t *testing.T) {
 	ass.NoError(c.Register(func() logur.Logger {
 		return zerologadapter.New(zerolog.Logger)
 	}))
+	ass.NoError(c.Instance(config.UndefinedApplication()))
 	ass.NoError(c.Instance(&multilog.Config{Level: logur.Info}))
 	ass.NoError(c.Instance(&log.Config{Stop: false}))
 	ass.NoError(c.Register(Provide))

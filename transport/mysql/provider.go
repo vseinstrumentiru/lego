@@ -1,6 +1,8 @@
 package mysql
 
 import (
+	"database/sql/driver"
+
 	"contrib.go.opencensus.io/integrations/ocsql"
 	"emperror.dev/errors"
 	"github.com/go-sql-driver/mysql"
@@ -16,7 +18,17 @@ type Args struct {
 	Logger multilog.Logger
 }
 
-func Provide(in Args) (*Connector, error) {
+func ProvideConnector(in Args) (*Connector, error) {
+	conn, err := Provide(in)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &Connector{conn}, nil
+}
+
+func Provide(in Args) (driver.Connector, error) {
 	connector, err := mysql.NewConnector(&in.Config.Config)
 
 	if err != nil {
@@ -26,10 +38,8 @@ func Provide(in Args) (*Connector, error) {
 	logger := in.Logger.WithFields(map[string]interface{}{"component": "mysql"})
 	_ = mysql.SetLogger(logur.NewErrorPrintLogger(logger))
 
-	return &Connector{
-		Connector: ocsql.WrapConnector(
-			connector,
-			ocsql.WithOptions(in.Config.Trace),
-		),
-	}, nil
+	return ocsql.WrapConnector(
+		connector,
+		ocsql.WithOptions(in.Config.Trace),
+	), nil
 }

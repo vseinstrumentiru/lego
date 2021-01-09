@@ -9,38 +9,14 @@ import (
 	"github.com/vseinstrumentiru/lego/v2/multilog"
 )
 
-type args struct {
+type ProvideArgs struct {
 	dig.In
 	App    *config.Application
 	Config *exporters.NewRelic `optional:"true"`
 	Logger multilog.Logger
 }
 
-type loggerWrap struct {
-	multilog.Logger
-}
-
-func (l loggerWrap) Error(msg string, context map[string]interface{}) {
-	l.Logger.Error(msg, context)
-}
-
-func (l loggerWrap) Warn(msg string, context map[string]interface{}) {
-	l.Logger.Warn(msg, context)
-}
-
-func (l loggerWrap) Info(msg string, context map[string]interface{}) {
-	l.Logger.Info(msg, context)
-}
-
-func (l loggerWrap) Debug(msg string, context map[string]interface{}) {
-	l.Logger.Debug(msg, context)
-}
-
-func (l loggerWrap) DebugEnabled() bool {
-	return false
-}
-
-func Provide(in args) (app *newrelic.Application, err error) {
+func Provide(in ProvideArgs) (app *newrelic.Application, err error) {
 	if in.Config == nil {
 		return nil, nil
 	}

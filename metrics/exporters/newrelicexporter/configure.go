@@ -13,7 +13,7 @@ import (
 	lenewrelic "github.com/vseinstrumentiru/lego/v2/multilog/newrelic"
 )
 
-type argsIn struct {
+type ConfigArgs struct {
 	dig.In
 	App      *config.Application   `optional:"true"`
 	Config   *exporters.NewRelic   `optional:"true"`
@@ -21,7 +21,7 @@ type argsIn struct {
 	Log      multilog.Logger
 }
 
-func Configure(in argsIn) error {
+func Configure(in ConfigArgs) error {
 	if in.Config == nil || !in.Config.Enabled {
 		return nil
 	}

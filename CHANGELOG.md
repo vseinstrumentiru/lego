@@ -9,6 +9,25 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 
+## [2.0.7] - 2021-01-09
+- MultiLog:
+    - Added `LocalMode` (colored human console) and `DebugMode` (trace log level) to `config.Application`
+    - Application name in log fields
+    - By default, console log enabled (added `SilentMode` in `multilog.Config` to turn it off)
+- Runner:
+    - All builtin providers are public
+    - Added startup options:
+        - `server.NoDefaultProviders()` - turn off all default providers and configurations
+        - `server.LocalDebug()` - turn on colored console logging and trace level
+- Other:
+    - `mysql.Provide` now returns `driver.Connector` (and added `mysql.ProvideConnector` for manual registering)
+    - `sql.Provide` now accepting `driver.Connector`
+- Deprecated:
+    - `server.NoWaitOption()` -> `server.NoWait()`
+    - `server.EnvPathOption(path)` -> `server.EnvPath(path)`
+    - `server.ConfigOption(cfg)` -> `server.WithConfig(cfg)`
+    - Field `MySQL` in `sql.Args` structure
+
 ## [2.0.6] - 2020-11-12
 
 
@@ -33,7 +52,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## 1.0.0 - 2020-09-28
 
-[Unreleased]: https://github.com/vseinstrumentiru/lego/compare/v2.0.6...HEAD
+[Unreleased]: https://github.com/vseinstrumentiru/lego/compare/v2.0.7...HEAD
+[2.0.7]: https://github.com/vseinstrumentiru/lego/compare/v2.0.6...v2.0.7
 [2.0.6]: https://github.com/vseinstrumentiru/lego/compare/v2.0.5...v2.0.6
 [2.0.5]: https://github.com/vseinstrumentiru/lego/compare/v2.0.4...v2.0.5
 [2.0.4]: https://github.com/vseinstrumentiru/lego/compare/v2.0.3...v2.0.4

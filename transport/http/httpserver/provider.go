@@ -17,7 +17,7 @@ import (
 	"go.opencensus.io/trace"
 	"go.uber.org/dig"
 
-	"github.com/vseinstrumentiru/lego/v2/internal/metrics/propagation"
+	"github.com/vseinstrumentiru/lego/v2/metrics/propagation"
 	"github.com/vseinstrumentiru/lego/v2/metrics/tracing"
 	"github.com/vseinstrumentiru/lego/v2/multilog"
 	httpcfg "github.com/vseinstrumentiru/lego/v2/transport/http"

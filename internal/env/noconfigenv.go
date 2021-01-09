@@ -17,7 +17,7 @@ func (e *noConfigEnv) Configure() error {
 		return err
 	}
 
-	app := base.Undefined()
+	app := base.UndefinedApplication()
 
 	if name := e.viper.GetString("name"); name != "" {
 		app = &base.Application{

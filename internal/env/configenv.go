@@ -46,7 +46,7 @@ func (e *configEnv) Configure(cfg Config) error {
 	e.setInstances(parsed)
 
 	if !parsed.exist(base.Application{}) {
-		app := base.Undefined()
+		app := base.UndefinedApplication()
 
 		if name := e.viper.GetString("name"); name != "" {
 			app = &base.Application{

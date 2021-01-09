@@ -12,7 +12,7 @@ import (
 	"github.com/vseinstrumentiru/lego/v2/version"
 )
 
-type argsIn struct {
+type Args struct {
 	dig.In
 	Router  *http.ServeMux
 	App     *config.Application
@@ -20,7 +20,7 @@ type argsIn struct {
 	Version version.Info
 }
 
-func Configure(in argsIn) error {
+func Configure(in Args) error {
 	log := in.Log.WithFields(map[string]interface{}{"component": "exporter.prometheus"})
 
 	exp, err := prometheus.NewExporter(prometheus.Options{

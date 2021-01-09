@@ -13,7 +13,7 @@ import (
 	"go.uber.org/dig"
 	"google.golang.org/grpc"
 
-	"github.com/vseinstrumentiru/lego/v2/internal/metrics/propagation"
+	"github.com/vseinstrumentiru/lego/v2/metrics/propagation"
 	"github.com/vseinstrumentiru/lego/v2/metrics/tracing"
 	"github.com/vseinstrumentiru/lego/v2/multilog"
 	"github.com/vseinstrumentiru/lego/v2/transport/http/middleware"

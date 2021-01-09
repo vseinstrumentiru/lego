@@ -11,8 +11,8 @@ import (
 	watermilllog "logur.dev/integration/watermill"
 
 	"github.com/vseinstrumentiru/lego/v2/events"
-	"github.com/vseinstrumentiru/lego/v2/internal/events/eventrouter/metrics"
 	"github.com/vseinstrumentiru/lego/v2/multilog"
+	"github.com/vseinstrumentiru/lego/v2/transport/events/eventrouter/metrics"
 )
 
 type Args struct {

@@ -6,7 +6,7 @@ import (
 	"go.opencensus.io/plugin/ochttp"
 	"go.opencensus.io/trace"
 
-	"github.com/vseinstrumentiru/lego/v2/internal/metrics/propagation"
+	"github.com/vseinstrumentiru/lego/v2/metrics/propagation"
 	httpTransport "github.com/vseinstrumentiru/lego/v2/transport/http"
 )
 

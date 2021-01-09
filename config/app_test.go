@@ -36,12 +36,12 @@ func TestUndefined(t *testing.T) {
 		name string
 		want *Application
 	}{
-		{"success", &Application{"undefined", "undefined"}},
+		{"success", &Application{Name: "undefined", DataCenter: "undefined"}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Undefined(); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Undefined() = %v, want %v", got, tt.want)
+			if got := UndefinedApplication(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("UndefinedApplication() = %v, want %v", got, tt.want)
 			}
 		})
 	}

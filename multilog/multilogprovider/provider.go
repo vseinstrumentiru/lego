@@ -1,4 +1,4 @@
-package multilog
+package multilogprovider
 
 import (
 	"fmt"
@@ -10,6 +10,7 @@ import (
 	zerologadapter "logur.dev/adapter/zerolog"
 	"logur.dev/logur"
 
+	"github.com/vseinstrumentiru/lego/v2/config"
 	"github.com/vseinstrumentiru/lego/v2/multilog"
 	"github.com/vseinstrumentiru/lego/v2/multilog/log"
 	"github.com/vseinstrumentiru/lego/v2/multilog/sentry"
@@ -17,6 +18,7 @@ import (
 
 type args struct {
 	dig.In
+	App    *config.Application
 	Config *multilog.Config `optional:"true"`
 
 	Sentry *sentry.Config `optional:"true"`
@@ -35,17 +37,41 @@ func withCaller(depth int) ctxOpt {
 func Provide(in args) multilog.Logger {
 	var opts []multilog.Option
 
+	if in.Config == nil {
+		level := logur.Error
+		if in.App.DebugMode {
+			level = logur.Trace
+		}
+
+		in.Config = &multilog.Config{Level: level}
+	}
+
 	if in.Sentry != nil {
 		opts = append(opts, multilog.WithHandler(sentry.Handler(in.Sentry.Addr, in.Sentry.Level, in.Sentry.Stop)))
 	}
 
 	var contextOptions []ctxOpt
 
+	if in.Log == nil && !in.Config.SilentMode {
+		in.Log = log.DefaultConfig()
+
+		if in.App.LocalMode {
+			in.Log.Color = true
+		}
+	}
+
 	if in.Log != nil {
 		if in.Logger == nil {
 			var writer io.Writer
+			if in.Log.TimeFormat != "" {
+				zerolog.TimeFieldFormat = in.Log.TimeFormat
+			}
+
 			if in.Log.Color {
 				zeroWriter := zerolog.NewConsoleWriter()
+				if in.Log.TimeFormat != "" {
+					zeroWriter.TimeFormat = in.Log.TimeFormat
+				}
 				zeroWriter.FormatMessage = func(i interface{}) string {
 					return fmt.Sprintf("%-30s|", i)
 				}
@@ -78,9 +104,18 @@ func Provide(in args) multilog.Logger {
 		opts = append(opts, multilog.WithHandler(log.Handler(in.Logger, in.Log.Stop)))
 	}
 
-	if in.Config == nil {
-		in.Config = &multilog.Config{Level: logur.Error}
+	logger := multilog.New(in.Config.Level, opts...)
+
+	if in.App.Name != config.Undefined && in.App.Name != "" {
+		fields := make(map[string]interface{})
+		fields["app.name"] = in.App.Name
+
+		if in.App.DataCenter != "" && in.App.DataCenter != config.Undefined {
+			fields["app.dc"] = in.App.DataCenter
+		}
+
+		logger = logger.WithFields(fields)
 	}
 
-	return multilog.New(in.Config.Level, opts...)
+	return logger
 }

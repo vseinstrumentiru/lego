@@ -6,12 +6,12 @@ import (
 	"go.uber.org/dig"
 
 	"github.com/vseinstrumentiru/lego/v2/config"
-	"github.com/vseinstrumentiru/lego/v2/internal/metrics/propagation"
 	"github.com/vseinstrumentiru/lego/v2/metrics/exporters"
+	"github.com/vseinstrumentiru/lego/v2/metrics/propagation"
 	"github.com/vseinstrumentiru/lego/v2/multilog"
 )
 
-type argsIn struct {
+type Args struct {
 	dig.In
 	App         *config.Application
 	Config      *exporters.Jaeger `optional:"true"`
@@ -19,7 +19,7 @@ type argsIn struct {
 	Propagation *propagation.HTTPFormatCollection
 }
 
-func Configure(in argsIn) error {
+func Configure(in Args) error {
 	if in.Config == nil {
 		return nil
 	}

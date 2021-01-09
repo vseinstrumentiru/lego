@@ -7,7 +7,8 @@ import (
 )
 
 type Config struct {
-	Level logur.Level
+	Level      logur.Level
+	SilentMode bool
 }
 
 func (c Config) SetDefaults(env config.Env) {

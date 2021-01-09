@@ -16,8 +16,8 @@ import (
 	di "github.com/vseinstrumentiru/lego/v2/internal/container"
 	"github.com/vseinstrumentiru/lego/v2/internal/deprecated"
 	environment "github.com/vseinstrumentiru/lego/v2/internal/env"
-	multilogProvider "github.com/vseinstrumentiru/lego/v2/internal/multilog"
 	"github.com/vseinstrumentiru/lego/v2/multilog"
+	"github.com/vseinstrumentiru/lego/v2/multilog/multilogprovider"
 	"github.com/vseinstrumentiru/lego/v2/server/shutdown"
 	"github.com/vseinstrumentiru/lego/v2/version"
 )
@@ -41,8 +41,16 @@ func Run(app interface{}, opts ...Option) {
 		container.register(func() environment.Config { return cfg })
 	})
 
+	container.make(env)
+
+	if runtime.Is(optLocalDebug) {
+		container.execute(func(cfg *baseCfg.Application) {
+			cfg.LocalMode = true
+			cfg.DebugMode = true
+		})
+	}
+
 	container.
-		make(env).
 		execute(func(cfg *baseCfg.Application) {
 			ver = version.New(cfg)
 		}).
@@ -54,15 +62,19 @@ func Run(app interface{}, opts ...Option) {
 	}
 	// logger
 	var logger multilog.Logger
-	container.register(multilogProvider.Provide).
+	container.register(multilogprovider.Provide).
 		execute(func(l multilog.Logger) {
 			logger = l
 		})
+
+	logger = logger.WithFields(map[string]interface{}{"component": "runtime"})
+	logger.Trace("starting application")
 
 	defer emperror.HandleRecover(logger.WithFields(map[string]interface{}{"type": "panic"}))
 	multilog.SetStandardLogger(logger.WithFields(map[string]interface{}{"type": "standard"}))
 
 	// pipeline configuration
+	logger.Trace("pipeline configuration")
 	closer := new(shutdown.CloseGroup)
 	container.instance(closer)
 	defer func() {
@@ -89,22 +101,28 @@ func Run(app interface{}, opts ...Option) {
 	pipeline.Add(run.SignalHandler(ctx, syscall.SIGINT, syscall.SIGTERM))
 	pipeline.Add(appkitrun.GracefulRestart(ctx, upg))
 
-	deprecated.Container = container.i
+	logger.Trace("pipeline configuration", map[string]interface{}{"status": "completed"})
 
-	for _, provider := range providers() {
+	// constructing application
+	logger.Trace("constructing application")
+	deprecated.Container = container.i
+	for _, provider := range providers(runtime) {
 		container.register(provider)
 	}
-	// constructing application
+
 	container.make(app)
 
-	for _, exec := range executors() {
+	for _, exec := range executors(runtime) {
 		container.execute(exec)
 	}
+	logger.Trace("constructing application", map[string]interface{}{"status": "completed"})
 
-	if runtime.Not(flagNoWait) {
+	if runtime.Not(optNoWait) {
+		logger.Trace("starting pipeline")
 		// running application
 		if err := pipeline.Run(); err != nil {
 			logger.WithErrFilter(match.As(&run.SignalError{}).MatchError).Notify(err)
 		}
 	}
+	logger.Trace("application stopped")
 }

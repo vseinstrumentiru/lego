@@ -9,8 +9,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 
-## [2.0.8.1] - 2021-01-09
+## [2.0.10] - 2021-01-12
+- Fixes
 
+## [2.0.9] - 2021-01-09
+- Fixes
 
 ## [2.0.8] - 2021-01-09
 - Added root `cobra.Command` in container
@@ -57,8 +60,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## 1.0.0 - 2020-09-28
 
-[Unreleased]: https://github.com/vseinstrumentiru/lego/compare/v2.0.8.1...HEAD
-[2.0.8.1]: https://github.com/vseinstrumentiru/lego/compare/v2.0.8...v2.0.8.1
+[Unreleased]: https://github.com/vseinstrumentiru/lego/compare/v2.0.10...HEAD
+[2.0.10]: https://github.com/vseinstrumentiru/lego/compare/v2.0.8.1...v2.0.10
+[2.0.9]: https://github.com/vseinstrumentiru/lego/compare/v2.0.8...v2.0.9
 [2.0.8]: https://github.com/vseinstrumentiru/lego/compare/v2.0.7...v2.0.8
 [2.0.7]: https://github.com/vseinstrumentiru/lego/compare/v2.0.6...v2.0.7
 [2.0.6]: https://github.com/vseinstrumentiru/lego/compare/v2.0.5...v2.0.6

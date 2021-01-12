@@ -45,7 +45,7 @@ func provideGrpc() []interface{} {
 
 func provideSql() []interface{} {
 	return []interface{}{
-		mysql.Provide,
+		mysql.ProvideConnector,
 		sql.Provide,
 	}
 }

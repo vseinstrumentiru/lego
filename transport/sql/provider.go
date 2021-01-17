@@ -12,26 +12,19 @@ import (
 	"go.uber.org/dig"
 
 	"github.com/vseinstrumentiru/lego/v2/server/shutdown"
-	"github.com/vseinstrumentiru/lego/v2/transport/mysql"
 )
 
 type Args struct {
 	dig.In
-	Connector driver.Connector `optional:"true"`
-	// Deprecated: use driver.Connector
-	MySQL *mysql.Connector `optional:"true"`
 
-	Closer *shutdown.CloseGroup
-	Health health.Health
+	Connector driver.Connector
+	Closer    *shutdown.CloseGroup
+	Health    health.Health
 }
 
 func Provide(in Args) (*sql.DB, error) {
 	if in.Connector == nil {
-		if in.MySQL != nil {
-			in.Connector = in.MySQL.Connector
-		} else {
-			return nil, errors.New("connector not found. you must provide `driver.Connector`")
-		}
+		return nil, errors.New("connector not found. you must provide `driver.Connector`")
 	}
 
 	conn := sql.OpenDB(in.Connector)

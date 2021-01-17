@@ -1,5 +1,3 @@
-// +build gen
-
 package service
 
 import (

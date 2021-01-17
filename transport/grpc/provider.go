@@ -28,7 +28,7 @@ type Args struct {
 
 	Propagation *propagation.HTTPFormatCollection
 
-	Version  version.Info
+	Version  *version.Info
 	Logger   multilog.Logger
 	Pipeline *run.Group
 	Upg      *tableflip.Upgrader

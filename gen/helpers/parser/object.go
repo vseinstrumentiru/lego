@@ -1,5 +1,3 @@
-// +build gen
-
 package parser
 
 import (

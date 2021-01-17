@@ -22,6 +22,10 @@ func (c CloseFn) Close() error {
 	return c()
 }
 
+func NewCloseGroup() *CloseGroup {
+	return new(CloseGroup)
+}
+
 type CloseGroup struct {
 	closers []io.Closer
 }

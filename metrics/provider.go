@@ -36,7 +36,7 @@ type ServerArgs struct {
 	Config *Config `optional:"true"`
 
 	Health   health.Health
-	Version  version.Info
+	Version  *version.Info
 	Logger   multilog.Logger
 	Pipeline *run.Group
 	Upg      *tableflip.Upgrader

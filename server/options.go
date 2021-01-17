@@ -1,63 +1,35 @@
 package server
 
-const (
-	optNoWait  = "opt_no_wait"
-	optEnvPath = "opt_env_path"
-
-	optLocalDebug = "opt_local_debug"
-
-	optWithoutProviders  = "opt_without_providers"
-	optWithoutMonitoring = "opt_without_monitoring"
+import (
+	"github.com/vseinstrumentiru/lego/v2/app"
 )
 
+type Option = app.Option
+
+func Provide(providers ...interface{}) Option {
+	return app.Provide(providers...)
+}
+
 func LocalDebug() Option {
-	return func(r *Runtime) {
-		r.opts.Set(optLocalDebug, true)
-	}
+	return app.LocalDebug()
 }
 
 func NoDefaultProviders() Option {
-	return func(r *Runtime) {
-		r.opts.Set(optWithoutProviders, true)
-	}
+	return app.NoDefaultProviders()
 }
 
 func CommandMode() Option {
-	return func(r *Runtime) {
-		r.opts.Set(optNoWait, true)
-		r.opts.Set(optWithoutMonitoring, true)
-	}
+	return app.CommandMode()
 }
 
 func NoWait() Option {
-	return func(r *Runtime) {
-		r.opts.Set(optNoWait, true)
-	}
-}
-
-// Deprecated: use NoWait
-func NoWaitOption() Option {
-	return NoWait()
+	return app.NoWait()
 }
 
 func EnvPath(path string) Option {
-	return func(r *Runtime) {
-		r.opts.Set(optEnvPath, path)
-	}
-}
-
-// Deprecated: use EnvPath
-func EnvPathOption(path string) Option {
-	return EnvPath(path)
+	return app.EnvPath(path)
 }
 
 func WithConfig(cfg interface{}) Option {
-	return func(r *Runtime) {
-		r.cfg = cfg
-	}
-}
-
-// Deprecated: use WithConfig
-func ConfigOption(cfg interface{}) Option {
-	return WithConfig(cfg)
+	return app.WithConfig(cfg)
 }

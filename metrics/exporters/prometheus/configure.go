@@ -17,7 +17,7 @@ type Args struct {
 	Router  *http.ServeMux `optional:"true"`
 	App     *config.Application
 	Log     multilog.Logger
-	Version version.Info
+	Version *version.Info
 }
 
 func Configure(in Args) error {

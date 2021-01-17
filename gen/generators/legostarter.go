@@ -1,5 +1,3 @@
-// +build gen
-
 package generators
 
 import (
@@ -28,7 +26,9 @@ func NewLeGoStarter(path string) error {
 		Block(
 			Qual("github.com/vseinstrumentiru/lego/v2/server", "Run").Call(
 				Id("application").Values(),
-				Op("&").Id("config").Values(),
+				Qual("github.com/vseinstrumentiru/lego/v2/app", "WithConfig").Call(
+					Op("&").Id("config").Values(),
+				),
 			),
 		)
 
@@ -42,8 +42,6 @@ func newLegoStarterConfig(path string) error {
 
 	f.Type().Id("config").Struct(
 		Id("App").Qual("github.com/vseinstrumentiru/lego/v2/config", "Application"),
-		Id("Logger").Qual("github.com/vseinstrumentiru/lego/v2/multilog", "Config"),
-		Id("Console").Qual("github.com/vseinstrumentiru/lego/v2/multilog/log", "Config"),
 	)
 
 	return f.Save(helpers.Path(path, "config.go"))

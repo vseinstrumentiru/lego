@@ -126,7 +126,10 @@ func TestContainer_SameInstances(t *testing.T) {
 		dig.In
 		First  Type1
 		Second Type1 `name:"second"`
-	}) { assert.Equal(t, 1, in.First.Val); assert.Equal(t, 2, in.Second.Val) })
+	}) {
+		assert.Equal(t, 1, in.First.Val)
+		assert.Equal(t, 2, in.Second.Val)
+	})
 
 	assert.NoError(t, err)
 }

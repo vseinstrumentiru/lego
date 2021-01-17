@@ -7,7 +7,7 @@ import (
 	"emperror.dev/errors"
 )
 
-func Handler(buildInfo Info) http.Handler {
+func Handler(buildInfo *Info) http.Handler {
 	var body []byte
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

@@ -4,7 +4,6 @@ import (
 	"reflect"
 	"strings"
 
-	"emperror.dev/emperror"
 	"emperror.dev/errors"
 	"github.com/iancoleman/strcase"
 
@@ -16,15 +15,6 @@ func newParser() *parser {
 		configs:   make(map[reflect.Type]*Instances),
 		validates: make(map[string]config.Validatable),
 	}
-}
-
-// Deprecated: use newParser().scan()
-func parse(v reflect.Value) *parser {
-	result := newParser()
-
-	emperror.Panic(result.scan(v, "", flags{}))
-
-	return result
 }
 
 type defaults struct {

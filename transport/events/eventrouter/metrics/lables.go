@@ -17,16 +17,18 @@ const (
 	labelValueNoHandler = "<no handler>"
 )
 
-var (
-	labelGetters = map[string]func(context.Context) string{
+func getLabelGetters() map[string]func(context.Context) string {
+	return map[string]func(context.Context) string{
 		labelKeyHandlerName:    message.HandlerNameFromCtx,
 		labelKeyPublisherName:  message.PublisherNameFromCtx,
 		labelKeySubscriberName: message.SubscriberNameFromCtx,
 	}
-)
+}
 
 func labelsFromCtx(ctx context.Context, labels ...string) prometheus.Labels {
 	ctxLabels := map[string]string{}
+
+	labelGetters := getLabelGetters()
 
 	for _, l := range labels {
 		k := l

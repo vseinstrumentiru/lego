@@ -2,6 +2,10 @@ package config
 
 const Undefined = "undefined"
 
+func IsUndefined(s string) bool {
+	return s == "" || s == Undefined
+}
+
 func UndefinedApplication() *Application {
 	return &Application{
 		Name:       Undefined,

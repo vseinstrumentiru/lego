@@ -1,11 +1,8 @@
-// +build gen
-
 package service
 
 import (
 	"bytes"
 	"fmt"
-	"go/ast"
 	"go/format"
 	"go/types"
 	"io"
@@ -75,13 +72,6 @@ func writeOut(ctx *genall.GenerationContext, root *loader.Package, outBytes []by
 }
 
 func (g Generator) generatePackage(ctx *genall.GenerationContext, root *loader.Package) []byte {
-	ctx.Checker.Check(root, func(node ast.Node) bool {
-		// ignore non-interfaces
-		_, isStruct := node.(*ast.StructType)
-
-		return isStruct
-	})
-
 	root.NeedTypesInfo()
 
 	var serviceContract *parser.Object

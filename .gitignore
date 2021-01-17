@@ -6,3 +6,6 @@
 /build/
 /tmp/
 /vendor/
+
+pkged.go
+*-packr.go

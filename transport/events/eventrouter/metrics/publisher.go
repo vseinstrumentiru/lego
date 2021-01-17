@@ -8,13 +8,13 @@ import (
 	"go.opencensus.io/tag"
 )
 
-var (
-	publisherLabelKeys = []string{
+func getPublisherLabelKeys() []string {
+	return []string{
 		labelKeyHandlerName,
 		labelKeyPublisherName,
 		labelSuccess,
 	}
-)
+}
 
 type PublisherDecorator struct {
 	pub           message.Publisher
@@ -28,7 +28,7 @@ func (p *PublisherDecorator) Publish(topic string, messages ...*message.Message)
 
 	// TODO: take ctx not only from first msg. Might require changing the signature of Publish, which is planned anyway.
 	ctx := messages[0].Context()
-	labels := labelsFromCtx(ctx, publisherLabelKeys...)
+	labels := labelsFromCtx(ctx, getPublisherLabelKeys()...)
 	if labels[labelKeyPublisherName] == "" {
 		labels[labelKeyPublisherName] = p.publisherName
 	}

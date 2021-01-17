@@ -27,6 +27,7 @@ require (
 	github.com/go-kit/kit v0.10.0
 	github.com/go-resty/resty/v2 v2.3.0
 	github.com/go-sql-driver/mysql v1.5.1-0.20200311113236-681ffa848bae
+	github.com/gobuffalo/packr/v2 v2.8.1
 	github.com/golang/snappy v0.0.2 // indirect
 	github.com/google/go-cmp v0.5.4
 	github.com/google/uuid v1.1.4

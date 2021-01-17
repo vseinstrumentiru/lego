@@ -7,6 +7,7 @@ import (
 )
 
 // NewPublisher supported for use in custom views.
+// -lint
 var (
 	PublisherPublishTime = stats.Float64(
 		"publish_time_seconds",

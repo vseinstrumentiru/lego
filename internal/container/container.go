@@ -2,6 +2,7 @@ package container
 
 import (
 	"fmt"
+	"io"
 	"reflect"
 	"strings"
 
@@ -21,6 +22,10 @@ func New() *container {
 
 type container struct {
 	di *dig.Container
+}
+
+func (c *container) Visualize(w io.Writer, opts ...dig.VisualizeOption) error {
+	return dig.Visualize(c.di, w, opts...)
 }
 
 func (c *container) Register(constructor interface{}, options ...dig.ProvideOption) error {
@@ -71,15 +76,28 @@ func (c *container) Make(i interface{}) error {
 	// resolve constructors and collect configuration methods
 	t := val.Type()
 	var configurations []interface{}
+
+	if appWithConfiguration, ok := i.(interface{ Configurations() []interface{} }); ok {
+		configurations = append(configurations, appWithConfiguration.Configurations()...)
+	}
+
+	if appWithConfiguration, ok := i.(interface{ With() []interface{} }); ok {
+		configurations = append(configurations, appWithConfiguration.With()...)
+	}
+
 	for i := 0; i < t.NumMethod(); i++ {
 		m := t.Method(i)
+
+		if m.Name == "Providers" || m.Name == "Configurations" || m.Name == "With" {
+			continue
+		}
 
 		if m.Name == "Provide" || strings.HasPrefix(m.Name, "Provide") {
 			constructor := val.MethodByName(m.Name).Interface()
 			if err := c.Register(constructor); err != nil {
 				return err
 			}
-		} else if m.Name == "Configure" || strings.HasPrefix(m.Name, "Configure") {
+		} else if m.Name == "Configure" || strings.HasPrefix(m.Name, "Configure") || strings.HasPrefix(m.Name, "With") {
 			configurations = append(configurations, val.MethodByName(m.Name).Interface())
 		}
 	}

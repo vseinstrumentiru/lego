@@ -15,7 +15,7 @@ ifdef SOURCE_DATE_EPOCH
 else
     BUILD_DATE ?= $(shell date "$(DATE_FMT)")
 endif
-LDFLAGS += -X main.version=${VERSION} -X main.commitHash=${COMMIT_HASH} -X main.buildDate=${BUILD_DATE}
+LDFLAGS += -X github.com/vseinstrumentiru/lego/v2/version.Version=${VERSION} -X github.com/vseinstrumentiru/lego/v2/version.CommitHash=${COMMIT_HASH} -X github.com/vseinstrumentiru/lego/v2/version.BuildDate=${BUILD_DATE}
 export CGO_ENABLED ?= 0
 ifeq (${VERBOSE}, 1)
 ifeq ($(filter -v,${GOARGS}),)
@@ -56,6 +56,18 @@ pre-build: ${PRE_BUILD_TARGETS}
 post-build: ${POST_BUILD_TARGETS}
 	@:
 
+.PHONY: build-%
+build-%: build-deps pre-build
+build-%: goversion
+ifeq (${VERBOSE}, 1)
+	go env
+endif
+
+	@mkdir -p ${BUILD_DIR}
+	go build ${GOARGS} -trimpath -tags "${GOTAGS}" -ldflags "${LDFLAGS}" -o ${BUILD_DIR}/$* ./gen/cmd/$*
+
+	@${MAKE} post-build
+
 .PHONY: build
 build: build-deps pre-build
 build: goversion ## Build binaries
@@ -64,7 +76,7 @@ ifeq (${VERBOSE}, 1)
 endif
 
 	@mkdir -p ${BUILD_DIR}
-	go build ${GOARGS} -trimpath -tags "${GOTAGS}" -ldflags "${LDFLAGS}" -o ${BUILD_DIR}/ ./gen
+	go build ${GOARGS} -trimpath -tags "${GOTAGS}" -ldflags "${LDFLAGS}" -o ${BUILD_DIR}/ ./gen/cmd/...
 
 	@${MAKE} post-build
 
@@ -196,7 +208,3 @@ help:
 # Variable outputting/exporting rules
 var-%: ; @echo $($*)
 varexport-%: ; @echo $*=$($*)
-
-# Update main targets
-main.mk:
-	curl https://raw.githubusercontent.com/sagikazarmark/makefiles/master/go-binary/main.mk > main.mk

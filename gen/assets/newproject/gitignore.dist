@@ -1,0 +1,10 @@
+.DS_Store
+.idea
+
+/bin/
+/dist/
+/build/
+/tmp/
+/vendor/
+
+config.yaml

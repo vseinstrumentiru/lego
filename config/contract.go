@@ -1,9 +1,11 @@
 package config
 
-import (
-	"github.com/spf13/pflag"
-	"github.com/spf13/viper"
-)
+type Runtime interface {
+	On(key string, callback interface{}) (ok bool)
+	Is(key string) bool
+	Not(key string) bool
+	Run(apps ...interface{})
+}
 
 type FlagBinder interface {
 	To(key string)
@@ -21,9 +23,4 @@ type Validatable interface {
 
 type WithDefaults interface {
 	SetDefaults(env Env)
-}
-
-// Deprecated: use WithDefaults interface
-type WithDefaultsDeprecated interface {
-	SetDefaults(key string, env *viper.Viper, flag *pflag.FlagSet)
 }

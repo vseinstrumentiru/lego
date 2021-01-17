@@ -1,5 +1,3 @@
-// +build gen
-
 package generators
 
 import (
@@ -18,16 +16,10 @@ func NewLegoService(path string) error {
 	if err := LegoService(path); err != nil {
 		return err
 	}
+	if err := LegoEvents(path); err != nil {
+		return err
+	}
 	if err := EmptyGoFile("models", path); err != nil {
-		return err
-	}
-	if err := EmptyGoFile("events", path); err != nil {
-		return err
-	}
-	if err := EmptyGoFile("handlers", path); err != nil {
-		return err
-	}
-	if err := EmptyGoFile("middleware", path); err != nil {
 		return err
 	}
 
@@ -38,14 +30,13 @@ func LegoService(path string) error {
 	pkg := helpers.PackageName(path)
 	f := NewFile(pkg)
 
+	f.Comment("+kit:endpoint")
 	f.Comment("Service contract")
-	f.Comment("lego:service:contract")
 	f.Type().Id("Service").Interface(
 		Comment("add service methods here..."),
 	)
 
 	f.Comment("Service constructor")
-	f.Comment("lego:service:provider")
 	f.Func().Id("NewService").Params(Id("store").Id("Store")).Id("Service").
 		Block(
 			Return(
@@ -56,7 +47,6 @@ func LegoService(path string) error {
 		)
 
 	f.Comment("Service realization")
-	f.Comment("lego:service")
 	f.Type().Id("service").Struct(
 		Id("store").Id("Store"),
 	)
@@ -68,7 +58,6 @@ func LegoServiceStore(path string) error {
 	pkg := helpers.PackageName(path)
 	f := NewFile(pkg)
 	f.Comment("Store contract")
-	f.Comment("lego:store:contract")
 	f.Type().Id("Store").Interface(
 		Comment("add store methods here..."),
 	)
@@ -82,4 +71,16 @@ func LegoServiceStore(path string) error {
 	}
 
 	return f.Save(helpers.Path(path, "store.go"))
+}
+
+func LegoEvents(path string) error {
+	pkg := helpers.PackageName(path)
+	f := NewFile(pkg)
+	f.Comment("+mga:event:dispatcher")
+	f.Comment("Events contract")
+	f.Type().Id("Events").Interface(
+		Comment("add dispatcher methods here..."),
+	)
+
+	return f.Save(helpers.Path(path, "events.go"))
 }

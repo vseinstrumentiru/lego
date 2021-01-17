@@ -9,7 +9,7 @@ import (
 	"github.com/vseinstrumentiru/lego/v2/version"
 )
 
-func TraceVersionMiddleware(buildInfo version.Info) mux.MiddlewareFunc {
+func TraceVersionMiddleware(buildInfo *version.Info) mux.MiddlewareFunc {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			span := trace.FromContext(r.Context())

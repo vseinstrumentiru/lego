@@ -1,0 +1,14 @@
+structure:
+  api:
+    .gitkeep: emptyfile
+  cmd:
+    server: legostarter
+  internal:
+    app:
+      simple: legoservice
+    platform:
+      .gitkeep: emptyfile
+  pkg:
+    .gitkeep: emptyfile
+  static:
+    .gitkeep: emptyfile

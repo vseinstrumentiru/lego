@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"os"
 	"runtime"
-
-	"github.com/vseinstrumentiru/lego/v2/config"
 )
 
 // Provisioned by ldflags
@@ -28,9 +26,9 @@ type Info struct {
 	DataCenter string `json:"data_center"`
 }
 
-func New(config *config.Application) Info {
+func New() *Info {
 	host, _ := os.Hostname()
-	return Info{
+	return &Info{
 		Version:    Version,
 		CommitHash: CommitHash,
 		BuildDate:  BuildDate,
@@ -39,15 +37,14 @@ func New(config *config.Application) Info {
 		Arch:       runtime.GOARCH,
 		Compiler:   runtime.Compiler,
 		Host:       host,
-		DataCenter: config.DataCenter,
 	}
 }
 
-func (i Info) Print() {
+func (i *Info) Print() {
 	fmt.Printf("version %s (%s) built on %s (%s+%s+%s)\n", i.Version, i.CommitHash, i.BuildDate, i.GoVersion, i.Compiler, i.Arch)
 }
 
-func (i Info) Fields() map[string]interface{} {
+func (i *Info) Fields() map[string]interface{} {
 	return map[string]interface{}{
 		"version":     i.Version,
 		"commit_hash": i.CommitHash,

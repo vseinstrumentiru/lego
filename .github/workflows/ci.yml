@@ -15,13 +15,27 @@ jobs:
       GOFLAGS: -mod=readonly
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
           go-version: 1.15
 
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Cache Go modules
+        uses: actions/cache@v2
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Get packr
+        run: go get -u github.com/gobuffalo/packr/v2
+
+      - name: Test
+        run: make test
 
       - name: Build
         uses: goreleaser/goreleaser-action@v2
@@ -29,13 +43,11 @@ jobs:
           version: latest
           args: build --snapshot --debug
 
-      - uses: actions/upload-artifact@v2
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
         with:
           name: build
           path: dist
 
 #      - name: Lint
 #        run: make lint
-
-      - name: Test
-        run: make test

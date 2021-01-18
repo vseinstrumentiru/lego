@@ -5,16 +5,17 @@ import (
 
 	"github.com/vseinstrumentiru/lego/v2/app"
 	"github.com/vseinstrumentiru/lego/v2/di"
+	"github.com/vseinstrumentiru/lego/v2/gen/internal/newproject"
 )
 
-var box = packr.New("assets", "../../assets")
-
 func main() {
+	box := packr.New("assets", "../../assets")
+
 	app.NewRuntime(
 		app.EnvPath("lego"),
 		app.NoDefaultProviders(),
 		app.Provide(
-			di.ProvideCommand(newProjectCMD),
+			di.ProvideCommand(newproject.NewCommand(box)),
 		),
 	).Run()
 }

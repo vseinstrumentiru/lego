@@ -7,11 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-
-## [2.1.1] - 2021-01-17
-- Build fixes
-
-## [2.1.0] - 2021-01-17
+## [2.1.0] - 2021-01-18
 
 - Removed deprecations from 2.0.X
 - Finalized new project generator with `lego new name`
@@ -73,8 +69,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## 1.0.0 - 2020-09-28
 
-[Unreleased]: https://github.com/vseinstrumentiru/lego/compare/v2.1.1...HEAD
-[2.1.1]: https://github.com/vseinstrumentiru/lego/compare/v2.1.0...v2.1.1
+[Unreleased]: https://github.com/vseinstrumentiru/lego/compare/v2.1.0...HEAD
 [2.1.0]: https://github.com/vseinstrumentiru/lego/compare/v2.0.10...v2.1.0
 
 [2.0.10]: https://github.com/vseinstrumentiru/lego/compare/v2.0.8.1...v2.0.10

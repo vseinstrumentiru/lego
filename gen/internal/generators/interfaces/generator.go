@@ -1,4 +1,4 @@
-package service
+package interfaces
 
 import (
 	"bytes"
@@ -15,45 +15,73 @@ import (
 	"sigs.k8s.io/controller-tools/pkg/loader"
 	"sigs.k8s.io/controller-tools/pkg/markers"
 
-	"github.com/vseinstrumentiru/lego/v2/gen/helpers/parser"
+	"github.com/vseinstrumentiru/lego/v2/gen/internal/helpers/parser"
 )
 
-// nolint: gochecknoglobals
-var (
-	marker = markers.Must(markers.MakeDefinition("lego:service:contract", markers.DescribesType, struct{}{}))
-)
-
-type Generator struct {
+type implementationMark struct {
+	Pkg    string `marker:"pkg,optional"`
+	Parent string `marker:"parent,optional"`
 }
 
-func (g Generator) RegisterMarkers(into *markers.Registry) error {
-	if err := into.Register(marker); err != nil {
+func NewGenerator(name string, mark string, filename string, implementation string) genall.Generator {
+	gen := generator{
+		name:     name,
+		mark:     markers.Must(markers.MakeDefinition(mark, markers.DescribesType, struct{}{})),
+		filename: filename,
+	}
+
+	if implementation != "" {
+		gen.implementation = markers.Must(markers.MakeDefinition(implementation, markers.DescribesType, implementationMark{}))
+	}
+
+	return gen
+}
+
+type generator struct {
+	mark           *markers.Definition
+	implementation *markers.Definition
+	name           string
+	filename       string
+}
+
+func (g generator) RegisterMarkers(into *markers.Registry) error {
+	if err := into.Register(g.mark); err != nil {
 		return err
 	}
 
 	into.AddHelp(
-		marker,
+		g.mark,
 		markers.SimpleHelp("LeGo", "enables service generator for interface"),
 	)
+	if g.implementation != nil {
+		if err := into.Register(g.implementation); err != nil {
+			return err
+		}
+
+		into.AddHelp(
+			g.implementation,
+			markers.SimpleHelp("LeGo", "enables service generator for interface"),
+		)
+	}
 
 	return nil
 }
 
-func (g Generator) Generate(ctx *genall.GenerationContext) error {
+func (g generator) Generate(ctx *genall.GenerationContext) error {
 	for _, root := range ctx.Roots {
 		outContents := g.generatePackage(ctx, root)
 		if outContents == nil {
 			continue
 		}
 
-		writeOut(ctx, root, outContents)
+		g.writeOut(ctx, root, outContents)
 	}
 
 	return nil
 }
 
-func writeOut(ctx *genall.GenerationContext, root *loader.Package, outBytes []byte) {
-	outputFile, err := ctx.Open(root, "service.go")
+func (g generator) writeOut(ctx *genall.GenerationContext, root *loader.Package, outBytes []byte) {
+	outputFile, err := ctx.Open(root, g.filename)
 	if err != nil {
 		root.AddError(err)
 
@@ -71,18 +99,20 @@ func writeOut(ctx *genall.GenerationContext, root *loader.Package, outBytes []by
 	}
 }
 
-func (g Generator) generatePackage(ctx *genall.GenerationContext, root *loader.Package) []byte {
+func (g generator) generatePackage(ctx *genall.GenerationContext, root *loader.Package) []byte {
 	root.NeedTypesInfo()
 
 	var serviceContract *parser.Object
+	var implementations []parser.Object
 
 	err := markers.EachType(ctx.Collector, root, func(info *markers.TypeInfo) {
-		if marker := info.Markers.Get(marker.Name); marker == nil {
-			return
-		}
+		var isImplementation bool
+		if marker := info.Markers.Get(g.mark.Name); marker == nil {
+			if marker := info.Markers.Get(g.implementation.Name); marker == nil {
+				return
+			}
 
-		if info.Name != "Service" {
-			return
+			isImplementation = true
 		}
 
 		typeInfo := root.TypesInfo.TypeOf(info.RawSpec.Name)
@@ -100,7 +130,11 @@ func (g Generator) generatePackage(ctx *genall.GenerationContext, root *loader.P
 			return
 		}
 
-		serviceContract = &i
+		if isImplementation {
+			implementations = append(implementations, i)
+		} else {
+			serviceContract = &i
+		}
 	})
 
 	if err != nil {
@@ -128,7 +162,7 @@ func (g Generator) generatePackage(ctx *genall.GenerationContext, root *loader.P
 		Object: *serviceContract,
 	}
 
-	outContents, err := generateCode(file)
+	outContents, err := g.generateCode(file)
 	if err != nil {
 		root.AddError(err)
 
@@ -138,14 +172,11 @@ func (g Generator) generatePackage(ctx *genall.GenerationContext, root *loader.P
 	return outContents
 }
 
-func generateCode(file parser.File) ([]byte, error) {
+func (g generator) generateCode(file parser.File) ([]byte, error) {
 	code := jen.NewFilePathName(file.Package.Path, file.Package.Name)
 
-	const (
-		serviceName = "service"
-	)
-
-	code.Type().Id(serviceName).Struct()
+	code.Comment(fmt.Sprintf("+lego:service:parent=%s:pkg=%s", file.Object.Name, file.Object.Package.Path))
+	code.Type().Id(g.name).Struct()
 
 	for i := 0; i < len(file.Object.Methods); i++ {
 		method := file.Object.Methods[i]
@@ -165,7 +196,7 @@ func generateCode(file parser.File) ([]byte, error) {
 		}
 
 		code.Func().Params(
-			jen.Id("s").Id(serviceName),
+			jen.Id("s").Id(g.name),
 		).
 			Id(method.Name).Params(params...).Params(results...).
 			Block(

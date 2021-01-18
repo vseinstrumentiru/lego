@@ -1,13 +1,13 @@
 before:
   hooks:
-    - go mod download
     - make packr
+    - go mod download
 
 builds:
   - env:
       - CGO_ENABLED=0
     ldflags: "-s -w -X github.com/vseinstrumentiru/lego/v2/version.Version={{ .Version }} -X github.com/vseinstrumentiru/lego/v2/version.CommitHash={{ .ShortCommit }} -X github.com/vseinstrumentiru/lego/v2/version.BuildDate={{ .Date }}"
-    main: ./gen/cmd/main.go
+    main: ./gen/cmd/lego/main.go
     goos:
       - linux
       - darwin

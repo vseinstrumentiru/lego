@@ -27,7 +27,12 @@ jobs:
         uses: goreleaser/goreleaser-action@v2
         with:
           version: latest
-          args: build --rm-dist --debug
+          args: build --snapshot --debug
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: dist
 
 #      - name: Lint
 #        run: make lint

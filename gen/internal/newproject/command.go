@@ -36,7 +36,6 @@ func getDefaultStructure() map[string]interface{} {
 }
 
 func NewCommand(box *packr.Box) *cobra.Command {
-
 	cmd := &cobra.Command{
 		Use:  "new [name] [path]",
 		Args: cobra.RangeArgs(1, 2),
@@ -84,7 +83,7 @@ func NewCommand(box *packr.Box) *cobra.Command {
 			makeStruct(path, viper.GetStringMap("structure"))
 
 			{
-				file, err := box.Find("./newproject/main.mk")
+				file, err := box.Find("newproject/main.mk")
 				if err != nil {
 					return err
 				}
@@ -94,7 +93,7 @@ func NewCommand(box *packr.Box) *cobra.Command {
 			}
 
 			{
-				file, err := box.Find("./newproject/Makefile")
+				file, err := box.Find("newproject/Makefile")
 				if err != nil {
 					return err
 				}
@@ -104,7 +103,7 @@ func NewCommand(box *packr.Box) *cobra.Command {
 			}
 
 			{
-				file, err := box.Find("./newproject/gitignore.dist")
+				file, err := box.Find("newproject/gitignore.dist")
 				if err != nil {
 					return err
 				}
@@ -114,7 +113,7 @@ func NewCommand(box *packr.Box) *cobra.Command {
 			}
 
 			{
-				file, err := box.Find("./newproject/golangci.yml")
+				file, err := box.Find("newproject/golangci.yml")
 				if err != nil {
 					return err
 				}
@@ -124,7 +123,7 @@ func NewCommand(box *packr.Box) *cobra.Command {
 			}
 
 			{
-				file, err := box.Find("./newproject/config.tpl")
+				file, err := box.Find("newproject/config.tpl")
 				if err != nil {
 					return err
 				}
@@ -134,7 +133,7 @@ func NewCommand(box *packr.Box) *cobra.Command {
 			}
 
 			{
-				file, err := box.Find("./newproject/config.tpl")
+				file, err := box.Find("newproject/config.tpl")
 				if err != nil {
 					return err
 				}
@@ -144,7 +143,7 @@ func NewCommand(box *packr.Box) *cobra.Command {
 			}
 
 			{
-				file, err := box.Find("./newproject/mod.tpl")
+				file, err := box.Find("newproject/mod.tpl")
 				if err != nil {
 					return err
 				}

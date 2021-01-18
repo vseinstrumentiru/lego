@@ -6,6 +6,7 @@ before:
 builds:
   - env:
       - CGO_ENABLED=0
+      - GO111MODULE=on
     ldflags: "-s -w -X github.com/vseinstrumentiru/lego/v2/version.Version={{ .Version }} -X github.com/vseinstrumentiru/lego/v2/version.CommitHash={{ .ShortCommit }} -X github.com/vseinstrumentiru/lego/v2/version.BuildDate={{ .Date }}"
     main: ./gen/cmd/lego/main.go
     goos:

@@ -1,6 +1,6 @@
 before:
   hooks:
-    - make packr
+    - make bin/packr
     - go mod download
 
 builds:
@@ -9,13 +9,14 @@ builds:
       - GO111MODULE=on
     ldflags: "-s -w -X github.com/vseinstrumentiru/lego/v2/version.Version={{ .Version }} -X github.com/vseinstrumentiru/lego/v2/version.CommitHash={{ .ShortCommit }} -X github.com/vseinstrumentiru/lego/v2/version.BuildDate={{ .Date }}"
     main: ./gen/cmd/lego/main.go
-    flags:
-      - -tags=!skippackr
+#    flags:
+#      - -tags=!skippackr
     goos:
       - linux
       - darwin
     goarch:
       - amd64
+    gobinary: "./bin/packr"
 
 archives:
   - name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"

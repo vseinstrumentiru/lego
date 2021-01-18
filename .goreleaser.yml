@@ -1,5 +1,6 @@
 before:
   hooks:
+    - make packr
     - go mod download
 
 builds:

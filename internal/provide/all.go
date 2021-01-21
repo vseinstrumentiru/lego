@@ -11,7 +11,7 @@ func All(runtime config.Runtime) []interface{} {
 
 	res = append(res, Minimal()...)
 
-	if runtime.Not(config.ServerMode) {
+	if runtime.Is(config.ServerMode) {
 		res = append(res, Monitoring()...)
 		res = append(res, Pipeline()...)
 	}

@@ -25,8 +25,49 @@ import (
 	"github.com/vseinstrumentiru/lego/v2/version"
 )
 
-type Args struct {
+type ArgsServer struct {
 	dig.In
+	Config *httpcfg.Config `optional:"true"`
+
+	Logger   multilog.Logger
+	Pipeline *run.Group
+	Upg      *tableflip.Upgrader
+}
+
+func ProvideServer(in ArgsServer) *http.Server {
+	if in.Config == nil {
+		in.Config = httpcfg.NewDefaultConfig()
+	}
+
+	logger := in.Logger.WithFields(map[string]interface{}{"component": "http"})
+
+	server := &http.Server{
+		ErrorLog: multilog.NewErrorStandardLogger(logger),
+	}
+
+	httpLn, err := in.Upg.Listen("tcp", fmt.Sprintf(":%v", in.Config.Port))
+	emperror.Panic(err)
+
+	emperror.Panic(view.Register(
+		ochttp.ServerRequestCountView,
+		ochttp.ServerRequestBytesView,
+		ochttp.ServerResponseBytesView,
+		ochttp.ServerLatencyView,
+		ochttp.ServerRequestCountByMethod,
+		ochttp.ServerResponseCountByStatusCode,
+	))
+
+	in.Pipeline.Add(appkitrun.LogServe(logger.WithFields(map[string]interface{}{"port": in.Config.Port}))(
+		appkitrun.HTTPServe(server, httpLn, in.Config.ShutdownTimeout),
+	))
+
+	return server
+}
+
+type ArgsMuxRouter struct {
+	dig.In
+	Server *http.Server
+
 	Config      *httpcfg.Config                      `optional:"true"`
 	TraceTags   middleware.TraceTagsMiddlewareConfig `optional:"true"`
 	TraceConfig *tracing.Config                      `optional:"true"`
@@ -34,18 +75,12 @@ type Args struct {
 
 	Propagation *propagation.HTTPFormatCollection
 
-	Version  *version.Info
-	Logger   multilog.Logger
-	Pipeline *run.Group
-	Upg      *tableflip.Upgrader
+	Version *version.Info
+	Logger  multilog.Logger
 }
 
-func Provide(in Args) (*http.Server, *mux.Router) {
-	if in.Config == nil {
-		in.Config = httpcfg.NewDefaultConfig()
-	}
-
-	logger := in.Logger.WithFields(map[string]interface{}{"component": "http"})
+func ProvideMuxRouter(in ArgsMuxRouter) *mux.Router {
+	logger := in.Logger.WithFields(map[string]interface{}{"component": "http.router"})
 
 	router := mux.NewRouter()
 	router.Use(middleware.RecoverHandlerMiddleware(logger))
@@ -76,26 +111,7 @@ func Provide(in Args) (*http.Server, *mux.Router) {
 		IsPublicEndpoint: in.Config.IsPublic,
 	}
 
-	server := &http.Server{
-		Handler:  handler,
-		ErrorLog: multilog.NewErrorStandardLogger(logger),
-	}
+	in.Server.Handler = handler
 
-	httpLn, err := in.Upg.Listen("tcp", fmt.Sprintf(":%v", in.Config.Port))
-	emperror.Panic(err)
-
-	emperror.Panic(view.Register(
-		ochttp.ServerRequestCountView,
-		ochttp.ServerRequestBytesView,
-		ochttp.ServerResponseBytesView,
-		ochttp.ServerLatencyView,
-		ochttp.ServerRequestCountByMethod,
-		ochttp.ServerResponseCountByStatusCode,
-	))
-
-	in.Pipeline.Add(appkitrun.LogServe(logger.WithFields(map[string]interface{}{"port": in.Config.Port}))(
-		appkitrun.HTTPServe(server, httpLn, in.Config.ShutdownTimeout),
-	))
-
-	return server, router
+	return router
 }

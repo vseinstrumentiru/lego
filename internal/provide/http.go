@@ -7,7 +7,8 @@ import (
 
 func Http() []interface{} {
 	return []interface{}{
-		httpserver.Provide,
+		httpserver.ProvideServer,
+		httpserver.ProvideMuxRouter,
 		httpclient.Provide,
 		httpclient.ConstructorProvider,
 	}

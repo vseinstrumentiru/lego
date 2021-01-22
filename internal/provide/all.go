@@ -3,18 +3,18 @@ package provide
 import "github.com/vseinstrumentiru/lego/v2/config"
 
 func All(runtime config.Runtime) []interface{} {
-	if runtime.Is(config.OptWithoutProviders) {
-		return []interface{}{}
-	}
-
 	var res []interface{}
-
-	res = append(res, Minimal()...)
 
 	if runtime.Is(config.ServerMode) {
 		res = append(res, Monitoring()...)
 		res = append(res, Pipeline()...)
 	}
+
+	if runtime.Is(config.OptWithoutProviders) {
+		return res
+	}
+
+	res = append(res, Minimal()...)
 
 	res = append(res, Http()...)
 	res = append(res, Grpc()...)

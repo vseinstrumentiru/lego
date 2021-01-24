@@ -16,6 +16,7 @@ type Entry interface {
 	Details() []interface{}
 
 	WithDetails(details ...interface{}) Entry
+	WithFields(fields map[string]interface{}) Entry
 }
 
 type Logger interface {

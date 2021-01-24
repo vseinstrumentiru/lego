@@ -23,7 +23,7 @@ type HealthArgs struct {
 }
 
 func ProvideHealthChecker(in HealthArgs) health.Health {
-	logger := in.Logger.WithFields(map[string]interface{}{"component": "metrics"})
+	logger := in.Logger.WithFields(map[string]interface{}{"component": "metrics.health"})
 
 	healthz := health.New()
 	healthz.WithCheckListener(NewLogCheckListener(logger))

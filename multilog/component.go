@@ -85,7 +85,10 @@ func (l multilog) Notify(notification interface{}) {
 
 	switch t := notification.(type) {
 	case Entry:
-		n = t
+		if t == nil {
+			return
+		}
+		n = t.WithFields(l.fields)
 	case error:
 		if t == nil {
 			return

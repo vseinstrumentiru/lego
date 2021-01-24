@@ -103,7 +103,9 @@ func (l multilog) Notify(notification interface{}) {
 		return
 	}
 
-	l.handler.Handle(n)
+	if l.LevelEnabled(n.Level()) {
+		l.handler.Handle(n)
+	}
 }
 
 func (l multilog) WithFilter(matcher EntryMatcher) Logger {
@@ -130,7 +132,7 @@ func (l multilog) WithContext(ctx context.Context) Logger {
 }
 
 func (l multilog) notify(level logur.Level, msg string, fields ...map[string]interface{}) {
-	if l.level > level {
+	if !l.LevelEnabled(level) {
 		return
 	}
 

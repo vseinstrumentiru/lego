@@ -29,7 +29,7 @@ func Handler(endpoint string, level logur.Level, stop bool) *handler {
 }
 
 func (h *handler) LevelEnabled(level logur.Level) bool {
-	return h.level >= level
+	return level >= h.level
 }
 
 func (h *handler) Handle(msg multilog.Entry) {

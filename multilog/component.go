@@ -77,7 +77,7 @@ func (l multilog) WithFields(fields map[string]interface{}) Logger {
 }
 
 func (l multilog) LevelEnabled(level logur.Level) bool {
-	return l.level >= level
+	return level >= l.level
 }
 
 func (l multilog) Notify(notification interface{}) {

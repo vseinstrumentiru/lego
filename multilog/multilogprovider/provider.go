@@ -7,7 +7,6 @@ import (
 
 	"github.com/rs/zerolog"
 	"go.uber.org/dig"
-	zerologadapter "logur.dev/adapter/zerolog"
 	"logur.dev/logur"
 
 	"github.com/vseinstrumentiru/lego/v2/config"
@@ -90,15 +89,9 @@ func Provide(in args) multilog.Logger {
 				ctx = o(ctx)
 			}
 
-			logger := ctx.Logger()
+			logger := ctx.Logger().Level(zerolog.Level(in.Log.Level - 1))
 
-			if in.Log.Level >= 1 {
-				logger = logger.Level(zerolog.Level(in.Log.Level - 1))
-			} else {
-				logger = logger.Level(zerolog.Level(in.Log.Level))
-			}
-
-			in.Logger = zerologadapter.New(logger)
+			in.Logger = NewAdapter(logger)
 		}
 
 		opts = append(opts, multilog.WithHandler(log.Handler(in.Logger, in.Log.Stop)))

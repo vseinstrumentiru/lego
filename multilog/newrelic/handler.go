@@ -17,7 +17,7 @@ type handler struct {
 }
 
 func (h *handler) LevelEnabled(level logur.Level) bool {
-	return logur.Error >= level
+	return level >= logur.Error
 }
 
 func (h *handler) Handle(msg multilog.Entry) {

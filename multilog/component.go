@@ -17,6 +17,10 @@ func WithHandler(handler EntryHandler) Option {
 	}
 }
 
+func NoopLogger() Logger {
+	return New(logur.Error)
+}
+
 func New(level Level, options ...Option) Logger {
 	n := multilog{
 		level:   level,

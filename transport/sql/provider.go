@@ -18,8 +18,8 @@ type Args struct {
 	dig.In
 
 	Connector driver.Connector
-	Closer    *shutdown.CloseGroup
-	Health    health.Health
+	Closer    *shutdown.CloseGroup `optional:"true"`
+	Health    health.Health        `optional:"true"`
 }
 
 func Provide(in Args) (*sql.DB, error) {
@@ -30,17 +30,24 @@ func Provide(in Args) (*sql.DB, error) {
 	conn := sql.OpenDB(in.Connector)
 	stopStats := ocsql.RecordStats(conn, 5*time.Second)
 
-	err := in.Health.RegisterCheck(&health.Config{
-		Check:           checks.Must(checks.NewPingCheck("db.check", conn, time.Millisecond*100)),
-		ExecutionPeriod: 3 * time.Second,
-	})
+	if in.Health != nil {
+		err := in.Health.RegisterCheck(&health.Config{
+			Check:           checks.Must(checks.NewPingCheck("db.check", conn, time.Millisecond*100)),
+			ExecutionPeriod: 3 * time.Second,
+		})
 
-	if err != nil {
-		return nil, err
+		if err != nil {
+			return nil, err
+		}
+
+		if in.Closer != nil {
+			in.Closer.Add(shutdown.SimpleCloseFn(stopStats))
+		}
 	}
 
-	in.Closer.Add(shutdown.SimpleCloseFn(stopStats))
-	in.Closer.Add(conn)
+	if in.Closer != nil {
+		in.Closer.Add(conn)
+	}
 
 	return conn, nil
 }

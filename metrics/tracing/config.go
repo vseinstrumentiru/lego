@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"strings"
 
+	"contrib.go.opencensus.io/integrations/ocsql"
 	"emperror.dev/errors"
 	"go.opencensus.io/trace"
 )
@@ -27,6 +28,8 @@ type Config struct {
 	MaxAttributesPerSpan int
 	// MaxLinksPerSpan is max number of links per span.
 	MaxLinksPerSpan int
+
+	SQL *ocsql.TraceOptions
 }
 
 func (s *Sampler) UnmarshalText(b []byte) error {

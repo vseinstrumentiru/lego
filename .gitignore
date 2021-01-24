@@ -8,3 +8,4 @@
 /vendor/
 
 *-packr.go
+tmp_*.go

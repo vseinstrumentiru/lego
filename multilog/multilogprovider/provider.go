@@ -108,7 +108,7 @@ func Provide(in args) multilog.Logger {
 
 	if in.App.Name != config.Undefined && in.App.Name != "" {
 		fields := make(map[string]interface{})
-		fields["app.name"] = in.App.Name
+		fields["app"] = in.App.Name
 
 		if in.App.DataCenter != "" && in.App.DataCenter != config.Undefined {
 			fields["app.dc"] = in.App.DataCenter

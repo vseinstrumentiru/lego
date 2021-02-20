@@ -1,11 +1,10 @@
-package provide
+package env
 
 import (
 	"github.com/spf13/cobra"
 	"go.uber.org/dig"
 
 	"github.com/vseinstrumentiru/lego/v2/config"
-	"github.com/vseinstrumentiru/lego/v2/internal/env"
 )
 
 const (
@@ -15,23 +14,23 @@ const (
 type envArgs struct {
 	dig.In
 	Runtime config.Runtime
-	Config  env.Config `optional:"true"`
+	Config  Config `optional:"true"`
 	Cmd     *cobra.Command
 }
 
-func Env(in envArgs) (env.Env, config.Env) {
+func Provide(in envArgs) (Env, config.Env) {
 	path := defaultEnvPath
 
 	in.Runtime.On(config.OptEnvPath, func(newPath string) {
 		path = newPath
 	})
 
-	var instance env.Env
+	var instance Env
 
 	if in.Config == nil {
-		instance = env.NewNoConfigEnv(in.Cmd.PersistentFlags(), path)
+		instance = NewNoConfigEnv(in.Cmd.PersistentFlags(), path)
 	} else {
-		instance = env.NewConfigEnv(in.Cmd.PersistentFlags(), path)
+		instance = NewConfigEnv(in.Cmd.PersistentFlags(), path)
 	}
 
 	instance.SetFlag("version", false, "show version")

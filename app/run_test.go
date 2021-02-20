@@ -1,9 +1,7 @@
-package server
+package app
 
 import (
 	"testing"
-
-	"github.com/vseinstrumentiru/lego/v2/app"
 )
 
 type testApp struct {
@@ -13,9 +11,9 @@ type testConfig struct {
 }
 
 func Test_WithConfig(t *testing.T) {
-	Run(testApp{}, app.WithConfig(&testConfig{}), app.NoWait())
+	NewRuntime(WithConfig(&testConfig{})).Run(testApp{})
 }
 
 func Test_NoConfig(t *testing.T) {
-	Run(testApp{}, app.NoWait())
+	NewRuntime().Run(testApp{})
 }

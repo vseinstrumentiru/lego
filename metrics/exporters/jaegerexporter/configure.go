@@ -16,7 +16,7 @@ type Args struct {
 	App         *config.Application
 	Config      *exporters.Jaeger `optional:"true"`
 	Log         multilog.Logger
-	Propagation *propagation.HTTPFormatCollection
+	Propagation *propagation.HTTPFormatCollection `optional:"true"`
 }
 
 func Configure(in Args) error {
@@ -39,7 +39,9 @@ func Configure(in Args) error {
 	}
 
 	trace.RegisterExporter(exp)
-	in.Propagation.Add(&HTTPFormat{})
+	if in.Propagation != nil {
+		in.Propagation.Add(&HTTPFormat{})
+	}
 
 	log.Info("jaeger enabled")
 

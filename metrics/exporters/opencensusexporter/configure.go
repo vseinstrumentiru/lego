@@ -18,7 +18,7 @@ type Args struct {
 	App         *config.Application
 	Config      *exporters.Opencensus `optional:"true"`
 	Log         multilog.Logger
-	Propagation *propagation.HTTPFormatCollection
+	Propagation *propagation.HTTPFormatCollection `optional:"true"`
 }
 
 func Configure(in Args) error {
@@ -39,7 +39,10 @@ func Configure(in Args) error {
 
 	trace.RegisterExporter(exp)
 	view.RegisterExporter(exp)
-	in.Propagation.Add(&tracecontext.HTTPFormat{})
+
+	if in.Propagation != nil {
+		in.Propagation.Add(&tracecontext.HTTPFormat{})
+	}
 
 	log.Info("opencensus enabled")
 

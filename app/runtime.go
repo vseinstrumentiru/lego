@@ -9,8 +9,6 @@ import (
 	"github.com/vseinstrumentiru/lego/v2/config"
 	di "github.com/vseinstrumentiru/lego/v2/internal/container"
 	"github.com/vseinstrumentiru/lego/v2/internal/env"
-	"github.com/vseinstrumentiru/lego/v2/internal/execute"
-	"github.com/vseinstrumentiru/lego/v2/internal/provide"
 	"github.com/vseinstrumentiru/lego/v2/multilog"
 	"github.com/vseinstrumentiru/lego/v2/multilog/multilogprovider"
 	"github.com/vseinstrumentiru/lego/v2/server/shutdown"
@@ -41,31 +39,33 @@ func NewRuntime(opts ...Option) *runtime {
 }
 
 type runtime struct {
-	container di.ChainContainer
-	log       multilog.Logger
-	opts      cast.CastableRWSet
-	exec      runner
+	container      di.ChainContainer
+	configurations []interface{}
+	log            multilog.Logger
+	opts           cast.CastableRWSet
+	exec           runner
 }
 
 func (r *runtime) Providers() []interface{} {
 	return []interface{}{
-		provide.RootCommand,
+		rootCommand,
 		version.New,
 		shutdown.NewCloseGroup,
 		multilogprovider.Provide,
-		provide.Env,
+		env.Provide,
 	}
 }
 
 func (r *runtime) Configurations() []interface{} {
 	exec := []interface{}{
 		r.configureEnv,
-		execute.Version,
+		printDIGraph,
 		r.configureVersion,
+		showVersion,
 		r.configureLogger,
 	}
 
-	return exec
+	return append(exec, r.configurations...)
 }
 
 func (r *runtime) configureEnv(e env.Env) {
@@ -119,16 +119,8 @@ func (r *runtime) Run(apps ...interface{}) {
 
 	// constructing application
 	log.Trace("constructing application")
-	for _, provider := range provide.All(r) {
-		r.container.Register(provider)
-	}
-
 	for i := 0; i < len(apps); i++ {
 		r.container.Make(apps[i])
-	}
-
-	for _, e := range execute.All(r) {
-		r.container.Execute(e)
 	}
 	log.Trace("constructing application", map[string]interface{}{"status": "completed"})
 

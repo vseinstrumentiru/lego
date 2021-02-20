@@ -13,6 +13,7 @@ import (
 	"go.opencensus.io/zpages"
 	"go.uber.org/dig"
 
+	"github.com/vseinstrumentiru/lego/v2/common/netx"
 	"github.com/vseinstrumentiru/lego/v2/multilog"
 	"github.com/vseinstrumentiru/lego/v2/version"
 )
@@ -39,7 +40,7 @@ type ServerArgs struct {
 	Version  *version.Info
 	Logger   multilog.Logger
 	Pipeline *run.Group
-	Upg      *tableflip.Upgrader
+	Upg      *tableflip.Upgrader `optional:"true"`
 }
 
 func ProvideMonitoringServer(in ServerArgs) *http.ServeMux {
@@ -67,7 +68,7 @@ func ProvideMonitoringServer(in ServerArgs) *http.ServeMux {
 		server.Handle("/healthz/ready", handler)
 	}
 
-	httpLn, err := in.Upg.Listen("tcp", fmt.Sprintf(":%v", in.Config.Port))
+	httpLn, err := netx.Listen("tcp", fmt.Sprintf(":%v", in.Config.Port), in.Upg)
 	emperror.Panic(err)
 
 	srv := &http.Server{

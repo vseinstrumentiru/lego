@@ -26,13 +26,15 @@ type NatsSubArgs struct {
 }
 
 func ProvideNatsPublisher(in NatsPubArgs) (*nats.StreamingPublisher, error) {
-	return nats.NewStreamingPublisherWithStanConn(
+	pub, err := nats.NewStreamingPublisherWithStanConn(
 		in.Stan,
 		nats.StreamingPublisherPublishConfig{
 			Marshaler: in.Encoder,
 		},
 		watermilllog.New(in.Logger.WithFields(map[string]interface{}{"provider": "stan", "component": "events.publisher"})),
 	)
+
+	return pub, err
 }
 
 func ProvideNatsSubscriber(in NatsSubArgs) (*nats.StreamingSubscriber, error) {
@@ -50,9 +52,11 @@ func ProvideNatsSubscriber(in NatsSubArgs) (*nats.StreamingSubscriber, error) {
 		subCfg.CloseTimeout = *in.Config.CloseTimeout
 	}
 
-	return nats.NewStreamingSubscriberWithStanConn(
+	sub, err := nats.NewStreamingSubscriberWithStanConn(
 		in.Stan,
 		subCfg,
 		watermilllog.New(in.Logger.WithFields(map[string]interface{}{"provider": "stan", "component": "events.subscriber"})),
 	)
+
+	return sub, err
 }

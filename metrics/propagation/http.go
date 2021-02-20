@@ -8,7 +8,8 @@ import (
 )
 
 func ProvideHTTP() *HTTPFormatCollection {
-	return new(HTTPFormatCollection)
+	c := new(HTTPFormatCollection)
+	return c
 }
 
 type HTTPFormatCollection struct {

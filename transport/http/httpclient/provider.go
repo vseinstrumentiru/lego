@@ -5,17 +5,30 @@ import (
 
 	"go.opencensus.io/plugin/ochttp"
 	"go.opencensus.io/trace"
+	"go.opencensus.io/trace/propagation"
+	"go.uber.org/dig"
 
-	"github.com/vseinstrumentiru/lego/v2/metrics/propagation"
+	propagationx "github.com/vseinstrumentiru/lego/v2/metrics/propagation"
 	httpTransport "github.com/vseinstrumentiru/lego/v2/transport/http"
 )
 
-func ConstructorProvider(httpProp *propagation.HTTPFormatCollection) httpTransport.Constructor {
-	return func(name string) *http.Client {
+type ClientArgs struct {
+	dig.In
+	Propagation *propagationx.HTTPFormatCollection `optional:"true"`
+}
+
+func ConstructorProvider(in ClientArgs) httpTransport.Constructor {
+	var prop propagation.HTTPFormat
+
+	if in.Propagation != nil {
+		prop = in.Propagation
+	}
+
+	c := func(name string) *http.Client {
 		return &http.Client{
 			Transport: &ochttp.Transport{
 				Base:        http.DefaultTransport,
-				Propagation: httpProp,
+				Propagation: prop,
 				StartOptions: trace.StartOptions{
 					Sampler: trace.AlwaysSample(),
 				},
@@ -25,13 +38,21 @@ func ConstructorProvider(httpProp *propagation.HTTPFormatCollection) httpTranspo
 			},
 		}
 	}
+
+	return c
 }
 
-func Provide(httpProp *propagation.HTTPFormatCollection) *http.Client {
-	return &http.Client{
+func Provide(in ClientArgs) *http.Client {
+	var prop propagation.HTTPFormat
+
+	if in.Propagation != nil {
+		prop = in.Propagation
+	}
+
+	c := &http.Client{
 		Transport: &ochttp.Transport{
 			Base:        http.DefaultTransport,
-			Propagation: httpProp,
+			Propagation: prop,
 			StartOptions: trace.StartOptions{
 				Sampler: trace.AlwaysSample(),
 			},
@@ -40,4 +61,6 @@ func Provide(httpProp *propagation.HTTPFormatCollection) *http.Client {
 			},
 		},
 	}
+
+	return c
 }

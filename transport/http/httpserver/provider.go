@@ -15,9 +15,11 @@ import (
 	"go.opencensus.io/plugin/ochttp"
 	"go.opencensus.io/stats/view"
 	"go.opencensus.io/trace"
+	"go.opencensus.io/trace/propagation"
 	"go.uber.org/dig"
 
-	"github.com/vseinstrumentiru/lego/v2/metrics/propagation"
+	"github.com/vseinstrumentiru/lego/v2/common/netx"
+	propagationx "github.com/vseinstrumentiru/lego/v2/metrics/propagation"
 	"github.com/vseinstrumentiru/lego/v2/metrics/tracing"
 	"github.com/vseinstrumentiru/lego/v2/multilog"
 	httpcfg "github.com/vseinstrumentiru/lego/v2/transport/http"
@@ -31,7 +33,7 @@ type ArgsServer struct {
 
 	Logger   multilog.Logger
 	Pipeline *run.Group
-	Upg      *tableflip.Upgrader
+	Upg      *tableflip.Upgrader `optional:"true"`
 }
 
 func ProvideServer(in ArgsServer) *http.Server {
@@ -45,7 +47,7 @@ func ProvideServer(in ArgsServer) *http.Server {
 		ErrorLog: multilog.NewErrorStandardLogger(logger),
 	}
 
-	httpLn, err := in.Upg.Listen("tcp", fmt.Sprintf(":%v", in.Config.Port))
+	httpLn, err := netx.Listen("tcp", fmt.Sprintf(":%v", in.Config.Port), in.Upg)
 	emperror.Panic(err)
 
 	emperror.Panic(view.Register(
@@ -72,8 +74,7 @@ type ArgsMuxRouter struct {
 	TraceTags   middleware.TraceTagsMiddlewareConfig `optional:"true"`
 	TraceConfig *tracing.Config                      `optional:"true"`
 	Newrelic    *newrelic.Application                `optional:"true"`
-
-	Propagation *propagation.HTTPFormatCollection
+	Propagation *propagationx.HTTPFormatCollection   `optional:"true"`
 
 	Version *version.Info
 	Logger  multilog.Logger
@@ -81,6 +82,10 @@ type ArgsMuxRouter struct {
 
 func ProvideMuxRouter(in ArgsMuxRouter) *mux.Router {
 	logger := in.Logger.WithFields(map[string]interface{}{"component": "http.router"})
+
+	if in.Config == nil {
+		in.Config = httpcfg.NewDefaultConfig()
+	}
 
 	router := mux.NewRouter()
 	router.Use(middleware.RecoverHandlerMiddleware(logger))
@@ -104,9 +109,15 @@ func ProvideMuxRouter(in ArgsMuxRouter) *mux.Router {
 		router.Use(nrgorilla.Middleware(in.Newrelic))
 	}
 
+	var prop propagation.HTTPFormat
+
+	if in.Propagation != nil {
+		prop = in.Propagation
+	}
+
 	handler := &ochttp.Handler{
 		Handler:          router,
-		Propagation:      in.Propagation,
+		Propagation:      prop,
 		StartOptions:     startOptions,
 		IsPublicEndpoint: in.Config.IsPublic,
 	}

@@ -41,6 +41,7 @@ require (
 	github.com/iancoleman/strcase v0.1.2
 	github.com/jackc/pgx/v4 v4.10.1
 	github.com/klauspost/compress v1.11.6 // indirect
+	github.com/lebrains/gomongowrapper v0.0.0-20201208100026-f83272f79c09
 	github.com/lithammer/shortuuid/v3 v3.0.5 // indirect
 	github.com/magiconair/properties v1.8.4 // indirect
 	github.com/mitchellh/mapstructure v1.4.0

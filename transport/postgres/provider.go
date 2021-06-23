@@ -2,6 +2,9 @@ package postgres
 
 import (
 	"database/sql/driver"
+	"github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/newrelic/go-agent/v3/newrelic/sqlparse"
+	"strconv"
 
 	"contrib.go.opencensus.io/integrations/ocsql"
 	"go.uber.org/dig"
@@ -16,9 +19,10 @@ import (
 
 type Args struct {
 	dig.In
-	Config *Config
-	Trace  *tracing.Config `optional:"true"`
-	Logger multilog.Logger `optional:"true"`
+	Config   *Config
+	Trace    *tracing.Config `optional:"true"`
+	Newrelic *newrelic.Application
+	Logger   multilog.Logger `optional:"true"`
 }
 
 func Provide(in Args) (driver.Connector, error) {
@@ -40,5 +44,21 @@ func Provide(in Args) (driver.Connector, error) {
 		options = in.Trace.SQL
 	}
 
-	return sql.NewConnector(stdlib.GetDefaultDriver(), dsn, options), nil
+	connector := sql.NewConnector(stdlib.GetDefaultDriver(), dsn, options)
+
+	if in.Newrelic != nil {
+		builder := newrelic.SQLDriverSegmentBuilder{
+			BaseSegment: newrelic.DatastoreSegment{
+				Product:      newrelic.DatastorePostgres,
+				DatabaseName: config.Database,
+				Host:         config.Host,
+				PortPathOrID: strconv.Itoa(int(config.Port)),
+			},
+			ParseQuery: sqlparse.ParseQuery,
+		}
+
+		connector = newrelic.InstrumentSQLConnector(sql.NewConnector(stdlib.GetDefaultDriver(), dsn, options), builder)
+	}
+
+	return connector, nil
 }

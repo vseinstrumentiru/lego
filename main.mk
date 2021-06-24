@@ -154,11 +154,18 @@ lint: bin/golangci-lint ## Run linter
 fix: bin/golangci-lint ## Fix lint violations
 	bin/golangci-lint run --fix
 
+CHGLOG_VERSION = 0.14.2
+bin/chglog-${CHGLOG_VERSION}:
+	@mkdir -p bin
+	curl -L https://github.com/git-chglog/git-chglog/releases/download/v${CHGLOG_VERSION}/git-chglog_${CHGLOG_VERSION}_${OS}_amd64.tar.gz | tar -zOxf - git-chglog > ./bin/chglog-${CHGLOG_VERSION} && chmod +x ./bin/chglog-${CHGLOG_VERSION}
+
+bin/chglog: bin/chglog-${CHGLOG_VERSION}
+	@ln -sf chglog-${CHGLOG_VERSION} bin/chglog
+
 release-%: TAG_PREFIX = v
-release-%:
+release-%: bin/chglog
 ifneq (${DRY}, 1)
-	@sed -e "s/^## \[Unreleased\]$$/## [Unreleased]\\"$$'\n'"\\"$$'\n'"\\"$$'\n'"## [$*] - $$(date +%Y-%m-%d)/g; s|^\[Unreleased\]: \(.*\/compare\/\)\(.*\)...HEAD$$|[Unreleased]: \1${TAG_PREFIX}$*...HEAD\\"$$'\n'"[$*]: \1\2...${TAG_PREFIX}$*|g" CHANGELOG.md > CHANGELOG.md.new
-	@mv CHANGELOG.md.new CHANGELOG.md
+	@bin/chglog --next-tag ${TAG_PREFIX}$* -o CHANGELOG.md
 
 ifeq (${TAG}, 1)
 	git add CHANGELOG.md

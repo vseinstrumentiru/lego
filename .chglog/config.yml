@@ -1,0 +1,36 @@
+style: github
+template: CHANGELOG.tpl.md
+info:
+  title: CHANGELOG
+  repository_url: https://github.com/vseinstrumentiru/lego
+options:
+  commits:
+     filters:
+       Type:
+         - fix
+         - fixed
+         - Fix
+         - added
+         - add
+         - refactor
+  commit_groups:
+    sort_by: Title
+    title_maps:
+      fix: Bug Fixes
+      fixed: Bug Fixes
+      Fix: Bug Fixes
+
+      added: Features
+      add: Features
+    #   feat: Features
+    #   fix: Bug Fixes
+    #   perf: Performance Improvements
+      refactor: Code Refactoring
+  header:
+    pattern: "^((\\w+)\\s.*)$"
+    pattern_maps:
+      - Subject
+      - Type
+  notes:
+    keywords:
+      - BREAKING CHANGE

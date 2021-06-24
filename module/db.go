@@ -2,6 +2,7 @@ package module
 
 import (
 	"github.com/vseinstrumentiru/lego/v2/di"
+	"github.com/vseinstrumentiru/lego/v2/transport/mongodb"
 	"github.com/vseinstrumentiru/lego/v2/transport/mysql"
 	"github.com/vseinstrumentiru/lego/v2/transport/postgres"
 	"github.com/vseinstrumentiru/lego/v2/transport/sql"
@@ -23,6 +24,13 @@ func PostgresPack() []di.Module {
 	}
 }
 
+func MongoDbPack() []di.Module {
+	return []di.Module{
+		MongoDbConnector,
+		HealthChecker,
+	}
+}
+
 func SQLDB() (interface{}, []interface{}) {
 	return sql.Provide, nil
 }
@@ -33,4 +41,8 @@ func MySQLConnector() (interface{}, []interface{}) {
 
 func PostgresConnector() (interface{}, []interface{}) {
 	return postgres.Provide, nil
+}
+
+func MongoDbConnector() (interface{}, []interface{}) {
+	return mongodb.Provide, nil
 }

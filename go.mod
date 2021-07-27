@@ -19,7 +19,7 @@ require (
 	github.com/cenkalti/backoff/v3 v3.2.2 // indirect
 	github.com/census-instrumentation/opencensus-proto v0.3.0 // indirect
 	github.com/certifi/gocertifi v0.0.0-20200922220541-2c3bb06c6054 // indirect
-	github.com/cloudflare/tableflip v1.2.0
+	github.com/cloudflare/tableflip v1.2.1
 	github.com/dave/jennifer v1.4.1
 	github.com/fatih/color v1.10.0 // indirect
 	github.com/frankban/quicktest v1.11.3 // indirect
@@ -84,7 +84,6 @@ require (
 	golang.org/x/mod v0.4.0 // indirect
 	golang.org/x/net v0.0.0-20201224014010-6772e930b67b // indirect
 	golang.org/x/sync v0.0.0-20201207232520-09787c993a3a // indirect
-	golang.org/x/sys v0.0.0-20210108172913-0df2131ae363 // indirect
 	golang.org/x/text v0.3.5 // indirect
 	golang.org/x/tools v0.0.0-20210108195828-e2f9c7f1fc8e
 	google.golang.org/api v0.36.0 // indirect

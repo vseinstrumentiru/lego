@@ -148,7 +148,7 @@ bin/golangci-lint-${GOLANGCI_VERSION}:
 
 .PHONY: lint
 lint: bin/golangci-lint ## Run linter
-	bin/golangci-lint run
+	bin/golangci-lint run --timeout 5m
 
 .PHONY: fix
 fix: bin/golangci-lint ## Fix lint violations

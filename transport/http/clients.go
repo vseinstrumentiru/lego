@@ -42,6 +42,7 @@ func InsecureClient() ClientOption {
 				octr.Base = http.DefaultTransport
 			}
 
+			//nolint:forcetypeassert
 			httpTr = octr.Base.(*http.Transport)
 		} else if httpTr, ok = client.Transport.(*http.Transport); !ok {
 			return
@@ -52,7 +53,7 @@ func InsecureClient() ClientOption {
 		}
 
 		if httpTr.TLSClientConfig == nil {
-			httpTr.TLSClientConfig = &tls.Config{}
+			httpTr.TLSClientConfig = &tls.Config{MinVersion: tls.VersionTLS12}
 		}
 
 		httpTr.TLSClientConfig.InsecureSkipVerify = true

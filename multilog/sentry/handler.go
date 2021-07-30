@@ -16,7 +16,7 @@ type handler struct {
 	stop   bool
 }
 
-func Handler(endpoint string, level logur.Level, stop bool) *handler {
+func Handler(endpoint string, level logur.Level, stop bool) multilog.EntryHandler {
 	client, err := raven.New(endpoint)
 
 	emperror.Panic(err)

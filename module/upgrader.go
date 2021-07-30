@@ -10,5 +10,6 @@ func Upgrader() (interface{}, []interface{}) {
 	if runtime.GOOS == "windows" {
 		return nil, nil
 	}
+
 	return uprader.Provide, []interface{}{uprader.Configure}
 }

@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package {{ .Name }}.v1;
+
+option csharp_namespace = "{{ .CamelCaseName }}.V1";
+option go_package = "{{ .ModuleName }}/api/{{ .Name }}/v1;{{ .Name }}";
+option java_multiple_files = true;
+option java_outer_classname = "{{ .CamelCaseName }}Proto";
+option java_package = "com.{{ .Name }}.v1";
+option objc_class_prefix = "TXX";
+option php_namespace = "{{ .CamelCaseName }}\\V1";

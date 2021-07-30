@@ -9,6 +9,7 @@ import (
 
 func ProvideHTTP() *HTTPFormatCollection {
 	c := new(HTTPFormatCollection)
+
 	return c
 }
 

@@ -53,7 +53,7 @@ func LocalDebug() Option {
 	}
 }
 
-// Deprecated: use app.NewRuntime().Run()
+// Deprecated: use app.NewRuntime().Run().
 func NoDefaultProviders() Option {
 	return func(r *runtime) {}
 }
@@ -70,7 +70,7 @@ func ServerMode() Option {
 	}
 }
 
-// Deprecated: use app.CommandMode()
+// Deprecated: use app.CommandMode().
 func NoWait() Option {
 	return CommandMode()
 }

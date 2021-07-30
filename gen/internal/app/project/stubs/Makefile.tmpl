@@ -1,0 +1,8 @@
+include .make/build.mk
+include .make/.mga.mk
+{{ if .UseGraphql -}}
+    include .make/graphql.mk
+{{ end -}}
+{{ if .UseProtobuf -}}
+    include .make/protobuf.mk
+{{ end -}}

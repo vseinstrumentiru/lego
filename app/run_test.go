@@ -4,11 +4,9 @@ import (
 	"testing"
 )
 
-type testApp struct {
-}
+type testApp struct{}
 
-type testConfig struct {
-}
+type testConfig struct{}
 
 func Test_WithConfig(t *testing.T) {
 	NewRuntime(WithConfig(&testConfig{})).Run(testApp{})

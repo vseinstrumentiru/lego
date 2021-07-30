@@ -10,7 +10,7 @@ import (
 	"go.uber.org/dig"
 )
 
-func New() *container {
+func New() Container {
 	instance := dig.New()
 
 	c := &container{
@@ -166,6 +166,7 @@ func (c *container) resolve(val reflect.Value) error {
 
 	in := reflect.Indirect(reflect.New(reflect.StructOf(inFields)))
 	out := reflect.Indirect(reflect.New(reflect.StructOf(outFields)))
+	//nolint:lll
 	fn := reflect.MakeFunc(reflect.FuncOf([]reflect.Type{in.Type()}, []reflect.Type{out.Type()}, false), func(args []reflect.Value) (results []reflect.Value) {
 		arg := args[0]
 

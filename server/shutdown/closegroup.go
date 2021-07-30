@@ -6,7 +6,7 @@ import (
 	"emperror.dev/errors"
 )
 
-var _ io.Closer = &CloseGroup{}
+var _ io.Closer = new(CloseGroup)
 
 type SimpleCloseFn func()
 

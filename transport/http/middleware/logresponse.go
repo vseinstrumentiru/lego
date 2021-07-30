@@ -33,6 +33,7 @@ func LogResponseWithMaxLenMiddleware(length int) mux.MiddlewareFunc {
 
 			if span == nil {
 				next.ServeHTTP(w, r)
+
 				return
 			}
 

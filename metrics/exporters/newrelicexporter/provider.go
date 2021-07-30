@@ -1,7 +1,7 @@
 package newrelicexporter
 
 import (
-	newrelic "github.com/newrelic/go-agent/v3/newrelic"
+	"github.com/newrelic/go-agent/v3/newrelic"
 	"go.uber.org/dig"
 
 	"github.com/vseinstrumentiru/lego/v2/config"

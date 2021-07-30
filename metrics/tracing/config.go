@@ -50,11 +50,12 @@ func (s *Sampler) FromString(b []byte) error {
 			return errors.NewWithDetails("probability trace without fraction", "use `sampler: probability:0.05`")
 		}
 
-		if fraction, err := strconv.ParseFloat(fractionTxt, 64); err != nil {
+		fraction, err := strconv.ParseFloat(fractionTxt, 64)
+		if err != nil {
 			return errors.WithStack(err)
-		} else {
-			*s = Sampler(trace.ProbabilitySampler(fraction))
 		}
+
+		*s = Sampler(trace.ProbabilitySampler(fraction))
 
 		return nil
 	}

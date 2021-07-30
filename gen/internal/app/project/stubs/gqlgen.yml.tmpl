@@ -1,0 +1,16 @@
+schema:
+- "api/{{ .Name }}/v1/main.graphql"
+
+exec:
+filename: internal/generated/api/v1/graphql/exec.go
+package: graphql
+
+model:
+filename: internal/generated/api/v1/graphql/generated.go
+package: graphql
+
+struct_tag: json
+
+omit_slice_element_pointers: true
+
+models:

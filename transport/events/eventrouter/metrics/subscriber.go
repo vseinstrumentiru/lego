@@ -7,12 +7,11 @@ import (
 	"go.opencensus.io/tag"
 )
 
-var (
-	subscriberLabelKeys = []string{
-		labelKeyHandlerName,
-		labelKeySubscriberName,
-	}
-)
+//nolint:gochecknoglobals
+var subscriberLabelKeys = []string{
+	labelKeyHandlerName,
+	labelKeySubscriberName,
+}
 
 type SubscriberDecorator struct {
 	message.Subscriber

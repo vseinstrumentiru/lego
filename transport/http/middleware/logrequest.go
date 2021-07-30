@@ -21,6 +21,7 @@ func LogRequestWithMaxLenMiddleware(length int) mux.MiddlewareFunc {
 
 			if span == nil {
 				next.ServeHTTP(w, r)
+
 				return
 			}
 
@@ -34,7 +35,6 @@ func LogRequestWithMaxLenMiddleware(length int) mux.MiddlewareFunc {
 					Vars:  mux.Vars(r),
 				}
 				bodyBytes, _ = json.Marshal(req)
-
 			} else {
 				bodyBytes, _ = ioutil.ReadAll(r.Body)
 				_ = r.Body.Close() //  must close

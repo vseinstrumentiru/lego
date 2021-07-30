@@ -17,7 +17,7 @@ import (
 
 type runner func(r *runtime)
 
-func NewRuntime(opts ...Option) *runtime {
+func NewRuntime(opts ...Option) config.Runtime {
 	parent := di.New()
 	container := di.NewChain(parent)
 	rt := &runtime{

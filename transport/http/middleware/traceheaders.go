@@ -16,6 +16,7 @@ func TraceHeadersMiddleware(cfg HeaderToTagsConfig) mux.MiddlewareFunc {
 
 			if span == nil {
 				next.ServeHTTP(w, r)
+
 				return
 			}
 

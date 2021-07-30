@@ -1,9 +1,9 @@
 package parser
 
 import (
-	"fmt"
 	"go/types"
 
+	"emperror.dev/errors"
 	"sagikazarmark.dev/mga/pkg/gentypes"
 )
 
@@ -23,11 +23,12 @@ type ObjectMethod struct {
 	Results []ObjectParam
 }
 
-// ParseEvent parses an object as an event.
+//nolint:interfacer
+// GetObject ParseEvent parses an object as an event.
 func GetObject(in types.Type) (Object, error) {
 	named, ok := in.(*types.Named)
 	if !ok {
-		return Object{}, fmt.Errorf("%q is not a named type", in.String())
+		return Object{}, errors.Errorf("%q is not a named type", in.String())
 	}
 
 	object := Object{
@@ -49,7 +50,10 @@ func GetObject(in types.Type) (Object, error) {
 			Name: m.Name(),
 		}
 
-		sig := m.Type().(*types.Signature)
+		sig, ok := m.Type().(*types.Signature)
+		if !ok {
+			continue
+		}
 
 		for j := 0; j < sig.Params().Len(); j++ {
 			rawParam := sig.Params().At(j)

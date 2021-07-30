@@ -1,21 +1,20 @@
 package main
 
 import (
-	"github.com/gobuffalo/packr/v2"
-
 	"github.com/vseinstrumentiru/lego/v2/app"
 	"github.com/vseinstrumentiru/lego/v2/di"
-	"github.com/vseinstrumentiru/lego/v2/gen/internal/newproject"
+	"github.com/vseinstrumentiru/lego/v2/gen/internal/app/project"
+	"github.com/vseinstrumentiru/lego/v2/gen/internal/app/service"
+	"github.com/vseinstrumentiru/lego/v2/gen/internal/app/store"
 )
 
 func main() {
-	box := packr.New("assets", "../../assets")
-
 	app.NewRuntime(
 		app.EnvPath("lego"),
-		app.NoDefaultProviders(),
 		app.Provide(
-			di.ProvideCommand(newproject.NewCommand(box)),
+			di.ProvideCommand(project.NewCommand()),
+			di.ProvideCommand(service.NewCommand()),
+			di.ProvideCommand(store.NewCommand()),
 		),
 	).Run()
 }

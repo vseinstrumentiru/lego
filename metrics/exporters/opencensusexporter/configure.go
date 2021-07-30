@@ -32,7 +32,6 @@ func Configure(in Args) error {
 		in.Config.Options(),
 		ocagent.WithServiceName(in.App.Name),
 	)...)
-
 	if err != nil {
 		return err
 	}

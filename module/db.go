@@ -24,9 +24,15 @@ func PostgresPack() []di.Module {
 	}
 }
 
+//nolint:stylecheck
+// Deprecated: use MongoDBPack.
 func MongoDbPack() []di.Module {
+	return MongoDBPack()
+}
+
+func MongoDBPack() []di.Module {
 	return []di.Module{
-		MongoDbConnector,
+		MongoDBConnector,
 		HealthChecker,
 	}
 }
@@ -43,6 +49,12 @@ func PostgresConnector() (interface{}, []interface{}) {
 	return postgres.Provide, nil
 }
 
+//nolint:stylecheck
+// Deprecated: use MongoDBConnector.
 func MongoDbConnector() (interface{}, []interface{}) {
+	return MongoDBConnector()
+}
+
+func MongoDBConnector() (interface{}, []interface{}) {
 	return mongodb.Provide, nil
 }

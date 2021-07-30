@@ -13,6 +13,7 @@ const (
 	httpHeader = `uber-trace-id`
 )
 
+//nolint:gochecknoglobals
 var parent = &jaegerPropagation.HTTPFormat{}
 
 type HTTPFormat struct{}

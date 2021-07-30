@@ -34,7 +34,6 @@ func Configure(in Args) error {
 			"host": in.Version.Host,
 		},
 	})
-
 	if err != nil {
 		return err
 	}

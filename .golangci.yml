@@ -4,22 +4,42 @@ run:
 
   skip-files:
     - ".*_gen\\.go$"
+    - ".*_test\\.go$"
 
 linters-settings:
-  golint:
+  gocyclo:
+    min-complexity: 35
+  gocognit:
+    min-complexity: 42
+  cyclop:
+    max-complexity: 35
+  revive:
     min-confidence: 0.1
   goimports:
-    local-prefixes: github.com/sagikazarmark/modern-go-application
+    local-prefixes: github.com/vseinstrumentiru/lego/v2
+  wrapcheck:
+    ignoreSigs:
+      - errors.Append
+      - errors.WithStack
+      - errors.Wrap
+      - errors.New
+  tagliatelle:
+    case:
+      rules:
+        json: snake
 
 linters:
   enable-all: true
   disable:
+    - exhaustivestruct
     - funlen
     - maligned
     - wsl
     - gomnd
     - testpackage
     - goerr113
+    - lll
+    - wrapcheck
 
     # Drives todos nuts
     - godox

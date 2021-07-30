@@ -17,6 +17,7 @@ func (s simple) Get(key string) interface{} {
 	if !ok {
 		return nil
 	}
+
 	return v
 }
 

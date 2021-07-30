@@ -10,7 +10,7 @@ import (
 type TraceTagsMiddlewareConfig map[string]string
 
 func TraceTagsMiddleware(cfg TraceTagsMiddlewareConfig) mux.MiddlewareFunc {
-	var tags []trace.Attribute
+	tags := make([]trace.Attribute, 0, len(cfg))
 
 	for key, val := range cfg {
 		tags = append(tags, trace.StringAttribute(key, val))
@@ -22,6 +22,7 @@ func TraceTagsMiddleware(cfg TraceTagsMiddlewareConfig) mux.MiddlewareFunc {
 
 			if span == nil || len(tags) == 0 {
 				next.ServeHTTP(w, r)
+
 				return
 			}
 

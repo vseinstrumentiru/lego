@@ -1,10 +1,12 @@
 package mongodb
 
 import (
+	"time"
+
 	"emperror.dev/errors"
 	"github.com/lebrains/gomongowrapper"
+
 	"github.com/vseinstrumentiru/lego/v2/config"
-	"time"
 )
 
 var ErrEmptyName = errors.New("database name must be set")

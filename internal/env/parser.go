@@ -63,10 +63,6 @@ type parser struct {
 	keys      []string
 }
 
-func (p *parser) isDouble(i interface{}) bool {
-	return false
-}
-
 func (p *parser) exist(i interface{}) bool {
 	v, ok := normalizeStruct(i)
 
@@ -88,6 +84,7 @@ func (p *parser) scan(v reflect.Value, key string, f flags) error {
 			if key != "" {
 				p.keys = append(p.keys, key)
 			}
+
 			return nil
 		}
 	}
@@ -174,8 +171,7 @@ func getFieldInfo(field reflect.Value, typ reflect.StructField) FieldInfo {
 		f.IsDefault = true
 	}
 
-	loadTag := typ.Tag.Get("load")
-	if loadTag == "true" {
+	if loadTag := typ.Tag.Get("load"); loadTag == "true" {
 		return f
 	}
 
@@ -189,16 +185,19 @@ func getFieldInfo(field reflect.Value, typ reflect.StructField) FieldInfo {
 		if squash && (typ.Type.Kind() == reflect.Struct || (typ.Type.Kind() == reflect.Ptr && typ.Type.Elem().Kind() == reflect.Struct)) {
 			f.Name = ""
 			f.IsSquashed = true
+
 			return f
 		}
 
 		f.Name = mapTag[:index]
+
 		return f
 	} else if len(mapTag) > 0 {
 		if mapTag == "-" {
 			return FieldInfo{Ignore: true}
 		}
 		f.Name = mapTag
+
 		return f
 	}
 

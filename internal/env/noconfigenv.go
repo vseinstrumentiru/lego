@@ -7,7 +7,7 @@ import (
 )
 
 func NewNoConfigEnv(set *pflag.FlagSet, path string) Env {
-	return &noConfigEnv{NewBaseEnv(set, path)}
+	return &noConfigEnv{newBaseEnv(set, path)}
 }
 
 type noConfigEnv struct {

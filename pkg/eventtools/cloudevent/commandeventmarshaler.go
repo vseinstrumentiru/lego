@@ -59,7 +59,6 @@ func (CommandEventMarshaller) Unmarshal(msg *message.Message, v interface{}) (er
 
 	if timed, ok := v.(EventWithTime); ok && err == nil {
 		t, err := time.Parse(time.RFC3339, timeStr)
-
 		if err != nil {
 			t, err = time.Parse(time.RFC3339Nano, timeStr)
 

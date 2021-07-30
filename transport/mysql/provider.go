@@ -22,7 +22,6 @@ type Args struct {
 
 func ProvideConnector(in Args) (*Connector, error) {
 	conn, err := Provide(in)
-
 	if err != nil {
 		return nil, err
 	}

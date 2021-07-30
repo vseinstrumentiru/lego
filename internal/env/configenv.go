@@ -4,16 +4,15 @@ import (
 	"reflect"
 
 	"emperror.dev/errors"
-	"github.com/spf13/pflag"
-
 	"github.com/mitchellh/mapstructure"
+	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 
 	base "github.com/vseinstrumentiru/lego/v2/config"
 )
 
 func NewConfigEnv(set *pflag.FlagSet, path string) Env {
-	return &configEnv{NewBaseEnv(set, path)}
+	return &configEnv{newBaseEnv(set, path)}
 }
 
 type configEnv struct {
@@ -22,7 +21,6 @@ type configEnv struct {
 
 func (e *configEnv) Configure(cfg Config) error {
 	parsed, err := e.configureParser(cfg)
-
 	if err != nil {
 		return err
 	}
@@ -97,9 +95,7 @@ func (e *configEnv) validate(validates map[string]base.Validatable) (err error) 
 func (e *configEnv) setInstances(parsed *parser) {
 	for _, coll := range parsed.configs {
 		coll.Items[coll.DefaultKey].IsDefault = true
-		for _, i := range coll.Items {
-			e.instances = append(e.instances, i)
-		}
+		e.instances = append(e.instances, coll.Items...)
 	}
 }
 

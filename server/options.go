@@ -14,7 +14,7 @@ func LocalDebug() Option {
 	return app.LocalDebug()
 }
 
-// Deprecated: use app.NewRuntime().Run()
+// Deprecated: use app.NewRuntime().Run().
 func NoDefaultProviders() Option {
 	return app.NoDefaultProviders()
 }
@@ -23,7 +23,7 @@ func CommandMode() Option {
 	return app.CommandMode()
 }
 
-// Deprecated: use app.CommandMode()
+// Deprecated: use app.CommandMode().
 func NoWait() Option {
 	return app.NoWait()
 }

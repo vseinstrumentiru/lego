@@ -1,0 +1,65 @@
+name: {{ .Name }}-server
+dataCenter: local
+debugMode: true
+localMode: true
+
+modules:
+log:
+level: trace
+console:
+color: true
+level: trace
+timeFormat: 2006-01-02T15:04:05.999999999Z07:00
+#  sentry:
+#    addr: http://url-from-sentry
+#    level: error
+http:
+port: 8080
+#    isPublic: true
+#    shutdownTimeout: 30s
+metrics:
+port: 10000
+#  jaeger:
+#    addr: localhost:1234
+#  newRelic:
+#    enabled: true
+#    telemetryEnabled: true
+#    key: secret-key-from-newrelic
+#  opencensus:
+#    addr: localhost:1234
+#    insecure: true
+#  tracing:
+#    samplier: always
+#    debug: true
+#  kafka:
+#    ackTimeout: 30s
+#    reconnectTimeout: 30s
+#    closeTimeout: 30s
+#    addr: [localhost:9001]
+#    groupName: YOURAPP.local
+# see https://github.com/Shopify/sarama/blob/master/config.go
+#    subOverwrite:
+#      net:
+#        sasl:
+#          enable: true
+#          mechanism: PLAIN
+#          user: {{ .Name }}-test
+#          password: super-secret
+#    pubOverwrite:
+#      net:
+#        sasl:
+#          enable: true
+#          mechanism: PLAIN
+#          user: {{ .Name }}-test
+#          password: super-secret
+#  mongodb:
+#    hosts: [localhost:12345]
+#    replicaSet: replica-set-name
+#    user: user-name
+#    pass: password
+#    name: database-name
+#  mysql:
+#    addr: localhost:3306
+#    user: user-name
+#    passwd: password
+#    dbName: database-name

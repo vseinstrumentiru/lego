@@ -35,7 +35,6 @@ func Configure(in ConfigArgs) error {
 	log := in.Log.WithFields(map[string]interface{}{"component": "exporter.newrelic"})
 
 	exp, err := nrcensus.NewExporter(in.App.FullName(), in.Config.Key)
-
 	if err != nil {
 		return err
 	}

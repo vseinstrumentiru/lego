@@ -38,5 +38,7 @@ type EntryHandler interface {
 
 type ContextExtractor func(ctx context.Context) map[string]interface{}
 
-type EntryMatcher func(msg Entry) bool
-type EntryErrMatcher func(err error) bool
+type (
+	EntryMatcher    func(msg Entry) bool
+	EntryErrMatcher func(err error) bool
+)

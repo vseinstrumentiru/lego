@@ -16,6 +16,7 @@ func TraceVersionMiddleware(buildInfo *version.Info) mux.MiddlewareFunc {
 
 			if span == nil {
 				next.ServeHTTP(w, r)
+
 				return
 			}
 

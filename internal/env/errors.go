@@ -1,11 +1,13 @@
 package env
 
-import "github.com/spf13/viper"
+import (
+	"errors"
+
+	"github.com/spf13/viper"
+)
 
 type ErrConfigFileNotFound = viper.ConfigFileNotFoundError
 
 func IsFileNotFound(err error) bool {
-	_, ok := err.(viper.ConfigFileNotFoundError)
-
-	return ok
+	return errors.As(err, &viper.ConfigFileNotFoundError{})
 }

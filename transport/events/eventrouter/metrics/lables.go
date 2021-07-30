@@ -12,7 +12,7 @@ const (
 	labelKeyPublisherName  = "publisher_name"
 	labelKeySubscriberName = "subscriber_name"
 	labelSuccess           = "success"
-	// labelAcked             = "acked"
+	// labelAcked             = "acked".
 
 	labelValueNoHandler = "<no handler>"
 )

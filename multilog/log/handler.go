@@ -6,7 +6,7 @@ import (
 	"github.com/vseinstrumentiru/lego/v2/multilog"
 )
 
-func Handler(logger logur.Logger, stop bool) *handler {
+func Handler(logger logur.Logger, stop bool) multilog.EntryHandler {
 	return &handler{
 		handler: logger,
 		stop:    stop,

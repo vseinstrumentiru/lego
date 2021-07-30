@@ -186,11 +186,12 @@ func Test_parse(t *testing.T) {
 		want    *parser
 		wantErr bool
 	}{
-		{"defaults",
+		{
+			"defaults",
 			&struct{ A structWithDefaults }{},
 			&parser{
 				configs: map[reflect.Type]*Instances{
-					reflect.TypeOf(structWithDefaults{}): &Instances{
+					reflect.TypeOf(structWithDefaults{}): {
 						DefaultKey: 0,
 						Items: []Instance{
 							{Key: "a", Val: &structWithDefaults{}},
@@ -205,11 +206,12 @@ func Test_parse(t *testing.T) {
 			},
 			false,
 		},
-		{"defaults_pointer",
+		{
+			"defaults_pointer",
 			&struct{ A *structWithDefaults }{},
 			&parser{
 				configs: map[reflect.Type]*Instances{
-					reflect.TypeOf(structWithDefaults{}): &Instances{
+					reflect.TypeOf(structWithDefaults{}): {
 						DefaultKey: 0,
 						Items: []Instance{
 							{Key: "a", Val: &structWithDefaults{}},
@@ -224,11 +226,12 @@ func Test_parse(t *testing.T) {
 			},
 			false,
 		},
-		{"validates",
+		{
+			"validates",
 			&struct{ A structWithValidates }{},
 			&parser{
 				configs: map[reflect.Type]*Instances{
-					reflect.TypeOf(structWithValidates{}): &Instances{
+					reflect.TypeOf(structWithValidates{}): {
 						DefaultKey: 0,
 						Items: []Instance{
 							{Key: "a", Val: &structWithValidates{}},
@@ -243,11 +246,12 @@ func Test_parse(t *testing.T) {
 			},
 			false,
 		},
-		{"validates_pointer",
+		{
+			"validates_pointer",
 			&struct{ A *structWithValidates }{},
 			&parser{
 				configs: map[reflect.Type]*Instances{
-					reflect.TypeOf(structWithValidates{}): &Instances{
+					reflect.TypeOf(structWithValidates{}): {
 						DefaultKey: 0,
 						Items: []Instance{
 							{Key: "a", Val: &structWithValidates{}},
@@ -262,7 +266,8 @@ func Test_parse(t *testing.T) {
 			},
 			false,
 		},
-		{"unexported",
+		{
+			"unexported",
 			&struct {
 				a1  structWithDefaults
 				a2  *structWithDefaults
@@ -286,7 +291,8 @@ func Test_parse(t *testing.T) {
 			},
 			false,
 		},
-		{"fields",
+		{
+			"fields",
 			&struct {
 				S1 string
 				S2 *string
@@ -309,7 +315,7 @@ func Test_parse(t *testing.T) {
 			}{},
 			&parser{
 				configs: map[reflect.Type]*Instances{
-					reflect.TypeOf(SubStruct{}): &Instances{
+					reflect.TypeOf(SubStruct{}): {
 						DefaultKey: 0,
 						Items: []Instance{
 							{Key: "a3", Val: &SubStruct{}},
@@ -336,7 +342,8 @@ func Test_parse(t *testing.T) {
 			},
 			false,
 		},
-		{"embedded_fields",
+		{
+			"embedded_fields",
 			&struct {
 				A1 struct {
 					SubStruct
@@ -363,7 +370,7 @@ func Test_parse(t *testing.T) {
 			}{},
 			&parser{
 				configs: map[reflect.Type]*Instances{
-					reflect.TypeOf(SubStruct{}): &Instances{
+					reflect.TypeOf(SubStruct{}): {
 						DefaultKey: 0,
 						Items: []Instance{
 							{Key: "a1.subStruct", Val: &SubStruct{}},

@@ -59,6 +59,7 @@ func Provide(in args) multilog.Logger {
 		}
 	}
 
+	//nolint:nestif
 	if in.Log != nil {
 		if in.Logger == nil {
 			var writer io.Writer

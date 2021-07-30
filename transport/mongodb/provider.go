@@ -2,12 +2,14 @@ package mongodb
 
 import (
 	"context"
+	"time"
+
 	health "github.com/AppsFlyer/go-sundheit"
 	"github.com/AppsFlyer/go-sundheit/checks"
 	"github.com/lebrains/gomongowrapper"
-	"github.com/vseinstrumentiru/lego/v2/server/shutdown"
 	"go.uber.org/dig"
-	"time"
+
+	"github.com/vseinstrumentiru/lego/v2/server/shutdown"
 )
 
 type Args struct {
@@ -49,5 +51,5 @@ func Provide(in Args) (*gomongowrapper.Database, error) {
 		})
 	}
 
-	return client.Database(in.Cfg.Config.Name), nil
+	return client.Database(in.Cfg.Config.Name), err
 }

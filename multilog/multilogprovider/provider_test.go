@@ -9,14 +9,13 @@ import (
 	"logur.dev/logur"
 
 	"github.com/vseinstrumentiru/lego/v2/config"
+	"github.com/vseinstrumentiru/lego/v2/internal/container"
 	"github.com/vseinstrumentiru/lego/v2/multilog"
 	"github.com/vseinstrumentiru/lego/v2/multilog/log"
-
-	container2 "github.com/vseinstrumentiru/lego/v2/internal/container"
 )
 
 func TestProvide(t *testing.T) {
-	c := container2.New()
+	c := container.New()
 
 	ass := assert.New(t)
 

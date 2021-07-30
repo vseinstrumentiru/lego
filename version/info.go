@@ -28,6 +28,7 @@ type Info struct {
 
 func New() *Info {
 	host, _ := os.Hostname()
+
 	return &Info{
 		Version:    Version,
 		CommitHash: CommitHash,
@@ -37,10 +38,12 @@ func New() *Info {
 		Arch:       runtime.GOARCH,
 		Compiler:   runtime.Compiler,
 		Host:       host,
+		DataCenter: "",
 	}
 }
 
 func (i *Info) Print() {
+	//nolint:forbidigo
 	fmt.Printf("version %s (%s) built on %s (%s+%s+%s)\n", i.Version, i.CommitHash, i.BuildDate, i.GoVersion, i.Compiler, i.Arch)
 }
 

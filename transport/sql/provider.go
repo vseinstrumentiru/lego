@@ -35,7 +35,6 @@ func Provide(in Args) (*sql.DB, error) {
 			Check:           checks.Must(checks.NewPingCheck("db.check", conn, time.Millisecond*100)),
 			ExecutionPeriod: 3 * time.Second,
 		})
-
 		if err != nil {
 			return nil, err
 		}

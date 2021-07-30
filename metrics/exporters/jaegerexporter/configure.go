@@ -33,7 +33,6 @@ func Configure(in Args) error {
 		},
 		OnError: log.Handle,
 	})
-
 	if err != nil {
 		return err
 	}

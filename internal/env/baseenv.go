@@ -17,7 +17,7 @@ import (
 	di "github.com/vseinstrumentiru/lego/v2/internal/container"
 )
 
-func NewBaseEnv(set *pflag.FlagSet, path string) *baseEnv {
+func newBaseEnv(set *pflag.FlagSet, path string) *baseEnv {
 	v := viper.New()
 	v.SetEnvPrefix(path)
 

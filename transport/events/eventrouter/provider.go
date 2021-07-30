@@ -56,7 +56,6 @@ func Provide(in Args) (*message.Router, error) {
 	}
 
 	router, err := message.NewRouter(cfg, watermilllog.New(logger))
-
 	if err != nil {
 		return nil, err
 	}
@@ -74,6 +73,7 @@ func Provide(in Args) (*message.Router, error) {
 	in.Pipeline.Add(
 		func() error {
 			logger.Info("starting router")
+
 			return router.Run(context.Background())
 		},
 		func(err error) {

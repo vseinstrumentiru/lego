@@ -1,10 +1,8 @@
 # ENV
-GOLANG_VERSION ?= 1.15
+GOLANGCI_VERSION ?= 1.41.1
+GOLANG_VERSION ?= 1.16
 GOTAGS = gen
-# Hooks
-PRE_BUILD_TARGETS = packr
-PRE_BUILD_RELEASE_TARGETS = packr
-PRE_BUILD_DEBUG_TARGETS = packr
+
 include main.mk
 # Update main targets
 

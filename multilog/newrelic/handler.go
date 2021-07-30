@@ -8,7 +8,7 @@ import (
 	"github.com/vseinstrumentiru/lego/v2/multilog"
 )
 
-func Handler(app *newrelic.Application) *handler {
+func Handler(app *newrelic.Application) multilog.EntryHandler {
 	return &handler{app: app}
 }
 

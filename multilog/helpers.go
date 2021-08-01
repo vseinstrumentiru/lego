@@ -1,17 +1,11 @@
 package multilog
 
 import (
-	"log"
-
-	"logur.dev/logur"
+	"github.com/vseinstrumentiru/lego/v2/log"
 )
 
-// NewErrorStandardLogger returns a new standard log logging on error level.
-func NewErrorStandardLogger(logger Logger) *log.Logger {
-	return logur.NewErrorStandardLogger(logger, "", 0)
-}
+// Deprecated: use log.NewErrorStandardLogger
+var NewErrorStandardLogger = log.NewErrorStandardLogger
 
-// SetStandardLogger sets the global log's output to a custom log instance.
-func SetStandardLogger(logger Logger) {
-	log.SetOutput(logur.NewWriter(logger))
-}
+// Deprecated: use log.SetStandardLogger
+var SetStandardLogger = log.SetStandardLogger

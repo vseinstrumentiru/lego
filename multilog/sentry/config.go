@@ -1,9 +1,8 @@
 package sentry
 
-import "logur.dev/logur"
+import (
+	"github.com/vseinstrumentiru/lego/v2/log/handlers/sentry"
+)
 
-type Config struct {
-	Addr  string
-	Level logur.Level
-	Stop  bool
-}
+// Deprecated: use sentry.Config
+type Config = sentry.Config

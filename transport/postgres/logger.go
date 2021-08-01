@@ -6,11 +6,11 @@ import (
 	"github.com/jackc/pgx/v4"
 	"logur.dev/logur"
 
-	"github.com/vseinstrumentiru/lego/v2/multilog"
+	"github.com/vseinstrumentiru/lego/v2/log"
 )
 
 type logger struct {
-	multilog.Logger
+	log.Logger
 }
 
 func (l *logger) Log(ctx context.Context, level pgx.LogLevel, msg string, data map[string]interface{}) {
@@ -26,5 +26,5 @@ func (l *logger) Log(ctx context.Context, level pgx.LogLevel, msg string, data m
 		return
 	}
 
-	l.Logger.WithContext(ctx).Notify(multilog.NewNotification(lvl, msg, data))
+	l.Logger.WithContext(ctx).Notify(log.NewEntry(lvl, msg, data))
 }

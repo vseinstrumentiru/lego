@@ -5,15 +5,15 @@ import (
 	"go.uber.org/dig"
 
 	"github.com/vseinstrumentiru/lego/v2/config"
+	"github.com/vseinstrumentiru/lego/v2/log"
 	"github.com/vseinstrumentiru/lego/v2/metrics/exporters"
-	"github.com/vseinstrumentiru/lego/v2/multilog"
 )
 
 type ProvideArgs struct {
 	dig.In
 	App    *config.Application
 	Config *exporters.NewRelic `optional:"true"`
-	Logger multilog.Logger
+	Logger log.Logger
 }
 
 func Provide(in ProvideArgs) (app *newrelic.Application, err error) {

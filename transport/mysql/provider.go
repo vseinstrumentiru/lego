@@ -8,8 +8,8 @@ import (
 	"go.uber.org/dig"
 	"logur.dev/logur"
 
+	"github.com/vseinstrumentiru/lego/v2/log"
 	"github.com/vseinstrumentiru/lego/v2/metrics/tracing"
-	"github.com/vseinstrumentiru/lego/v2/multilog"
 	"github.com/vseinstrumentiru/lego/v2/transport/sql"
 )
 
@@ -17,7 +17,7 @@ type Args struct {
 	dig.In
 	Config *Config
 	Trace  *tracing.Config `optional:"true"`
-	Logger multilog.Logger
+	Logger log.Logger
 }
 
 func ProvideConnector(in Args) (*Connector, error) {

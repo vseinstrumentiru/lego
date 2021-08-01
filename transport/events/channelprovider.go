@@ -5,13 +5,13 @@ import (
 	"go.uber.org/dig"
 	watermilllog "logur.dev/integration/watermill"
 
-	"github.com/vseinstrumentiru/lego/v2/multilog"
+	"github.com/vseinstrumentiru/lego/v2/log"
 )
 
 type ChannelArgs struct {
 	dig.In
 	Config *gochannel.Config `optional:"true"`
-	Logger multilog.Logger
+	Logger log.Logger
 }
 
 func ProvideChannel(in ChannelArgs) (*gochannel.GoChannel, error) {

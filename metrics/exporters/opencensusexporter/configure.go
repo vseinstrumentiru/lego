@@ -8,16 +8,16 @@ import (
 	"go.uber.org/dig"
 
 	"github.com/vseinstrumentiru/lego/v2/config"
+	"github.com/vseinstrumentiru/lego/v2/log"
 	"github.com/vseinstrumentiru/lego/v2/metrics/exporters"
 	"github.com/vseinstrumentiru/lego/v2/metrics/propagation"
-	"github.com/vseinstrumentiru/lego/v2/multilog"
 )
 
 type Args struct {
 	dig.In
 	App         *config.Application
 	Config      *exporters.Opencensus `optional:"true"`
-	Log         multilog.Logger
+	Log         log.Logger
 	Propagation *propagation.HTTPFormatCollection `optional:"true"`
 }
 

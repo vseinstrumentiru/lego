@@ -8,13 +8,13 @@ import (
 	"github.com/cloudflare/tableflip"
 	"go.uber.org/dig"
 
-	"github.com/vseinstrumentiru/lego/v2/multilog"
+	"github.com/vseinstrumentiru/lego/v2/log"
 )
 
 type Args struct {
 	dig.In
 	Upg *tableflip.Upgrader `optional:"true"`
-	Log multilog.Logger
+	Log log.Logger
 }
 
 func Configure(in Args) error {

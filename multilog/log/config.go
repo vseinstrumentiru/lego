@@ -1,8 +1,8 @@
 package log
 
 import (
-	"github.com/vseinstrumentiru/lego/v2/multilog/console"
+	"github.com/vseinstrumentiru/lego/v2/log/handlers/console"
 )
 
-// Deprecated: use console.Config
+// Deprecated: use log.Config
 type Config = console.Config

@@ -11,14 +11,14 @@ import (
 	watermilllog "logur.dev/integration/watermill"
 
 	"github.com/vseinstrumentiru/lego/v2/events"
-	"github.com/vseinstrumentiru/lego/v2/multilog"
+	"github.com/vseinstrumentiru/lego/v2/log"
 	"github.com/vseinstrumentiru/lego/v2/transport/events/eventrouter/metrics"
 )
 
 type Args struct {
 	dig.In
 	RouterConfig *events.RouterConfig `optional:"true"`
-	Logger       multilog.Logger
+	Logger       log.Logger
 	Pipeline     *run.Group
 }
 

@@ -1,44 +1,29 @@
 package multilog
 
 import (
-	"context"
-
-	"emperror.dev/emperror"
 	"logur.dev/logur"
+
+	"github.com/vseinstrumentiru/lego/v2/log"
 )
 
+// Deprecated: use logur.Level
 type Level = logur.Level
 
-type Entry interface {
-	Level() Level
-	Message() string
-	Fields() map[string]interface{}
-	Details() []interface{}
+// Deprecated: use log.Entry
+type Entry = log.Entry
 
-	WithDetails(details ...interface{}) Entry
-	WithFields(fields map[string]interface{}) Entry
-}
+// Deprecated: use log.Logger
+type Logger = log.Logger
 
-type Logger interface {
-	logur.LoggerFacade
-	emperror.ErrorHandlerFacade
-	Notify(notification interface{})
-	WithHandler(handler EntryHandler)
-	WithContext(ctx context.Context) Logger
-	WithFilter(matcher EntryMatcher) Logger
-	WithErrFilter(matcher EntryErrMatcher) Logger
-	WithFields(fields map[string]interface{}) Logger
-}
+// Deprecated: use log.EntryHandler
+type EntryHandler = log.EntryHandler
 
-type EntryHandler interface {
-	logur.LevelEnabler
-	Handle(msg Entry)
-	StopPropagation() bool
-}
-
-type ContextExtractor func(ctx context.Context) map[string]interface{}
+// Deprecated: use log.ContextExtractor
+type ContextExtractor = log.ContextExtractor
 
 type (
-	EntryMatcher    func(msg Entry) bool
-	EntryErrMatcher func(err error) bool
+	// Deprecated: use log.EntryMatcher
+	EntryMatcher = log.EntryMatcher
+	// Deprecated: use log.EntryErrMatcher
+	EntryErrMatcher = log.EntryErrMatcher
 )

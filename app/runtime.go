@@ -9,8 +9,10 @@ import (
 	"github.com/vseinstrumentiru/lego/v2/config"
 	di "github.com/vseinstrumentiru/lego/v2/internal/container"
 	"github.com/vseinstrumentiru/lego/v2/internal/env"
-	"github.com/vseinstrumentiru/lego/v2/multilog"
-	"github.com/vseinstrumentiru/lego/v2/multilog/multilogprovider"
+	"github.com/vseinstrumentiru/lego/v2/log"
+	"github.com/vseinstrumentiru/lego/v2/log/handlers/console"
+	"github.com/vseinstrumentiru/lego/v2/log/handlers/sentry"
+	"github.com/vseinstrumentiru/lego/v2/log/logger"
 	"github.com/vseinstrumentiru/lego/v2/server/shutdown"
 	"github.com/vseinstrumentiru/lego/v2/version"
 )
@@ -41,7 +43,7 @@ func NewRuntime(opts ...Option) config.Runtime {
 type runtime struct {
 	container      di.ChainContainer
 	configurations []interface{}
-	log            multilog.Logger
+	log            log.Logger
 	opts           cast.CastableRWSet
 	exec           runner
 }
@@ -51,7 +53,9 @@ func (r *runtime) Providers() []interface{} {
 		rootCommand,
 		version.New,
 		shutdown.NewCloseGroup,
-		multilogprovider.Provide,
+		logger.Provide,
+		sentry.Provide,
+		console.Provide,
 		env.Provide,
 	}
 }
@@ -84,9 +88,9 @@ func (r *runtime) configureVersion(ver *version.Info, cfg *config.Application, c
 	}
 }
 
-func (r *runtime) configureLogger(logger multilog.Logger) {
+func (r *runtime) configureLogger(logger log.Logger) {
 	r.log = logger.WithFields(map[string]interface{}{"component": "runtime"})
-	multilog.SetStandardLogger(r.log.WithFields(map[string]interface{}{"type": "standard"}))
+	log.SetStandardLogger(r.log.WithFields(map[string]interface{}{"type": "standard"}))
 	r.log.Trace("starting application")
 }
 

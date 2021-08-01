@@ -14,13 +14,14 @@ import (
 	"go.uber.org/dig"
 
 	"github.com/vseinstrumentiru/lego/v2/common/netx"
+	"github.com/vseinstrumentiru/lego/v2/log"
 	"github.com/vseinstrumentiru/lego/v2/multilog"
 	"github.com/vseinstrumentiru/lego/v2/version"
 )
 
 type HealthArgs struct {
 	dig.In
-	Logger multilog.Logger
+	Logger log.Logger
 }
 
 func ProvideHealthChecker(in HealthArgs) health.Health {
@@ -38,7 +39,7 @@ type ServerArgs struct {
 
 	Health   health.Health
 	Version  *version.Info
-	Logger   multilog.Logger
+	Logger   log.Logger
 	Pipeline *run.Group
 	Upg      *tableflip.Upgrader `optional:"true"`
 }

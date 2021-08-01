@@ -11,14 +11,14 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/vseinstrumentiru/lego/v2/multilog"
+	"github.com/vseinstrumentiru/lego/v2/log"
 )
 
 func TestPubSub(t *testing.T) {
 	ass := assert.New(t)
 
 	c, err := ProvideChannel(ChannelArgs{
-		Logger: multilog.New(0),
+		Logger: log.NoopLogger(),
 	})
 	ass.NoError(err)
 

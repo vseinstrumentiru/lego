@@ -5,21 +5,21 @@ import (
 	"go.uber.org/dig"
 	watermilllog "logur.dev/integration/watermill"
 
-	"github.com/vseinstrumentiru/lego/v2/multilog"
+	"github.com/vseinstrumentiru/lego/v2/log"
 	kafkatransport "github.com/vseinstrumentiru/lego/v2/transport/kafka"
 )
 
 type KafkaPubArgs struct {
 	dig.In
 	Broker  *kafkatransport.Config
-	Logger  multilog.Logger
+	Logger  log.Logger
 	Encoder kafka.Marshaler
 }
 
 type KafkaSubArgs struct {
 	dig.In
 	Broker  *kafkatransport.Config
-	Logger  multilog.Logger
+	Logger  log.Logger
 	Decoder kafka.Unmarshaler
 }
 

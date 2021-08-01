@@ -8,9 +8,9 @@ import (
 	"go.uber.org/dig"
 
 	"github.com/vseinstrumentiru/lego/v2/config"
+	"github.com/vseinstrumentiru/lego/v2/log"
+	lenewrelic "github.com/vseinstrumentiru/lego/v2/log/handlers/newrelic"
 	"github.com/vseinstrumentiru/lego/v2/metrics/exporters"
-	"github.com/vseinstrumentiru/lego/v2/multilog"
-	lenewrelic "github.com/vseinstrumentiru/lego/v2/multilog/newrelic"
 )
 
 type ConfigArgs struct {
@@ -18,7 +18,7 @@ type ConfigArgs struct {
 	App      *config.Application   `optional:"true"`
 	Config   *exporters.NewRelic   `optional:"true"`
 	NewRelic *newrelic.Application `optional:"true"`
-	Log      multilog.Logger
+	Log      log.Logger
 }
 
 func Configure(in ConfigArgs) error {
@@ -26,7 +26,7 @@ func Configure(in ConfigArgs) error {
 		return nil
 	}
 
-	in.Log.WithHandler(lenewrelic.Handler(in.NewRelic))
+	in.Log.WithHandler(lenewrelic.NewHandler(in.NewRelic))
 
 	if !in.Config.TelemetryEnabled {
 		return nil

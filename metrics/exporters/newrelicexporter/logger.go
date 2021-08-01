@@ -1,9 +1,11 @@
 package newrelicexporter
 
-import "github.com/vseinstrumentiru/lego/v2/multilog"
+import (
+	"github.com/vseinstrumentiru/lego/v2/log"
+)
 
 type loggerWrap struct {
-	multilog.Logger
+	log.Logger
 }
 
 func (l loggerWrap) Error(msg string, context map[string]interface{}) {

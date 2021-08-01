@@ -19,6 +19,7 @@ import (
 	"go.uber.org/dig"
 
 	"github.com/vseinstrumentiru/lego/v2/common/netx"
+	"github.com/vseinstrumentiru/lego/v2/log"
 	propagationx "github.com/vseinstrumentiru/lego/v2/metrics/propagation"
 	"github.com/vseinstrumentiru/lego/v2/metrics/tracing"
 	"github.com/vseinstrumentiru/lego/v2/multilog"
@@ -31,7 +32,7 @@ type ArgsServer struct {
 	dig.In
 	Config *httpcfg.Config `optional:"true"`
 
-	Logger   multilog.Logger
+	Logger   log.Logger
 	Pipeline *run.Group
 	Upg      *tableflip.Upgrader `optional:"true"`
 }
@@ -77,7 +78,7 @@ type ArgsMuxRouter struct {
 	Propagation *propagationx.HTTPFormatCollection   `optional:"true"`
 
 	Version *version.Info
-	Logger  multilog.Logger
+	Logger  log.Logger
 }
 
 func ProvideMuxRouter(in ArgsMuxRouter) *mux.Router {

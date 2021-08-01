@@ -6,14 +6,14 @@ import (
 	"go.uber.org/dig"
 	watermilllog "logur.dev/integration/watermill"
 
-	"github.com/vseinstrumentiru/lego/v2/multilog"
+	"github.com/vseinstrumentiru/lego/v2/log"
 	lestan "github.com/vseinstrumentiru/lego/v2/transport/stan"
 )
 
 type NatsPubArgs struct {
 	dig.In
 	Stan    stan.Conn
-	Logger  multilog.Logger
+	Logger  log.Logger
 	Encoder nats.Marshaler
 }
 
@@ -21,7 +21,7 @@ type NatsSubArgs struct {
 	dig.In
 	Config  *lestan.Config
 	Stan    stan.Conn
-	Logger  multilog.Logger
+	Logger  log.Logger
 	Decoder nats.Unmarshaler
 }
 

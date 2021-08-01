@@ -8,7 +8,7 @@ import (
 	"go.uber.org/dig"
 
 	"github.com/vseinstrumentiru/lego/v2/config"
-	"github.com/vseinstrumentiru/lego/v2/multilog"
+	"github.com/vseinstrumentiru/lego/v2/log"
 	"github.com/vseinstrumentiru/lego/v2/version"
 )
 
@@ -16,7 +16,7 @@ type Args struct {
 	dig.In
 	Router  *http.ServeMux `optional:"true"`
 	App     *config.Application
-	Log     multilog.Logger
+	Log     log.Logger
 	Version *version.Info
 }
 

@@ -5,10 +5,10 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"github.com/vseinstrumentiru/lego/v2/multilog"
+	"github.com/vseinstrumentiru/lego/v2/log"
 )
 
-func RecoverHandlerMiddleware(handler multilog.Logger) mux.MiddlewareFunc {
+func RecoverHandlerMiddleware(handler log.Logger) mux.MiddlewareFunc {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			defer func() {

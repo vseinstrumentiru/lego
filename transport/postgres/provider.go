@@ -11,8 +11,8 @@ import (
 	"github.com/newrelic/go-agent/v3/newrelic/sqlparse"
 	"go.uber.org/dig"
 
+	"github.com/vseinstrumentiru/lego/v2/log"
 	"github.com/vseinstrumentiru/lego/v2/metrics/tracing"
-	"github.com/vseinstrumentiru/lego/v2/multilog"
 	"github.com/vseinstrumentiru/lego/v2/transport/sql"
 )
 
@@ -21,7 +21,7 @@ type Args struct {
 	Config   *Config
 	Trace    *tracing.Config `optional:"true"`
 	Newrelic *newrelic.Application
-	Logger   multilog.Logger `optional:"true"`
+	Logger   log.Logger `optional:"true"`
 }
 
 func Provide(in Args) (driver.Connector, error) {

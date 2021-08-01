@@ -1,16 +1,8 @@
 package multilog
 
 import (
-	"logur.dev/logur"
-
-	"github.com/vseinstrumentiru/lego/v2/config"
+	"github.com/vseinstrumentiru/lego/v2/log/logger"
 )
 
-type Config struct {
-	Level      logur.Level
-	SilentMode bool
-}
-
-func (c Config) SetDefaults(env config.Env) {
-	env.SetDefault("level", logur.Error)
-}
+// DeprecatedL use logger.Config
+type Config = logger.Config

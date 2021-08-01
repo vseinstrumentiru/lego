@@ -5,15 +5,15 @@ import (
 
 	"github.com/go-resty/resty/v2"
 
-	"github.com/vseinstrumentiru/lego/v2/multilog"
+	"github.com/vseinstrumentiru/lego/v2/log"
 )
 
-func NewLogger(l multilog.Logger) resty.Logger {
+func NewLogger(l log.Logger) resty.Logger {
 	return &logger{Logger: l}
 }
 
 type logger struct {
-	multilog.Logger
+	log.Logger
 }
 
 func (l *logger) Errorf(format string, v ...interface{}) {

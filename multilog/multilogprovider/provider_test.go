@@ -11,7 +11,7 @@ import (
 	"github.com/vseinstrumentiru/lego/v2/config"
 	"github.com/vseinstrumentiru/lego/v2/internal/container"
 	"github.com/vseinstrumentiru/lego/v2/multilog"
-	"github.com/vseinstrumentiru/lego/v2/multilog/log"
+	"github.com/vseinstrumentiru/lego/v2/multilog/console"
 )
 
 func TestProvide(t *testing.T) {
@@ -24,7 +24,7 @@ func TestProvide(t *testing.T) {
 	}))
 	ass.NoError(c.Instance(config.UndefinedApplication()))
 	ass.NoError(c.Instance(&multilog.Config{Level: logur.Info}))
-	ass.NoError(c.Instance(&log.Config{Stop: false}))
+	ass.NoError(c.Instance(&console.Config{Stop: false}))
 	ass.NoError(c.Register(Provide))
 
 	ass.NoError(c.Execute(func(n multilog.Logger) {

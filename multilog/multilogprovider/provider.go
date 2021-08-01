@@ -11,7 +11,7 @@ import (
 
 	"github.com/vseinstrumentiru/lego/v2/config"
 	"github.com/vseinstrumentiru/lego/v2/multilog"
-	"github.com/vseinstrumentiru/lego/v2/multilog/log"
+	"github.com/vseinstrumentiru/lego/v2/multilog/console"
 	"github.com/vseinstrumentiru/lego/v2/multilog/sentry"
 )
 
@@ -20,9 +20,9 @@ type args struct {
 	App    *config.Application
 	Config *multilog.Config `optional:"true"`
 
-	Sentry *sentry.Config `optional:"true"`
-	Log    *log.Config    `optional:"true"`
-	Logger logur.Logger   `optional:"true"`
+	Sentry  *sentry.Config  `optional:"true"`
+	Console *console.Config `optional:"true"`
+	Logger  logur.Logger    `optional:"true"`
 }
 
 type ctxOpt func(ctx zerolog.Context) zerolog.Context
@@ -35,6 +35,10 @@ func withCaller(depth int) ctxOpt {
 
 func Provide(in args) multilog.Logger {
 	var opts []multilog.Option
+
+	if in.Console.Color {
+		in.Console.Format = console.HumanFormat
+	}
 
 	if in.Config == nil {
 		level := logur.Error
@@ -51,33 +55,33 @@ func Provide(in args) multilog.Logger {
 
 	var contextOptions []ctxOpt
 
-	if in.Log == nil && !in.Config.SilentMode {
-		in.Log = log.DefaultConfig()
+	if in.Console == nil && !in.Config.SilentMode {
+		in.Console = console.DefaultConfig()
 
 		if in.App.LocalMode {
-			in.Log.Color = true
+			in.Console.Color = true
 		}
 	}
 
 	//nolint:nestif
-	if in.Log != nil {
+	if in.Console != nil {
 		if in.Logger == nil {
 			var writer io.Writer
-			if in.Log.TimeFormat != "" {
-				zerolog.TimeFieldFormat = in.Log.TimeFormat
+			if in.Console.TimeFormat != "" {
+				zerolog.TimeFieldFormat = in.Console.TimeFormat
 			}
 
-			if in.Log.Color {
+			if in.Console.Color {
 				zeroWriter := zerolog.NewConsoleWriter()
-				if in.Log.TimeFormat != "" {
-					zeroWriter.TimeFormat = in.Log.TimeFormat
+				if in.Console.TimeFormat != "" {
+					zeroWriter.TimeFormat = in.Console.TimeFormat
 				}
 				zeroWriter.FormatMessage = func(i interface{}) string {
 					return fmt.Sprintf("%-30s|", i)
 				}
 				writer = zeroWriter
-				if in.Log.Depth > 0 {
-					contextOptions = append(contextOptions, withCaller(in.Log.Depth))
+				if in.Console.Depth > 0 {
+					contextOptions = append(contextOptions, withCaller(in.Console.Depth))
 				}
 			} else {
 				writer = os.Stderr
@@ -90,12 +94,12 @@ func Provide(in args) multilog.Logger {
 				ctx = o(ctx)
 			}
 
-			logger := ctx.Logger().Level(zerolog.Level(in.Log.Level - 1))
+			logger := ctx.Logger().Level(zerolog.Level(in.Console.Level - 1))
 
 			in.Logger = NewAdapter(logger)
 		}
 
-		opts = append(opts, multilog.WithHandler(log.Handler(in.Logger, in.Log.Stop)))
+		opts = append(opts, multilog.WithHandler(console.Handler(in.Logger, in.Console.Stop)))
 	}
 
 	logger := multilog.New(in.Config.Level, opts...)

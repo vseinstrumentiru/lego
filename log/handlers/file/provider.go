@@ -4,12 +4,14 @@ import (
 	"fmt"
 
 	"github.com/rs/zerolog"
+	"go.uber.org/dig"
 
 	"github.com/vseinstrumentiru/lego/v2/log/handlers"
 	"github.com/vseinstrumentiru/lego/v2/log/handlers/console"
 )
 
 type Args struct {
+	dig.In
 	Config *Config `optional:"true"`
 }
 

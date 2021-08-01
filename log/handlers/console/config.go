@@ -1,6 +1,8 @@
 package console
 
 import (
+	"io"
+	"os"
 	"time"
 
 	"logur.dev/logur"
@@ -24,7 +26,15 @@ func DefaultConfig() *Config {
 		Depth:      -1,
 		Level:      logur.Trace,
 		TimeFormat: DefaultTimeFormat,
+		out:        os.Stderr,
 	}
+}
+
+func CustomWriterConfig(writer io.Writer) *Config {
+	cfg := DefaultConfig()
+	cfg.out = writer
+
+	return cfg
 }
 
 type Config struct {
@@ -35,6 +45,7 @@ type Config struct {
 	Depth      int
 	Level      logur.Level
 	TimeFormat string
+	out        io.Writer
 }
 
 func (c Config) SetDefaults(env config.Env) {

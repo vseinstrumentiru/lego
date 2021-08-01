@@ -3,10 +3,10 @@ package console
 import (
 	"logur.dev/logur"
 
-	"github.com/vseinstrumentiru/lego/v2/multilog"
+	"github.com/vseinstrumentiru/lego/v2/log"
 )
 
-func Handler(logger logur.Logger, stop bool) multilog.EntryHandler {
+func NewHandler(logger logur.Logger, stop bool) log.EntryHandler {
 	return &handler{
 		handler: logger,
 		stop:    stop,
@@ -18,6 +18,10 @@ type handler struct {
 	stop    bool
 }
 
+func (h *handler) Name() string {
+	return "console"
+}
+
 func (h *handler) LevelEnabled(level logur.Level) bool {
 	if en, ok := h.handler.(logur.LevelEnabler); ok {
 		return en.LevelEnabled(level)
@@ -26,7 +30,7 @@ func (h *handler) LevelEnabled(level logur.Level) bool {
 	return true
 }
 
-func (h *handler) Handle(msg multilog.Entry) {
+func (h *handler) Handle(msg log.Entry) {
 	switch msg.Level() {
 	case logur.Trace:
 		h.handler.Trace(msg.Message(), msg.Fields())

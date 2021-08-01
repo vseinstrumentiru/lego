@@ -15,7 +15,6 @@ import (
 
 	"github.com/vseinstrumentiru/lego/v2/common/netx"
 	"github.com/vseinstrumentiru/lego/v2/log"
-	"github.com/vseinstrumentiru/lego/v2/multilog"
 	"github.com/vseinstrumentiru/lego/v2/version"
 )
 
@@ -74,7 +73,7 @@ func ProvideMonitoringServer(in ServerArgs) *http.ServeMux {
 
 	srv := &http.Server{
 		Handler:  server,
-		ErrorLog: multilog.NewErrorStandardLogger(logger),
+		ErrorLog: log.NewErrorStandardLogger(logger),
 	}
 
 	in.Pipeline.Add(appkitrun.LogServe(logger.WithFields(map[string]interface{}{"port": in.Config.Port}))(

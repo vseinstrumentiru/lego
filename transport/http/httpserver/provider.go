@@ -22,7 +22,6 @@ import (
 	"github.com/vseinstrumentiru/lego/v2/log"
 	propagationx "github.com/vseinstrumentiru/lego/v2/metrics/propagation"
 	"github.com/vseinstrumentiru/lego/v2/metrics/tracing"
-	"github.com/vseinstrumentiru/lego/v2/multilog"
 	httpcfg "github.com/vseinstrumentiru/lego/v2/transport/http"
 	"github.com/vseinstrumentiru/lego/v2/transport/http/middleware"
 	"github.com/vseinstrumentiru/lego/v2/version"
@@ -45,7 +44,7 @@ func ProvideServer(in ArgsServer) *http.Server {
 	logger := in.Logger.WithFields(map[string]interface{}{"component": "http"})
 
 	server := &http.Server{
-		ErrorLog: multilog.NewErrorStandardLogger(logger),
+		ErrorLog: log.NewErrorStandardLogger(logger),
 	}
 
 	httpLn, err := netx.Listen("tcp", fmt.Sprintf(":%v", in.Config.Port), in.Upg)

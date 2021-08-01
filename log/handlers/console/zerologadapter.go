@@ -80,9 +80,11 @@ func ToLogurLevel(level zerolog.Level) logur.Level {
 		return logur.Info
 	case zerolog.WarnLevel:
 		return logur.Warn
-	default:
+	case zerolog.Disabled, zerolog.ErrorLevel, zerolog.FatalLevel, zerolog.NoLevel, zerolog.PanicLevel:
 		return logur.Error
 	}
+
+	return logur.Error
 }
 
 func ToZerologLevel(level logur.Level) zerolog.Level {
@@ -95,6 +97,8 @@ func ToZerologLevel(level logur.Level) zerolog.Level {
 		return zerolog.InfoLevel
 	case logur.Warn:
 		return zerolog.WarnLevel
+	case logur.Error:
+		return zerolog.ErrorLevel
 	default:
 		return zerolog.ErrorLevel
 	}

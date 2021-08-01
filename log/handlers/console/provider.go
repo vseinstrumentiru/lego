@@ -49,6 +49,7 @@ func Provide(in Args) handlers.Out {
 
 	var contextOptions []ctxOpt
 
+	// nolint: nestif
 	if in.Logger == nil {
 		var writer io.Writer
 

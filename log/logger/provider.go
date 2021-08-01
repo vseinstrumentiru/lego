@@ -1,7 +1,6 @@
 package logger
 
 import (
-	"github.com/rs/zerolog"
 	"go.uber.org/dig"
 	"logur.dev/logur"
 
@@ -17,17 +16,7 @@ type args struct {
 	Handlers []log.EntryHandler `group:"log.handlers"`
 }
 
-type ctxOpt func(ctx zerolog.Context) zerolog.Context
-
-func withCaller(depth int) ctxOpt {
-	return func(ctx zerolog.Context) zerolog.Context {
-		return ctx.CallerWithSkipFrameCount(depth)
-	}
-}
-
 func Provide(in args) log.Logger {
-	var opts []log.Option
-
 	if in.Config == nil {
 		level := logur.Error
 		if in.App.DebugMode {
@@ -36,6 +25,8 @@ func Provide(in args) log.Logger {
 
 		in.Config = &Config{Level: level}
 	}
+
+	opts := make([]log.Option, 0, len(in.Handlers))
 
 	for _, handler := range in.Handlers {
 		if handler == nil {

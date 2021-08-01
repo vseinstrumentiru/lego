@@ -67,11 +67,11 @@ func (l *LoggerAdapter) ErrorContext(_ context.Context, msg string, fields ...ma
 }
 
 func (l *LoggerAdapter) LevelEnabled(level logur.Level) bool {
-	return log.LevelEnabled(level, l.GetLevel())
+	return log.LevelEnabled(level, ToLogurLevel(l.logger.GetLevel()))
 }
 
-func (l *LoggerAdapter) GetLevel() logur.Level {
-	switch l.logger.GetLevel() {
+func ToLogurLevel(level zerolog.Level) logur.Level {
+	switch level {
 	case zerolog.TraceLevel:
 		return logur.Trace
 	case zerolog.DebugLevel:
@@ -82,6 +82,21 @@ func (l *LoggerAdapter) GetLevel() logur.Level {
 		return logur.Warn
 	default:
 		return logur.Error
+	}
+}
+
+func ToZerologLevel(level logur.Level) zerolog.Level {
+	switch level {
+	case logur.Trace:
+		return zerolog.TraceLevel
+	case logur.Debug:
+		return zerolog.DebugLevel
+	case logur.Info:
+		return zerolog.InfoLevel
+	case logur.Warn:
+		return zerolog.WarnLevel
+	default:
+		return zerolog.ErrorLevel
 	}
 }
 

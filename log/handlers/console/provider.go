@@ -84,7 +84,7 @@ func Provide(in Args) handlers.Out {
 			ctx = o(ctx)
 		}
 
-		logger := ctx.Logger().Level(zerolog.Level(in.Config.Level - 1))
+		logger := ctx.Logger().Level(ToZerologLevel(in.Config.Level))
 
 		in.Logger = NewAdapter(logger)
 	}

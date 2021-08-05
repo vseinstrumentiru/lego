@@ -15,7 +15,7 @@ type filterHandler struct {
 }
 
 func (h filterHandler) Name() string {
-	return "filter"
+	return "_filter"
 }
 
 func (h filterHandler) StopPropagation() bool {
@@ -40,14 +40,16 @@ type errFilterHandler struct {
 }
 
 func (h errFilterHandler) Name() string {
-	return "filter.error"
+	return "_filter.error"
 }
 
 func (h errFilterHandler) StopPropagation() bool {
+	// TODO: set propagation in constructor and on append handler event
 	return h.handler.StopPropagation()
 }
 
 func (h errFilterHandler) LevelEnabled(level logur.Level) bool {
+	// TODO: set level in constructor and on append handler event
 	return h.handler.LevelEnabled(level)
 }
 
@@ -62,14 +64,16 @@ func (h errFilterHandler) Handle(notification Entry) {
 type compositeHandler []EntryHandler
 
 func (h compositeHandler) Name() string {
-	return "composite"
+	return "_composite"
 }
 
 func (h compositeHandler) StopPropagation() bool {
+	// TODO: set propagation in constructor and on append handler event
 	return false
 }
 
 func (h compositeHandler) LevelEnabled(level logur.Level) bool {
+	// TODO: set level in constructor and on append handler event
 	for _, handler := range h {
 		if handler.LevelEnabled(level) {
 			return true

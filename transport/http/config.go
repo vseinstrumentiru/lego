@@ -19,5 +19,5 @@ func NewDefaultConfig() *Config {
 func (c *Config) SetDefaults(env config.Env) {
 	env.SetDefault("port", 8080)
 	env.SetDefault("shutdownTimeout", "5s")
-	env.SetFlag("http-addr", &c.Port, "App HTTP server address")
+	env.SetFlag("http-addr", 8080, "App HTTP server address").To("port")
 }

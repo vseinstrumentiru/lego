@@ -8,7 +8,7 @@ type Config struct {
 }
 
 func (c *Config) SetDefaults(env config.Env) {
-	env.SetFlag("telemetry-addr", &c.Port, "Telemetry HTTP server address")
+	env.SetFlag("telemetry-addr", 10000, "Telemetry HTTP server address").To("port")
 }
 
 func NewDefaultConfig() *Config {

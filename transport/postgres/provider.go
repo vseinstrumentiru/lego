@@ -19,9 +19,9 @@ import (
 type Args struct {
 	dig.In
 	Config   *Config
-	Trace    *tracing.Config `optional:"true"`
-	Newrelic *newrelic.Application
-	Logger   log.Logger `optional:"true"`
+	Trace    *tracing.Config       `optional:"true"`
+	Newrelic *newrelic.Application `optional:"true"`
+	Logger   log.Logger            `optional:"true"`
 }
 
 func Provide(in Args) (driver.Connector, error) {

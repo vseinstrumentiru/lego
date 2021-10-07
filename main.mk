@@ -162,6 +162,18 @@ bin/chglog-${CHGLOG_VERSION}:
 bin/chglog: bin/chglog-${CHGLOG_VERSION}
 	@ln -sf chglog-${CHGLOG_VERSION} bin/chglog
 
+DEPTH_VERSION = 1.2.1
+bin/depth-${DEPTH_VERSION}:
+	@mkdir -p bin
+	curl -L https://github.com/KyleBanks/depth/releases/download/v${DEPTH_VERSION}/depth_${DEPTH_VERSION}_${OS}_amd64 -o ./bin/depth-${DEPTH_VERSION} && chmod +x ./bin/depth-${DEPTH_VERSION}
+
+bin/depth: bin/depth-${DEPTH_VERSION}
+	@ln -sf depth-${DEPTH_VERSION} bin/depth
+
+.PHONY: depth
+depth: bin/depth
+	./bin/depth -max 100 ./internal/env
+
 release-%: TAG_PREFIX = v
 release-%: bin/chglog
 ifneq (${DRY}, 1)

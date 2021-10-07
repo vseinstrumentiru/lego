@@ -31,10 +31,10 @@ func Provide(in Args) (*sql.DB, error) {
 	stopStats := ocsql.RecordStats(conn, 5*time.Second)
 
 	if in.Health != nil {
-		err := in.Health.RegisterCheck(&health.Config{
-			Check:           checks.Must(checks.NewPingCheck("db.check", conn, time.Millisecond*100)),
-			ExecutionPeriod: 3 * time.Second,
-		})
+		err := in.Health.RegisterCheck(
+			checks.Must(checks.NewPingCheck("db.check", conn)),
+			health.ExecutionPeriod(3*time.Second),
+		)
 		if err != nil {
 			return nil, err
 		}

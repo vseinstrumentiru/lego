@@ -15,6 +15,10 @@ func NewLogCheckListener(logger logur.Logger) health.CheckListener {
 	}
 }
 
+func (c checkListener) OnCheckRegistered(name string, _ health.Result) {
+	c.logger.Trace("registered check", map[string]interface{}{"check": name})
+}
+
 func (c checkListener) OnCheckStarted(name string) {
 	c.logger.Trace("starting check", map[string]interface{}{"check": name})
 }

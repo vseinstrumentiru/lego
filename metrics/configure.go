@@ -1,7 +1,7 @@
 package metrics
 
 import (
-	health "github.com/AppsFlyer/go-sundheit"
+	health "github.com/AppsFlyer/go-sundheit/opencensus"
 	"go.opencensus.io/plugin/ocgrpc"
 	"go.opencensus.io/plugin/ochttp"
 	"go.opencensus.io/stats/view"

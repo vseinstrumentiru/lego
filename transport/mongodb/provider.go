@@ -45,10 +45,10 @@ func Provide(in Args) (*gomongowrapper.Database, error) {
 	}
 
 	if in.Health != nil {
-		err = in.Health.RegisterCheck(&health.Config{
-			Check:           checks.Must(checks.NewPingCheck("mongodb.check", client, time.Millisecond*100)),
-			ExecutionPeriod: 3 * time.Second,
-		})
+		err = in.Health.RegisterCheck(
+			checks.Must(checks.NewPingCheck("mongodb.check", client)),
+			health.ExecutionPeriod(3*time.Second),
+		)
 	}
 
 	return client.Database(in.Cfg.Config.Name), err

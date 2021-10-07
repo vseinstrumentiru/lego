@@ -154,7 +154,7 @@ lint: bin/golangci-lint ## Run linter
 fix: bin/golangci-lint ## Fix lint violations
 	bin/golangci-lint run --fix
 
-CHGLOG_VERSION = 0.14.2
+CHGLOG_VERSION = 0.15.0
 bin/chglog-${CHGLOG_VERSION}:
 	@mkdir -p bin
 	curl -L https://github.com/git-chglog/git-chglog/releases/download/v${CHGLOG_VERSION}/git-chglog_${CHGLOG_VERSION}_${OS}_amd64.tar.gz | tar -zOxf - git-chglog > ./bin/chglog-${CHGLOG_VERSION} && chmod +x ./bin/chglog-${CHGLOG_VERSION}

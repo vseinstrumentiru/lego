@@ -13,24 +13,31 @@ options:
          - added
          - add
          - refactor
+         - feat
+         - chore
+         - deprecated
   commit_groups:
     sort_by: Title
     title_maps:
       fix: Bug Fixes
       fixed: Bug Fixes
       Fix: Bug Fixes
+      chore: Chores
+      refactor: Chores
+      deprecated: Deprecations
 
       added: Features
       add: Features
+      feat: Features
     #   feat: Features
     #   fix: Bug Fixes
     #   perf: Performance Improvements
-      refactor: Code Refactoring
   header:
-    pattern: "^((\\w+)\\s.*)$"
+    pattern: "^(\\w*)(?:\\(([\\w\\$\\.\\-\\*\\s]*)\\))?\\:\\s(.*)$"
     pattern_maps:
-      - Subject
       - Type
+      - Scope
+      - Subject
   notes:
     keywords:
       - BREAKING CHANGE

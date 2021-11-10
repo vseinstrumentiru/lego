@@ -22,6 +22,12 @@ import "github.com/vseinstrumentiru/lego/v3/pkg/config"
 ```
 
 ```go
+err := config.New().Unmarshal(&myConfigStruct)
+```
+
+## Пример
+
+```go
 package main
 
 import "github.com/vseinstrumentiru/lego/v3/pkg/config"

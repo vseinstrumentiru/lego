@@ -48,7 +48,7 @@ require (
 	github.com/newrelic/newrelic-opencensus-exporter-go v0.4.0
 	github.com/newrelic/newrelic-telemetry-sdk-go v0.8.1 // indirect
 	github.com/oklog/run v1.1.0
-	github.com/prometheus/client_golang v1.11.0
+	github.com/prometheus/client_golang v1.11.1
 	github.com/prometheus/common v0.31.1 // indirect
 	github.com/prometheus/statsd_exporter v0.22.2 // indirect
 	github.com/rogpeppe/go-internal v1.8.0 // indirect

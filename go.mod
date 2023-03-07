@@ -39,9 +39,9 @@ require (
 	github.com/lithammer/shortuuid/v3 v3.0.7 // indirect
 	github.com/mattn/go-colorable v0.1.11 // indirect
 	github.com/mitchellh/mapstructure v1.4.2
-	github.com/nats-io/nats-streaming-server v0.20.0 // indirect
-	github.com/nats-io/nats.go v1.12.3
-	github.com/nats-io/stan.go v0.8.1
+	github.com/nats-io/nats-streaming-server v0.24.3 // indirect
+	github.com/nats-io/nats.go v1.13.1-0.20220308171302-2f2f6968e98d
+	github.com/nats-io/stan.go v0.10.2
 	github.com/newrelic/go-agent/v3 v3.15.0
 	github.com/newrelic/go-agent/v3/integrations/nrgorilla v1.1.1
 	github.com/newrelic/go-agent/v3/integrations/nrpkgerrors v1.0.1
@@ -63,9 +63,6 @@ require (
 	github.com/stretchr/testify v1.7.0
 	go.opencensus.io v0.23.0
 	go.uber.org/dig v1.12.0
-	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519 // indirect
-	golang.org/x/net v0.0.0-20211006190231-62292e806868 // indirect
-	golang.org/x/sys v0.0.0-20211007075335-d3039528d8ac // indirect
 	golang.org/x/tools v0.1.5
 	google.golang.org/api v0.58.0 // indirect
 	google.golang.org/genproto v0.0.0-20211005153810-c76a74d43a8e // indirect

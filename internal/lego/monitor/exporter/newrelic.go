@@ -32,8 +32,10 @@ func (nrLogErr) DebugEnabled() bool {
 	return false
 }
 
+// NewRelicMiddleware it first reads config from env vars, then sets AppName and License key
 func NewRelicMiddleware(appName, key string, logErr lego.LogErr) mux.MiddlewareFunc {
 	app, err := newrelic.NewApplication(
+		newrelic.ConfigFromEnvironment(),
 		newrelic.ConfigAppName(appName),
 		newrelic.ConfigLicense(key),
 		newrelic.ConfigLogger(nrLogErr{logErr}),

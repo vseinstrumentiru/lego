@@ -16,12 +16,14 @@ type ProvideArgs struct {
 	Logger log.Logger
 }
 
+// Provide it first reads config from env vars, then sets AppName and License key
 func Provide(in ProvideArgs) (app *newrelic.Application, err error) {
 	if in.Config == nil {
 		return nil, nil
 	}
 
 	app, err = newrelic.NewApplication(
+		newrelic.ConfigFromEnvironment(),
 		newrelic.ConfigAppName(in.App.FullName()),
 		newrelic.ConfigLicense(in.Config.Key),
 		newrelic.ConfigLogger(loggerWrap{Logger: in.Logger}),

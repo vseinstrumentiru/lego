@@ -1,5 +1,9 @@
 # LeGo: Go Application Bootstrap Constructor
 
+> ⚠️ **NOTE:** this project is discontinued and have no any maintainer.
+> 
+> ⚠️ **Внимание!** Этот проект завершен и более не поддерживается.
+
 ### Мотивация
 
 Для поднятия приложения часто приходится повторять одну и ту же рутинную работу: проверка конфигов, описание
